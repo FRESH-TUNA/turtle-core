@@ -1,7 +1,11 @@
 package com.remember.core.domains;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@Entity
+@NoArgsConstructor
 public class PracticeStatus extends BaseTimeDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

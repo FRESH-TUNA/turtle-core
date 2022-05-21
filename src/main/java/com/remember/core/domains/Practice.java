@@ -1,11 +1,13 @@
 package com.remember.core.domains;
 
-import com.remember.core.security.domains.User;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@NoArgsConstructor
 public class Practice extends BaseTimeDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +24,8 @@ public class Practice extends BaseTimeDomain {
     private List<PracticeStatus> statuss = new ArrayList<>();
 
     // security
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    // @ManyToOne
+    // @JoinColumn(name = "user_id", nullable = false)
+    @Column(nullable = false)
+    private Long user;
 }
