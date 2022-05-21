@@ -18,6 +18,11 @@ spring:
     url: jdbc:mariadb://${REMEMBER_MAIN_DEV_DB_HOST}:${REMEMBER_MAIN_DEV_DB_PORT}/${REMEMBER_MAIN_DEV_DB_NAME}?characterEncoding=UTF-8&serverTimezone=UTC
     username: ${REMEMBER_MAIN_DEV_DB_USER}
     password: ${REMEMBER_MAIN_DEV_DB_PASSWORD}
+  #thymeleaf
+  thymeleaf:
+    #    prefix: classpath:/templates/
+    # prefix: file:src/main/resources/templates/
+    cache: false
 ---
 spring:
   config:

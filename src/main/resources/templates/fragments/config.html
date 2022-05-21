@@ -1,0 +1,28 @@
+<html lagn="ko"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!--configFragment 선언-->
+<th:block th:fragment="configFragment">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <!-- JavaScript Bundle with Popper -->
+    <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+            crossorigin="anonymous"></script>
+
+    <!-- 이 영역에 공통으로 사용할 css, js library를 선언한다. -->
+<!--    <link rel="stylesheet" th:href="@{/css/common.css}" >-->
+
+<!--    <script th:src="@{/js/common.js}"></script>-->
+
+    <!-- Content Page의 CSS fragment 삽입 -->
+    <th:block layout:fragment="css"></th:block>
+
+    <!-- Content Page의 script fragment 삽입 -->
+    <th:block layout:fragment="script"></th:block>
+
+</th:block>
+</html>
