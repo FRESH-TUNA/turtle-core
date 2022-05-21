@@ -23,9 +23,9 @@ public class Question extends BaseTimeDomain{
     @Column
     private Integer level;
 
-//    @ManyToMany
-//    @JoinTable(name = "question_algorithm",
-//            joinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"),
-//            inverseJoinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"))
-//    private List<Algorithm> algorithms = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "question_algorithm",
+            joinColumns = @JoinColumn(name = "algorithm_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"))
+    private List<Algorithm> algorithms = new ArrayList<>();
 }
