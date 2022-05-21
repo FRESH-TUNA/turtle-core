@@ -16,6 +16,6 @@ public class Algorithm extends BaseTimeDomain {
     @Column(length = 100, nullable = false)
     private String title;
 
-    @ManyToMany(mappedBy = "questions")
-    private List<Question> algorithms = new ArrayList<>();
+    @ManyToMany(mappedBy = "algorithms")
+    private List<Question> questions = new ArrayList<>();
 }
