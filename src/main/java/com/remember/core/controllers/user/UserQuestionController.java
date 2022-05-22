@@ -1,6 +1,6 @@
 package com.remember.core.controllers.user;
 
-import com.remember.core.responseDtos.user.UserQuestionResponseDto;
+import com.remember.core.responseDtos.user.UserQuestionsResponseDto;
 import com.remember.core.services.user.UserQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -20,8 +20,14 @@ public class UserQuestionController {
      * views
      */
     @GetMapping("/{user_id}/questions")
-    public PagedModel<UserQuestionResponseDto> findAll(
+    public PagedModel<UserQuestionsResponseDto> findAll(
             @PathVariable Long user_id, Pageable pageable) {
         return userQuestionService.findAll(pageable, user_id);
+    }
+
+    @GetMapping("/{user_id}/questions/{id}")
+    public UserQuestionsResponseDto findById(
+            @PathVariable Long user_id, @PathVariable Long id) {
+        return null;
     }
 }

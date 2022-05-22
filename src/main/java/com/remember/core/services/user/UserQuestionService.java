@@ -3,7 +3,7 @@ package com.remember.core.services.user;
 import com.remember.core.assemblers.user.UserQuestionsAssembler;
 import com.remember.core.domains.Question;
 import com.remember.core.repositories.question.QuestionRepository;
-import com.remember.core.responseDtos.user.UserQuestionResponseDto;
+import com.remember.core.responseDtos.user.UserQuestionsResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -17,7 +17,7 @@ public class UserQuestionService {
     private final UserQuestionsAssembler listAssembler;
     private final PagedResourcesAssembler<Question> pageAssembler;
 
-    public PagedModel<UserQuestionResponseDto> findAll(Pageable pageable, Long user_id) {
+    public PagedModel<UserQuestionsResponseDto> findAll(Pageable pageable, Long user_id) {
         return pageAssembler.toModel(repository.findAll(pageable, user_id), listAssembler);
     }
 }
