@@ -1,5 +1,6 @@
 package com.remember.core.domains;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -34,8 +35,38 @@ public class Question extends BaseTimeDomain{
     private List<Algorithm> algorithms = new ArrayList<>();
 
     @OneToMany(mappedBy = "question")
-    private List<Practice> practices = new ArrayList<>();
+    private List<PracticeLog> practices = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "practice_status_id", nullable = false)
+    private PracticeStatus practiceStatus;
 
     @Column(nullable = false)
     private Long user;
+
+    /*
+     * methods
+     */
+
+
+    /*
+     * contructors
+     */
+    @Builder
+    public Question(
+            Long id,
+            String title,
+            String link,
+            Platform platform,
+            PracticeStatus practiceStatus,
+            Integer level,
+            Long user) {
+        this.id = id;
+        this.title = title;
+        this.link = link;
+        this.platform = platform;
+        this.practiceStatus = practiceStatus;
+        this.level = level;
+        this.user = user;
+    }
 }

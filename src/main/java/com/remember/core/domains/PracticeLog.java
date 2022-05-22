@@ -12,8 +12,8 @@ public class PracticeLog extends BaseTimeDomain {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "practice_id", nullable = false)
-    private Practice practice;
+    @JoinColumn(name = "question_id", nullable = false)
+    private Question question;
 
     @ManyToOne
     @JoinColumn(name = "practice_status_id", nullable = false)

@@ -1,5 +1,6 @@
 package com.remember.core.domains;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -16,4 +17,17 @@ public class PracticeStatus {
 
     @Column(length = 100, nullable = false)
     private String color;
+
+    /*
+     * contructors
+     */
+    @Builder
+    public PracticeStatus(
+            Long id,
+            String status,
+            String color) {
+        this.id = id;
+        this.status = status;
+        this.color = color;
+    }
 }

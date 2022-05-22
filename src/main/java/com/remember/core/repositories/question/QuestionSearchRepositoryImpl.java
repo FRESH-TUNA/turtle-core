@@ -2,6 +2,7 @@ package com.remember.core.repositories.question;
 
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+
 import com.remember.core.domains.QQuestion;
 import com.remember.core.domains.Question;
 import org.springframework.data.domain.Page;
@@ -42,6 +43,7 @@ public class QuestionSearchRepositoryImpl
                 .select(question)
                 .from(question)
                 .innerJoin(question.platform).fetchJoin()
+                .innerJoin(question.practiceStatus).fetchJoin()
                 .where(question.user.eq(user));
     }
 
