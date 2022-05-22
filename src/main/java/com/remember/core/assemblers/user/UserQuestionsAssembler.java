@@ -2,7 +2,7 @@ package com.remember.core.assemblers.user;
 
 import com.remember.core.controllers.user.UserQuestionController;
 import com.remember.core.domains.Question;
-import com.remember.core.responseDtos.user.UserQuestionsResponseDto;
+import com.remember.core.vos.user.UserQuestionsVO;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +11,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
 public class UserQuestionsAssembler implements
-        RepresentationModelAssembler<Question, UserQuestionsResponseDto> {
+        RepresentationModelAssembler<Question, UserQuestionsVO> {
 
     @Override
-    public UserQuestionsResponseDto toModel(Question q) {
-        UserQuestionsResponseDto res = new UserQuestionsResponseDto(q);
+    public UserQuestionsVO toModel(Question q) {
+        UserQuestionsVO res = new UserQuestionsVO(q);
 
         //add self link
         res.add(linkTo(methodOn(UserQuestionController.class)

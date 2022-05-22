@@ -1,11 +1,13 @@
 package com.remember.core.domains;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 @NoArgsConstructor
 public class PracticeStatus {
     @Id

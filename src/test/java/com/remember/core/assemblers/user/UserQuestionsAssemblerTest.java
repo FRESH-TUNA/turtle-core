@@ -3,7 +3,7 @@ package com.remember.core.assemblers.user;
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
-import com.remember.core.responseDtos.user.UserQuestionsResponseDto;
+import com.remember.core.vos.user.UserQuestionsVO;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ class UserQuestionsAssemblerTest {
         /*
          * then
          */
-        UserQuestionsResponseDto dto = assembler.toModel(question);
+        UserQuestionsVO dto = assembler.toModel(question);
 
         /*
          * when
