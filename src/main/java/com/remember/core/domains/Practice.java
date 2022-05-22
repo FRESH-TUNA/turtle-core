@@ -20,8 +20,12 @@ public class Practice extends BaseTimeDomain {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
+    @ManyToOne
+    @JoinColumn(name = "practice_status_id", nullable = false)
+    private PracticeStatus practiceStatus;
+
     @OneToMany(mappedBy = "practice")
-    private List<PracticeStatus> statuss = new ArrayList<>();
+    private List<PracticeLog> practiceLogs = new ArrayList<>();
 
     // security
     // @ManyToOne
