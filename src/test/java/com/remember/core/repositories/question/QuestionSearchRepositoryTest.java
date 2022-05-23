@@ -4,8 +4,8 @@ import com.remember.core.configs.RepositoryConfig;
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
-import com.remember.core.repositories.PlatformRepository;
-import com.remember.core.repositories.PracticeStatusRepository;
+import com.remember.core.repositories.PlatformsRepository;
+import com.remember.core.repositories.PracticeStatususRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +31,10 @@ class QuestionSearchRepositoryTest {
     private QuestionRepository questionRepository;
 
     @Autowired
-    private PlatformRepository platformRepository;
+    private PlatformsRepository platformsRepository;
 
     @Autowired
-    private PracticeStatusRepository practiceStatusRepository;
+    private PracticeStatususRepository practiceStatususRepository;
 
     @Test
     @DisplayName("page 별로 유저가 생성한 문제들을 읽어오는 테스트")
@@ -78,10 +78,10 @@ class QuestionSearchRepositoryTest {
     }
 
     private Platform create_platform() {
-        return platformRepository.saveAndFlush(Platform.builder().name("platform").link("link").build());
+        return platformsRepository.saveAndFlush(Platform.builder().name("platform").link("link").build());
     }
 
     private PracticeStatus create_practiceStatus() {
-        return practiceStatusRepository.saveAndFlush(PracticeStatus.builder().status("status").color("color").build());
+        return practiceStatususRepository.saveAndFlush(PracticeStatus.builder().status("status").color("color").build());
     }
 }

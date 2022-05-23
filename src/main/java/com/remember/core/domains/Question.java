@@ -21,12 +21,16 @@ public class Question extends BaseTimeDomain{
     @Column(length = 255, nullable = false)
     private String link;
 
-    @ManyToOne
-    @JoinColumn(name = "practice_id", nullable = false)
-    private Platform platform;
-
     @Column
     private Integer level;
+
+    @ManyToOne
+    @JoinColumn(name = "platform_id", nullable = false)
+    private Platform platform;
+
+    @ManyToOne
+    @JoinColumn(name = "practice_status_id", nullable = false)
+    private PracticeStatus practiceStatus;
 
     @ManyToMany
     @JoinTable(name = "question_algorithm",
@@ -35,11 +39,9 @@ public class Question extends BaseTimeDomain{
     private List<Algorithm> algorithms = new ArrayList<>();
 
     @OneToMany(mappedBy = "question")
-    private List<PracticeLog> practices = new ArrayList<>();
+    private List<PracticeLog> practiceLogs = new ArrayList<>();
 
-    @ManyToOne
-    @JoinColumn(name = "practice_status_id", nullable = false)
-    private PracticeStatus practiceStatus;
+
 
     @Column(nullable = false)
     private Long user;

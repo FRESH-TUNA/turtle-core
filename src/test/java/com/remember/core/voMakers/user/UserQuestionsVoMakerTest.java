@@ -1,4 +1,4 @@
-package com.remember.core.assemblers.user;
+package com.remember.core.voMakers.user;
 
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserQuestionsAssemblerTest {
-    private UserQuestionsAssembler assembler = new UserQuestionsAssembler();
+class UserQuestionsVoMakerTest {
+    private UserQuestionsVoMaker assembler = new UserQuestionsVoMaker();
 
     @Test
     @DisplayName("문제들의 리스트 결과값을 위해 직렬화에 필요한 Dto 테스트")

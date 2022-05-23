@@ -1,5 +1,6 @@
 package com.remember.core.security.services;
 
+import com.remember.core.security.RememberUserDetails;
 import com.remember.core.security.UserRepository;
 import com.remember.core.security.domains.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,16 @@ public class AuthService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저입니다"));
 
-        return new org.springframework.security.core.userdetails.User(
+        return new RememberUserDetails(
+                user.getId(),
                 user.getUsername(),
-                user.getPassword(),
-                new ArrayList<>()
-//                Arrays.asList(new SimpleGrantedAuthority(user.getRole()))
+                user.getPassword()
         );
+//        return new org.springframework.security.core.userdetails.User(
+//                user.getUsername(),
+//                user.getPassword(),
+//                new ArrayList<>()
+////                Arrays.asList(new SimpleGrantedAuthority(user.getRole()))
+//        );
     }
 }
