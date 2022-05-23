@@ -15,3 +15,13 @@
 - 유저스토리 3 구현
 
 ## DB 스키마 
+
+
+## 참고자료
+https://to-dy.tistory.com/86
+https://medium.com/digitalfrontiers/spring-hateoas-avoid-linkto-for-resource-links-1abcf4a442d2
+https://velog.io/@kiwonkim/MVC2-%ED%83%80%EC%9E%84%EB%A6%AC%ED%94%84-%EA%B8%B0%EB%B3%B8%EA%B8%B0%EB%8A%A5
+https://www.baeldung.com/thymeleaf-select-option
+https://blog.naver.com/PostView.naver?blogId=writer0713&logNo=221853596497&redirect=Dlog&widgetTypeCall=true&directAccess=false
+https://mungto.tistory.com/438
+https://stackoverflow.com/questions/32442408/preauthorize-not-working-on-controller
