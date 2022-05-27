@@ -7,15 +7,15 @@
     <form th:action="${create_link}" method="post">
         <div class="form-group">
             <label th:for="title">문제 이름</label>
-            <input type="text" name="title" class="form-control" placeholder="예: N-Queen">
+            <input type="text" name="title" class="form-control" placeholder="예: N-Queen" id="title">
         </div>
         <div class="form-group">
             <label th:for="link">문제 링크</label>
-            <input type="text" name="link" class="form-control" placeholder="문제 링크 입력">
+            <input type="text" name="link" class="form-control" placeholder="문제 링크 입력" id="link">
         </div>
         <div class="form-group">
             <label th:for="level">난이도</label>
-            <input type="number" name="level" class="form-control" placeholder="난이도 입력">
+            <input type="number" name="level" class="form-control" placeholder="난이도 입력" id="level">
         </div>
         <div class="form-group">
             <label th:for="platform">플랫폼</label>
@@ -23,8 +23,8 @@
             <select name="platform">
                 <option th:each="platform : ${platforms}"
                         th:value="${platform.getLink('self').get().getHref()}"
-                        th:utext="${platform.getName()}">
-                </option>
+                        th:utext="${platform.getName}"
+                />
             </select>
         </div>
         <div class="form-group">
@@ -32,7 +32,16 @@
             <select name="practiceStatus">
                 <option th:each="status : ${practiceStatusus}"
                         th:value="${status.getLink('self').get().getHref()}"
-                        th:utext="${status.getStatus()}">
+                        th:utext="${status.getStatus()}"
+                />
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="algorithms">알고리즘</label>
+            <select multiple class="form-control" id="algorithms" name="algorithms">
+                <option th:each="algorithm : ${algorithms}"
+                        th:value="${algorithm.getLink('self').get().getHref()}"
+                        th:utext="${algorithm.getName}">
                 </option>
             </select>
         </div>
