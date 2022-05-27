@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<div layout:fragment="content">
+    <div class="container">
+    으악
+    <span th:text="${questions}"></span>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">First</th>
+                <th scope="col">Last</th>
+                <th scope="col">Handle</th>
+                <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="q: ${questions.content}">
+                <td th:text="${q.getTitle}"></td>
+                <td th:text="${q.getLink}"></td>
+                <td th:text="${q.getLevel}"></td>
+                <td th:text="${q.getPlatform}"></td>
+                <td th:text="${q.getPracticeStatus.getStatus}"></td>
+            </tr>
+        </tr>
+        </tbody>
+    </table>
+    </div>
+</div>
+</html>
