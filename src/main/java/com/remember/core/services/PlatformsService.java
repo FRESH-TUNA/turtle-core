@@ -1,6 +1,5 @@
 package com.remember.core.services;
 
-import com.remember.core.domains.Platform;
 import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.vos.PlatformVO;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package com.remember.core.vos.user;
 
-import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
+import com.remember.core.vos.user.question.UserQuestionPracticeStatusVO;
 import lombok.Getter;
 
 import lombok.NoArgsConstructor;
@@ -15,7 +15,7 @@ public class UserQuestionsVO extends RepresentationModel<UserQuestionsVO> {
     private String link;
     private String platform;
     private Integer level;
-    private PracticeStatus practiceStatus;
+    private UserQuestionPracticeStatusVO practiceStatus;
 
     public UserQuestionsVO(Question q) {
         this.id = q.getId();
@@ -23,6 +23,6 @@ public class UserQuestionsVO extends RepresentationModel<UserQuestionsVO> {
         this.link = q.getLink();
         this.level = q.getLevel();
         this.platform = q.getPlatform().getName();
-        this.practiceStatus = q.getPracticeStatus();
+        this.practiceStatus = new UserQuestionPracticeStatusVO(q.getPracticeStatus());
     }
 }

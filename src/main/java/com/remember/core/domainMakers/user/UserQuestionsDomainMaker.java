@@ -3,27 +3,36 @@ package com.remember.core.domainMakers.user;
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
+import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.repositories.PracticeStatususRepository;
+
 import com.remember.core.ros.user.UserQuestionsRO;
-import com.remember.core.tools.UriToIdConverter;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.remember.core.tools.uriToIdConverter.BasicUriToIdConverter;
+import com.remember.core.tools.uriToIdConverter.UriToIdConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-@Component
-public class UserQuestionsDomainMaker extends UriToIdConverter {
-    @Autowired
-    private PlatformsRepository platformsRepository;
+import java.util.List;
 
-    @Autowired
-    private PracticeStatususRepository practiceStatususRepository;
+@Component
+@RequiredArgsConstructor
+public class UserQuestionsDomainMaker extends BasicUriToIdConverter {
+    private final PlatformsRepository platformsRepository;
+    private final PracticeStatususRepository practiceStatususRepository;
+    private final AlgorithmsRepository algorithmsRepository;
+    private final UriToIdConverter uriToIdConverter;
 
     public Question toEntity(Long userId, UserQuestionsRO ro) {
-        Platform platform = platformsRepository.getById(convertURItoID(ro.getPlatform()));
-        PracticeStatus status = practiceStatususRepository
-                .getById(convertURItoID(ro.getPracticeStatus()));
+        String status_str =  ro.getPracticeStatus();
+        String platform_str = ro.getPlatform();
 
-        return Question.builder()
+        Platform platform = platform_str == null ?
+                null : platformsRepository.getById(uriToIdConverter.convert(platform_str));
+        PracticeStatus status = status_str == null ?
+                null : practiceStatususRepository.getById(uriToIdConverter.convert(status_str));
+
+        Question question = Question.builder()
                 .user(userId)
                 .level(ro.getLevel())
                 .practiceStatus(status)
@@ -31,5 +40,36 @@ public class UserQuestionsDomainMaker extends UriToIdConverter {
                 .link(ro.getLink())
                 .title(ro.getTitle())
                 .build();
+
+        return addQuestions(question, ro.getAlgorithms());
+    }
+
+    public Question toEntity(Long userId, Long id, UserQuestionsRO ro) {
+        String status_str =  ro.getPracticeStatus();
+        String platform_str = ro.getPlatform();
+
+        Platform platform = platform_str == null ?
+                null : platformsRepository.getById(uriToIdConverter.convert(platform_str));
+        PracticeStatus status = status_str == null ?
+                null : practiceStatususRepository.getById(uriToIdConverter.convert(status_str));
+
+        Question question = Question.builder()
+                .id(id)
+                .user(userId)
+                .level(ro.getLevel())
+                .practiceStatus(status)
+                .platform(platform)
+                .link(ro.getLink())
+                .title(ro.getTitle())
+                .build();
+
+        return addQuestions(question, ro.getAlgorithms());
+    }
+
+    private Question addQuestions(Question question, List<String> algorithms) {
+        if(algorithms == null) return question;
+        for (String algo : algorithms)
+            question.addAlgorithm(algorithmsRepository.getById(uriToIdConverter.convert(algo)));
+        return question;
     }
 }

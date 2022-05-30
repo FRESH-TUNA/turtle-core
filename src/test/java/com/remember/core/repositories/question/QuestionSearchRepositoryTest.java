@@ -1,6 +1,6 @@
 package com.remember.core.repositories.question;
 
-import com.remember.core.configs.RepositoryConfig;
+import com.remember.core.configs.BeanConfig;
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
@@ -19,11 +19,12 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import({RepositoryConfig.class})
+@Import({BeanConfig.class})
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class QuestionSearchRepositoryTest {
@@ -63,6 +64,30 @@ class QuestionSearchRepositoryTest {
         assertThat(res1.getTotalElements()).isEqualTo(2);
         assertThat(res2.getNumberOfElements()).isEqualTo(2);
         assertThat(res2.getTotalElements()).isEqualTo(2);
+    }
+
+    @Test
+    @DisplayName("id로 문제 하나를 읽어오는 테스트")
+    void findById() {
+        /*
+         * given
+         */
+        Platform platform = create_platform();
+        PracticeStatus practiceStatus = create_practiceStatus();
+        Question question = create_question(platform, practiceStatus);
+
+
+        /*
+         * then
+         */
+        Optional<Question> created_question = questionRepository.findById(question.getId());
+        Optional<Question> not_found = questionRepository.findById(-1L);
+
+        /*
+         * when
+         */
+        assertThat(created_question.get()).isEqualTo(question);
+        assertThat(not_found.isPresent()).isEqualTo(false);
     }
 
     /*

@@ -4,6 +4,10 @@ import com.remember.core.domains.Question;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface QuestionSearchRepository {
-    Page<Question> findAll(Pageable pageable, Long user);
+import java.util.Optional;
+
+public interface QuestionSearchRepository<T, ID> {
+    Page<T> findAll(Pageable pageable, ID user);
+
+    Optional<T> findById(ID id);
 }

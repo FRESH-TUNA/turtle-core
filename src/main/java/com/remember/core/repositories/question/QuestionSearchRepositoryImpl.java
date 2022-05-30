@@ -11,10 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.Optional;
 
 public class QuestionSearchRepositoryImpl
         extends QuerydslRepositorySupport
-        implements QuestionSearchRepository {
+        implements QuestionSearchRepository<Question, Long> {
 
     private final JPAQueryFactory queryFactory;
 
@@ -32,6 +33,21 @@ public class QuestionSearchRepositoryImpl
         Long counts = counts_query.fetchOne();
         List<Question> questions = getQuerydsl().applyPagination(pageable, query).fetch();
         return new PageImpl<>(questions, pageable, counts);
+    }
+
+    @Override
+    public Optional<Question> findById(Long id) {
+        QQuestion question = QQuestion.question;
+
+        JPAQuery<Question> query = queryFactory
+                .select(question)
+                .from(question)
+                .innerJoin(question.platform).fetchJoin()
+                .innerJoin(question.practiceStatus).fetchJoin()
+                .leftJoin(question.algorithms).fetchJoin()
+                .where(question.id.eq(id));
+
+        return Optional.ofNullable(query.fetchOne());
     }
 
     /*

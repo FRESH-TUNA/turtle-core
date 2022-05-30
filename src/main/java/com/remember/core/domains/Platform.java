@@ -6,9 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+
 @Getter
 @NoArgsConstructor
+@Entity
 public class Platform extends BaseTimeDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

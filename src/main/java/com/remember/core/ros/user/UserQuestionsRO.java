@@ -2,8 +2,12 @@ package com.remember.core.ros.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
+import java.util.List;
+
+@AllArgsConstructor // for ModelAttribute
+@NoArgsConstructor // for requestbody processing jackson
 @Getter
 public class UserQuestionsRO {
     private String title;
@@ -12,4 +16,5 @@ public class UserQuestionsRO {
 
     private String platform;
     private String practiceStatus;
+    private List<String> algorithms;
 }

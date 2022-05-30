@@ -49,7 +49,14 @@ public class Question extends BaseTimeDomain{
     /*
      * methods
      */
+    public void addAlgorithm(Algorithm a) {
+        this.algorithms.add(a);
+    }
 
+    public void partial_update(Question updated) {
+        if(updated.practiceStatus != null)
+            this.practiceStatus = updated.practiceStatus;
+    }
 
     /*
      * contructors
