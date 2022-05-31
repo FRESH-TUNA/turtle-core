@@ -13,42 +13,77 @@
         <span th:text="${questions}"></span>
         <table class="table">
             <thead>
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-                <th scope="col">상태</th>
-            </tr>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                    <th scope="col">상태</th>
+                </tr>
             </thead>
             <tbody>
-            <tr th:each="q: ${questions.content}"
-                th:data-uri="${q.getLink('self').get().getHref()}"
-                class="question"
-                th:classappend="${q.getId()}"
-            >
-                <td th:text="${q.getTitle}"></td>
-                <td th:text="${q.getLink}"></td>
-                <td th:text="${q.getLevel}"></td>
-                <td th:text="${q.getPlatform}"></td>
-                <td>
-                    <select class="selectpicker"
-                            data-style="btn-success"
-                            th:data-question="${q.getLink('self').get().getHref()}"
-                            th:data-status="${q.getPracticeStatus.getLink('self').get().getHref()}"
-                    >
-                        <option
-                                th:each="s: ${practiceStatusus}"
-                                th:text="${s.getStatus()}"
-                                th:value="${s.getLink('self').get().getHref()}"
-                                th:selected="${s.getId() eq q.getPracticeStatus.getId}">
-                        </option>
-                    </select>
-                </td>
-            </tr>
-            </tr>
+                <tr th:each="q: ${questions.content}"
+                        th:data-uri="${q.getLink('self').get().getHref()}"
+                        class="question"
+                        th:classappend="${q.getId()}"
+                >
+                        <td th:text="${q.getTitle}"></td>
+                        <td th:text="${q.getLink}"></td>
+                        <td th:text="${q.getLevel}"></td>
+                        <td th:text="${q.getPlatform}"></td>
+                        <td>
+                            <select class="selectpicker"
+                                    data-style="btn-success"
+                                    th:data-question="${q.getLink('self').get().getHref()}"
+                                    th:data-status="${q.getPracticeStatus.getLink('self').get().getHref()}"
+                            >
+                                <option
+                                        th:each="s: ${practiceStatusus}"
+                                        th:text="${s.getStatus()}"
+                                        th:value="${s.getLink('self').get().getHref()}"
+                                        th:selected="${s.getId() eq q.getPracticeStatus.getId}">
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                </tr>
             </tbody>
         </table>
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination"
+                th:with="start=${questions.getMetadata().getNumber()},
+                         totalPages=${questions.getMetadata().getTotalPages()-1},
+                         last=${start + 3 < totalPages ? start + 3 : totalPages},
+                         base=${questions.getLink('self').get().getHref()},
+                         prev=${questions.getLink('prev')},
+                         next=${questions.getLink('next')},
+                         urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+            >
+
+                <li class="page-item" th:class="${prev.isEmpty()} ? 'disabled'">
+                    <a class="page-link" th:href="${prev.isEmpty() ? '#' : prev.get().getHref()}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item"
+                    th:each="page: ${#numbers.sequence(start, last)}"
+                    th:class="${page == start} ? 'active'"
+                >
+                    <a class="page-link"
+                       th:href="${urlBuilder.replaceQueryParam('page', page).toUriString()}"
+                       th:text="${page+1}"></a>
+                </li>
+
+                <li class="page-item" th:class="${next.isEmpty()} ? 'disabled'">
+                    <a class="page-link" th:href="${next.isEmpty() ? '#': next.get().getHref()}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        https://chung-develop.tistory.com/17
     </div>
 </div>
 
