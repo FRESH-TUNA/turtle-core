@@ -29,6 +29,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -60,7 +61,7 @@ public class UserQuestionsController {
      * SSR views
      */
     @GetMapping("/{userId}/questions")
-    public String findAll(Pageable pageable, Model model,
+    public String findAll(Pageable pageable, Model model, HttpServletRequest request,
                           @PathVariable Long userId, @ModelAttribute UsersQuestionsSearchParams params) {
         PagedModel<UserQuestionsVO> questions = service.findAll(userId, pageable, params);
         List<PracticeStatusVO> practiceStatusus = practiceStatususService.findAll();
@@ -69,6 +70,13 @@ public class UserQuestionsController {
         questions = assembler.assemble(baseUri, userId, questions);
         practiceStatusus = practiceStatususAssembler.assemble(baseUri, practiceStatusus);
 
+        /*
+         * modeling
+         */
+        model.addAttribute("search_status",
+                params.getPracticeStatus() == null ? 0L : params.getPracticeStatus());
+        model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
+        model.addAttribute("questions_url", request.getRequestURL());
         model.addAttribute("questions", questions);
         model.addAttribute("practiceStatusus", practiceStatusus);
         return "users/questions/list";

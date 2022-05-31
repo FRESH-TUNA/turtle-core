@@ -1,0 +1,36 @@
+<html lagn="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<nav aria-label="Page navigation example" th:fragment="paginator">
+    <ul class="pagination"
+        th:with="start=${questions.getMetadata().getNumber()},
+                         totalPages=${questions.getMetadata().getTotalPages()-1},
+                         last=${start + 9 < totalPages ? start + 9 : totalPages},
+                         base=${questions.getLink('self').get().getHref()},
+                         prev=${questions.getLink('prev')},
+                         next=${questions.getLink('next')},
+                         urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
+    >
+
+        <li class="page-item" th:class="${prev.isEmpty()} ? 'disabled'">
+            <a class="page-link" th:href="${prev.isEmpty() ? '#' : prev.get().getHref()}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <li class="page-item"
+            th:each="page: ${#numbers.sequence(start, last)}"
+            th:class="${page == start} ? 'active'"
+        >
+            <a class="page-link"
+               th:href="${urlBuilder.replaceQueryParam('page', page).toUriString()}"
+               th:text="${page+1}"></a>
+        </li>
+
+        <li class="page-item" th:class="${next.isEmpty()} ? 'disabled'">
+            <a class="page-link" th:href="${next.isEmpty() ? '#': next.get().getHref()}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>

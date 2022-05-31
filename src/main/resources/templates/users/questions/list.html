@@ -7,12 +7,14 @@
     <script type="text/javascript" th:src="@{/static/js/users/questions/list.js}"></script>
 </th:block>
 
-<div layout:fragment="content">
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/static/css/users/questions/list.css}"/>
+</th:block>
+
+<div layout:fragment="content" class="users questions root" th:data-questions-url="${questions_url}">
     <div class="container">
-        <div class="form-group pull-right">
-            <input type="text" class="search form-control" placeholder="What you looking for?">
-        </div>
-        <table class="table">
+        <th:block th:replace="users/questions/list/search :: search"></th:block>
+        <table class="table datas">
             <thead>
                 <tr>
                     <th scope="col">#</th>
@@ -34,13 +36,16 @@
                         <td th:text="${q.getPlatform}"></td>
                         <td>
                             <select class="selectpicker"
-                                    data-style="btn-success"
+                                    data-width="100px"
                                     th:data-question="${q.getLink('self').get().getHref()}"
                                     th:data-status="${q.getPracticeStatus.getLink('self').get().getHref()}"
                             >
                                 <option
+                                        th:data-content="${
+                                            '<span class=''badge'''
+                                            + 'style=''background-color: ' + s.getColor() + ''';''>'
+                                            + s.getStatus() + '</span>'}"
                                         th:each="s: ${practiceStatusus}"
-                                        th:text="${s.getStatus()}"
                                         th:value="${s.getLink('self').get().getHref()}"
                                         th:selected="${s.getId() eq q.getPracticeStatus.getId}">
                                 </option>
@@ -51,40 +56,7 @@
             </tbody>
         </table>
 
-        <nav aria-label="Page navigation example">
-            <ul class="pagination"
-                th:with="start=${questions.getMetadata().getNumber()},
-                         totalPages=${questions.getMetadata().getTotalPages()-1},
-                         last=${start + 9 < totalPages ? start + 9 : totalPages},
-                         base=${questions.getLink('self').get().getHref()},
-                         prev=${questions.getLink('prev')},
-                         next=${questions.getLink('next')},
-                         urlBuilder=${T(org.springframework.web.servlet.support.ServletUriComponentsBuilder).fromCurrentRequest()}"
-            >
-
-                <li class="page-item" th:class="${prev.isEmpty()} ? 'disabled'">
-                    <a class="page-link" th:href="${prev.isEmpty() ? '#' : prev.get().getHref()}" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                </li>
-
-                <li class="page-item"
-                    th:each="page: ${#numbers.sequence(start, last)}"
-                    th:class="${page == start} ? 'active'"
-                >
-                    <a class="page-link"
-                       th:href="${urlBuilder.replaceQueryParam('page', page).toUriString()}"
-                       th:text="${page+1}"></a>
-                </li>
-
-                <li class="page-item" th:class="${next.isEmpty()} ? 'disabled'">
-                    <a class="page-link" th:href="${next.isEmpty() ? '#': next.get().getHref()}" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-        https://chung-develop.tistory.com/17
+        <th:block th:replace="users/questions/list/paginator :: paginator"></th:block>
     </div>
 </div>
 

@@ -1,0 +1,13 @@
+.users.questions.search {
+    display: flex;
+    justify-content: space-between;
+}
+
+.users.questions.search .options {
+    flex-grow: 2;
+}
+
+.users.questions.search .options .practiceStatus{
+    display: inline-block;
+    float: right;
+}
