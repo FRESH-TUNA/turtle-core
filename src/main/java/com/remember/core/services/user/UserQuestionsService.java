@@ -1,5 +1,6 @@
 package com.remember.core.services.user;
 
+import com.remember.core.searchParams.users.UsersQuestionsSearchParams;
 import com.remember.core.voMakers.user.UserQuestionsVoMaker;
 import com.remember.core.domainMakers.user.UserQuestionsDomainMaker;
 import com.remember.core.domains.Question;
@@ -26,8 +27,8 @@ public class UserQuestionsService {
     private final PagedResourcesAssembler<Question> pageAssembler;
     private final EntityManager entityManager;
 
-    public PagedModel<UserQuestionsVO> findAll(Long userId, Pageable pageable) {
-        return pageAssembler.toModel(repository.findAll(pageable, userId), listAssembler);
+    public PagedModel<UserQuestionsVO> findAll(Long userId, Pageable pageable, UsersQuestionsSearchParams params) {
+        return pageAssembler.toModel(repository.findAll(pageable, userId, params), listAssembler);
     }
 
     public UserQuestionVO findById(Long id) {

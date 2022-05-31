@@ -9,8 +9,9 @@
 
 <div layout:fragment="content">
     <div class="container">
-        으악
-        <span th:text="${questions}"></span>
+        <div class="form-group pull-right">
+            <input type="text" class="search form-control" placeholder="What you looking for?">
+        </div>
         <table class="table">
             <thead>
                 <tr>
@@ -54,7 +55,7 @@
             <ul class="pagination"
                 th:with="start=${questions.getMetadata().getNumber()},
                          totalPages=${questions.getMetadata().getTotalPages()-1},
-                         last=${start + 3 < totalPages ? start + 3 : totalPages},
+                         last=${start + 9 < totalPages ? start + 9 : totalPages},
                          base=${questions.getLink('self').get().getHref()},
                          prev=${questions.getLink('prev')},
                          next=${questions.getLink('next')},

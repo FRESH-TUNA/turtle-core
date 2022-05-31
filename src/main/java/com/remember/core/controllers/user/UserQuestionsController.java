@@ -5,6 +5,7 @@ import com.remember.core.assemblers.PlatformsAssembler;
 import com.remember.core.assemblers.PracticeStatususAssembler;
 import com.remember.core.assemblers.user.UserQuestionsAssembler;
 import com.remember.core.ros.user.UserQuestionsRO;
+import com.remember.core.searchParams.users.UsersQuestionsSearchParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
@@ -59,8 +60,9 @@ public class UserQuestionsController {
      * SSR views
      */
     @GetMapping("/{userId}/questions")
-    public String findAll(Pageable pageable, Model model, @PathVariable Long userId) {
-        PagedModel<UserQuestionsVO> questions = service.findAll(userId, pageable);
+    public String findAll(Pageable pageable, Model model,
+                          @PathVariable Long userId, @ModelAttribute UsersQuestionsSearchParams params) {
+        PagedModel<UserQuestionsVO> questions = service.findAll(userId, pageable, params);
         List<PracticeStatusVO> practiceStatusus = practiceStatususService.findAll();
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
 
