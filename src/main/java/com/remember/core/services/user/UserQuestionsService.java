@@ -1,6 +1,7 @@
 package com.remember.core.services.user;
 
 import com.remember.core.searchParams.users.UsersQuestionsSearchParams;
+import com.remember.core.tools.AuthenticatedUserTool;
 import com.remember.core.voMakers.user.UserQuestionsVoMaker;
 import com.remember.core.domainMakers.user.UserQuestionsDomainMaker;
 import com.remember.core.domains.Question;
@@ -13,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.BasicLinkBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +31,13 @@ public class UserQuestionsService {
     private final PagedResourcesAssembler<Question> pageAssembler;
     private final EntityManager entityManager;
 
-    public PagedModel<UserQuestionsVO> findAll(Long userId, Pageable pageable, UsersQuestionsSearchParams params) {
-        return pageAssembler.toModel(repository.findAll(pageable, userId, params), listAssembler);
+    private final AuthenticatedUserTool userTool;
+
+    public PagedModel<UserQuestionsVO> findAll(Pageable pageable, UsersQuestionsSearchParams params) {
+        String baseUri = requestURL();
+        Long user = userTool.getUserId();
+        return null;
+        //return pageAssembler.toModel(repository.findAll(pageable, user, params), listAssembler);
     }
 
     public UserQuestionVO findById(Long id) {
@@ -76,5 +85,12 @@ public class UserQuestionsService {
     @Transactional
     public void delete(Long id) {
         repository.deleteById(id);
+    }
+
+    /*
+     * helpers
+     */
+    private String requestURL() {
+        return BasicLinkBuilder.linkToCurrentMapping().toString();
     }
 }

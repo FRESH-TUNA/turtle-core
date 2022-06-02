@@ -3,7 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 
-    <div layout:fragment="content">
+<div layout:fragment="content">
+    <div class="container">
         <form action="/api/v1/auth/login" method="post">
             <div class="form-group">
                 <label th:for="username">이메일</label>
@@ -16,4 +17,5 @@
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
+</div>
 </html>

@@ -1,16 +1,16 @@
-package com.remember.core.security;
+package com.remember.core.authService;
 
-import com.remember.core.security.domains.User;
+import com.remember.core.authService.domains.User;
+import com.remember.core.authService.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 //@Component
 public class Initializer implements ApplicationRunner {
     @Autowired
-    private UserRepository userRepository;
+    private UsersRepository userRepository;
 
     @Autowired
     public PasswordEncoder passwordEncoder;

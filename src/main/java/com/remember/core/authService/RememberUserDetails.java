@@ -1,25 +1,47 @@
-package com.remember.core.security;
+package com.remember.core.authService;
 
+import com.remember.core.authService.domains.User;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@AllArgsConstructor
 public class RememberUserDetails implements UserDetails {
     private Long id;
     private String username;
+    private String nickname;
     private String password;
+    private List<String> roles;
+
+    public RememberUserDetails(User user) {
+        this.id = user.getId();
+        this.password = user.getPassword();
+        this.username = user.getUsername();
+        this.nickname = user.getNickname();
+        this.roles = user.getRoles().stream().map(r->r.getName()).collect(Collectors.toList());
+    }
 
     public Long getId() {
         return this.id;
     }
 
+    public String getNickname() {
+        return this.nickname;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return authorities;
     }
 
     @Override

@@ -37,4 +37,15 @@ public class LinkBuilderImpl implements LinkBuilder{
 
         return Link.of(str.toString(), IanaLinkRelations.SELF);
     }
+
+    @Override
+    public Link getServiceDetailLink(String baseUrl, String service, String resource, Long id) {
+        StringBuilder str = new StringBuilder(baseUrl);
+
+        str.append("/"); str.append(service);
+        str.append("/"); str.append(resource);
+        str.append("/"); str.append(id);
+
+        return Link.of(str.toString(), IanaLinkRelations.SELF);
+    }
 }

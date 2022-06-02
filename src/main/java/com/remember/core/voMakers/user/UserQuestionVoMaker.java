@@ -2,16 +2,14 @@ package com.remember.core.voMakers.user;
 
 import com.remember.core.domains.Question;
 import com.remember.core.tools.LinkBuilder;
-
-import com.remember.core.vos.user.UserQuestionsVO;
+import com.remember.core.vos.user.UserQuestionVO;
 import com.remember.core.vos.user.question.UserQuestionPlatformVO;
 import com.remember.core.vos.user.question.UserQuestionPracticeStatusVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserQuestionsVoMaker{
+public class UserQuestionVoMaker {
     @Autowired
     private LinkBuilder builder;
     private final String SERVICE = "memo";
@@ -20,11 +18,11 @@ public class UserQuestionsVoMaker{
     private final String PLATFORM_RESOURCES = "platforms";
     private final String PRACTICE_STATUS_RESOURCES = "practiceStatusus";
 
-    public UserQuestionsVO toModel(
+    public UserQuestionVO toModel(
             String baseUrl,
             Question question) {
 
-        UserQuestionsVO vo = new UserQuestionsVO(question);
+        UserQuestionVO vo = new UserQuestionVO(question);
 
         vo.add(builder.getServiceDetailLink(
                 baseUrl,
@@ -32,7 +30,9 @@ public class UserQuestionsVoMaker{
                 RESOURCES,
                 question.getId()).withSelfRel());
 
+        platformAssemble(baseUrl, vo.getPlatform());
         practiceStatusAssemble(baseUrl, vo.getPracticeStatus());
+
         return vo;
     }
 

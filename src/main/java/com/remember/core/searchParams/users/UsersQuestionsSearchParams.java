@@ -8,4 +8,7 @@ import lombok.Getter;
 public class UsersQuestionsSearchParams {
     private String title;
     private Long practiceStatus;
+
+    //user side
+    private String nickname;
 }

@@ -1,11 +1,10 @@
-package com.remember.core.security;
+package com.remember.core.authService;
 
-import com.remember.core.security.services.AuthService;
+import com.remember.core.authService.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -36,10 +35,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .formLogin()
-                .loginPage("/auth/login/form")
+                .loginPage("/auth/forms/login")
                 .loginProcessingUrl("/auth/login")
                 .defaultSuccessUrl("/")
-                .failureUrl("/auth/login/form")
+                .failureUrl("/auth/forms/login")
                 .usernameParameter("username")
                 .passwordParameter("password")
         ;

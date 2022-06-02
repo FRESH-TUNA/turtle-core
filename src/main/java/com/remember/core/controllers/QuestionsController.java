@@ -1,4 +1,4 @@
-package com.remember.core.controllers.user;
+package com.remember.core.controllers;
 
 import com.remember.core.assemblers.AlgorithmsAssembler;
 import com.remember.core.assemblers.PlatformsAssembler;
@@ -23,14 +23,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.BasicLinkBuilder;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,10 +38,9 @@ import java.util.stream.Collectors;
  * https://bulnabang99.tistory.com/59
  */
 @Controller
-@RequestMapping("/users")
-@PreAuthorize("@userQuestionsAuthorizer.check(#userId, authentication)")
+//@PreAuthorize("@userQuestionsAuthorizer.check(#userId, authentication)")
 @RequiredArgsConstructor
-public class UserQuestionsController {
+public class QuestionsController {
     private final UserQuestionsService service;
     private final PracticeStatususService practiceStatususService;
     private final PlatformsService platformsService;
@@ -60,14 +56,17 @@ public class UserQuestionsController {
     /*
      * SSR views
      */
-    @GetMapping("/{userId}/questions")
-    public String findAll(Pageable pageable, Model model, HttpServletRequest request,
-                          @PathVariable Long userId, @ModelAttribute UsersQuestionsSearchParams params) {
-        PagedModel<UserQuestionsVO> questions = service.findAll(userId, pageable, params);
+    @GetMapping("/questions")
+    public String findAll(Pageable pageable,
+                          HttpServletRequest request,
+                          @ModelAttribute UsersQuestionsSearchParams params,
+                          Model model) {
+
+        PagedModel<UserQuestionsVO> questions = service.findAll(pageable, params);
         List<PracticeStatusVO> practiceStatusus = practiceStatususService.findAll();
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
 
-        questions = assembler.assemble(baseUri, userId, questions);
+//        questions = assembler.assemble(baseUri, userId, questions);
         practiceStatusus = practiceStatususAssembler.assemble(baseUri, practiceStatusus);
 
         /*
