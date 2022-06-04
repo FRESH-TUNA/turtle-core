@@ -4,8 +4,8 @@ import com.remember.core.domains.Question;
 import com.remember.core.tools.LinkBuilder;
 
 import com.remember.core.tools.ServerContext;
-import com.remember.core.responseDtos.question.QuestionsVO;
-import com.remember.core.responseDtos.question.QuestionPracticeStatusVO;
+import com.remember.core.responseDtos.question.QuestionListResponseDto;
+import com.remember.core.responseDtos.question.QuestionPracticeStatusResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -13,7 +13,7 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Question, QuestionsVO> {
+public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Question, QuestionListResponseDto> {
     @Autowired
     private LinkBuilder builder;
 
@@ -24,8 +24,8 @@ public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Q
     private final String RESOURCES = "questions";
     private final String PRACTICE_STATUS_RESOURCES = "practiceStatusus";
 
-    public QuestionsVO toModel(Question question) {
-        QuestionsVO vo = new QuestionsVO(question);
+    public QuestionListResponseDto toModel(Question question) {
+        QuestionListResponseDto vo = new QuestionListResponseDto(question);
         vo = addSelfLink(vo);
         vo = practiceStatusAssemble(vo);
         return vo;
@@ -35,7 +35,7 @@ public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Q
      * helpers
      */
 
-    private QuestionsVO addSelfLink(QuestionsVO vo) {
+    private QuestionListResponseDto addSelfLink(QuestionListResponseDto vo) {
         StringBuilder url = new StringBuilder();
         String root = serverContext.getRoot();
 
@@ -48,9 +48,9 @@ public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Q
         return vo;
     }
 
-    private QuestionsVO practiceStatusAssemble(QuestionsVO vo) {
+    private QuestionListResponseDto practiceStatusAssemble(QuestionListResponseDto vo) {
         String baseUrl = serverContext.getRoot();
-        QuestionPracticeStatusVO ps = vo.getPracticeStatus();
+        QuestionPracticeStatusResponseDto ps = vo.getPracticeStatus();
         ps.add(builder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
         return vo;
     }

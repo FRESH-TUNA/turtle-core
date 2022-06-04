@@ -1,11 +1,11 @@
-package com.remember.core.searchParams.users;
+package com.remember.core.searchParams;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class QuestionsParams {
+public class QuestionParams {
     private String title;
     private Long practiceStatus;
 }

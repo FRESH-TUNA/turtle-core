@@ -4,11 +4,10 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.remember.core.domains.QQuestion;
-import com.remember.core.searchParams.users.QuestionsParams;
-import org.springframework.stereotype.Component;
+import com.remember.core.searchParams.QuestionParams;
 
-public class QuestionsPredicate {
-    public static Predicate generate(QuestionsParams params){
+public class QuestionPredicate {
+    public static Predicate generate(QuestionParams params){
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 
         booleanBuilder.and(titleEq(params.getTitle()));

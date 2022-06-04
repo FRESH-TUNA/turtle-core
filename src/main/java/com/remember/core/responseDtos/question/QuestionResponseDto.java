@@ -10,26 +10,26 @@ import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
-public class QuestionVO extends RepresentationModel<QuestionVO> {
+public class QuestionResponseDto extends RepresentationModel<QuestionResponseDto> {
     private Long id;
     private String title;
     private String link;
-    private QuestionPlatformVO platform;
+    private QuestionPlatformResponseDto platform;
     private Integer level;
-    private QuestionPracticeStatusVO practiceStatus;
-    private List<QuestionAlgorithmsVO> algorithms;
+    private QuestionPracticeStatusResponseDto practiceStatus;
+    private List<QuestionAlgorithmResponseDto> algorithms;
 
-    public QuestionVO(Question q) {
+    public QuestionResponseDto(Question q) {
         this.id = q.getId();
         this.title = q.getTitle();
         this.link = q.getLink();
         this.level = q.getLevel();
 
-        this.platform = new QuestionPlatformVO(q.getPlatform());
-        this.practiceStatus = new QuestionPracticeStatusVO(q.getPracticeStatus());
+        this.platform = new QuestionPlatformResponseDto(q.getPlatform());
+        this.practiceStatus = new QuestionPracticeStatusResponseDto(q.getPracticeStatus());
         this.algorithms = q.getAlgorithms()
                 .stream()
-                .map(a -> new QuestionAlgorithmsVO(a))
+                .map(a -> new QuestionAlgorithmResponseDto(a))
                 .collect(Collectors.toList());
     }
 }

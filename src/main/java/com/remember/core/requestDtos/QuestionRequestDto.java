@@ -8,7 +8,7 @@ import java.util.List;
 @AllArgsConstructor // for ModelAttribute
 //@NoArgsConstructor // for requestbody processing jackson
 @Getter
-public class QuestionsRO {
+public class QuestionRequestDto {
     private String title;
     private String link;
     private Integer level;

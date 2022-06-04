@@ -1,10 +1,7 @@
 package com.remember.core.controllers.users;
 
-import com.remember.core.assemblers.AlgorithmsAssembler;
-import com.remember.core.assemblers.PlatformsAssembler;
-import com.remember.core.assemblers.PracticeStatususAssembler;
-import com.remember.core.requestDtos.QuestionsRO;
-import com.remember.core.searchParams.users.QuestionsParams;
+import com.remember.core.requestDtos.QuestionRequestDto;
+import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
@@ -12,11 +9,11 @@ import com.remember.core.services.PracticeStatususService;
 import com.remember.core.services.users.UsersMeQuestionsService;
 import com.remember.core.tools.LinkBuilder;
 
-import com.remember.core.responseDtos.AlgorithmVO;
-import com.remember.core.responseDtos.PlatformVO;
-import com.remember.core.responseDtos.PracticeStatusVO;
-import com.remember.core.responseDtos.question.QuestionVO;
-import com.remember.core.responseDtos.question.QuestionsVO;
+import com.remember.core.responseDtos.AlgorithmResponseDto;
+import com.remember.core.responseDtos.PlatformResponseDto;
+import com.remember.core.responseDtos.PracticeStatusResponseDto;
+import com.remember.core.responseDtos.question.QuestionResponseDto;
+import com.remember.core.responseDtos.question.QuestionListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
@@ -29,7 +26,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,7 +37,7 @@ import java.util.stream.Collectors;
 @Controller
 //@PreAuthorize("@userQuestionsAuthorizer.check(#userId, authentication)")
 @RequiredArgsConstructor
-@RequestMapping("/users/me")
+@RequestMapping("/users/me/questions")
 public class UsersMeQuestionsController {
     private final UsersMeQuestionsService service;
     private final PracticeStatususService practiceStatususService;
@@ -54,14 +50,14 @@ public class UsersMeQuestionsController {
     /*
      * SSR views
      */
-    @GetMapping("/questions")
+    @GetMapping
     public String findAll(Pageable pageable,
                           HttpServletRequest request,
-                          @ModelAttribute QuestionsParams params,
+                          @ModelAttribute QuestionParams params,
                           Model model) {
 
-        PagedModel<QuestionsVO> questions = service.findAll(pageable, params);
-        CollectionModel<PracticeStatusVO> practiceStatusus = practiceStatususService.findAll();
+        PagedModel<QuestionListResponseDto> questions = service.findAll(pageable, params);
+        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
 
         /*
          * modeling
@@ -75,24 +71,24 @@ public class UsersMeQuestionsController {
         return "users/questions/list";
     }
 
-    @GetMapping("/questions/{id}")
+    @GetMapping("/{id}")
     public String findById(
             Model model, @PathVariable Long id) {
-        QuestionVO question = service.findById(id);
+        QuestionResponseDto question = service.findById(id);
 
         model.addAttribute("question", question);
         return "users/questions/detail";
     }
 
-    @PostMapping(value = "/questions", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String create(@ModelAttribute QuestionsRO ro) {
+    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String create(@ModelAttribute QuestionRequestDto ro) {
         service.create(ro);
 
         return "redirect:questions";
     }
 
-    @PutMapping(value = "/questions/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String update(@PathVariable Long id, @ModelAttribute QuestionsRO ro) {
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String update(@PathVariable Long id, @ModelAttribute QuestionRequestDto ro) {
         service.update(id, ro);
 
         return "redirect:/users/me/questions/" + id;
@@ -100,15 +96,15 @@ public class UsersMeQuestionsController {
 
     @ResponseBody
     @PatchMapping(
-            value = "/questions/{id}",
+            value = "/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public QuestionVO partial_update(@PathVariable Long id, @RequestBody QuestionsRO ro) {
+    public QuestionResponseDto partial_update(@PathVariable Long id, @RequestBody QuestionRequestDto ro) {
         return service.partial_update(id, ro);
     }
 
-    @DeleteMapping(value = "/questions/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String delete(@PathVariable Long id) {
         service.delete(id);
 
@@ -118,11 +114,11 @@ public class UsersMeQuestionsController {
     /*
      * forms
      */
-    @GetMapping("/questions/forms/create")
+    @GetMapping("/forms/create")
     public String createView( Model model) {
-        CollectionModel<PlatformVO> platforms = platformsService.findAll();
-        CollectionModel<PracticeStatusVO> practiceStatusus = practiceStatususService.findAll();
-        CollectionModel<AlgorithmVO> algorithms = algorithmsService.findAll();
+        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
+        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
 
         String create_link = linkBuilder.getListLink(baseUri, RESOURCES).getHref();
@@ -133,12 +129,12 @@ public class UsersMeQuestionsController {
         return "users/questions/forms/create";
     }
 
-    @GetMapping("/questions/{id}/forms/update")
+    @GetMapping("/{id}/forms/update")
     public String updateView(@PathVariable Long id, Model model) {
-        QuestionVO question = service.findById(id);
-        CollectionModel<PlatformVO> platforms = platformsService.findAll();
-        CollectionModel<PracticeStatusVO> practiceStatusus = practiceStatususService.findAll();
-        CollectionModel<AlgorithmVO> algorithms = algorithmsService.findAll();
+        QuestionResponseDto question = service.findById(id);
+        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
+        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
         Set<Long> curAlgorithms = question.getAlgorithms().stream().map(a -> a.getId()).collect(Collectors.toSet());
 
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
@@ -150,7 +146,7 @@ public class UsersMeQuestionsController {
         return "users/questions/forms/update";
     }
 
-    @GetMapping("/questions/{id}/forms/delete")
+    @GetMapping("/{id}/forms/delete")
     public String deleteView(@PathVariable Long id, Model model) {
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
         String delete_link = linkBuilder.getDetailLink(baseUri, RESOURCES, id).getHref();

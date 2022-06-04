@@ -5,17 +5,17 @@ import com.remember.core.authorizers.RememberAuthorizer;
 import com.remember.core.domainMappers.QuestionDomainMapper;
 
 import com.remember.core.domains.Question;
-import com.remember.core.predicates.QuestionsPredicate;
+import com.remember.core.predicates.QuestionPredicate;
 
 import com.remember.core.repositories.question.QuestionRepository;
-import com.remember.core.requestDtos.QuestionsRO;
-import com.remember.core.searchParams.users.QuestionsParams;
+import com.remember.core.requestDtos.QuestionRequestDto;
+import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.assemblers.user.UsersMeQuestionAssembler;
 import com.remember.core.tools.AuthenticatedUserTool;
 import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
 
-import com.remember.core.responseDtos.question.QuestionVO;
-import com.remember.core.responseDtos.question.QuestionsVO;
+import com.remember.core.responseDtos.question.QuestionResponseDto;
+import com.remember.core.responseDtos.question.QuestionListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,17 +43,17 @@ public class UsersMeQuestionsService {
     private final AuthenticatedUserTool userTool;
     private final RememberAuthorizer authorizer;
 
-    public PagedModel<QuestionsVO> findAll(Pageable pageable, QuestionsParams params) {
+    public PagedModel<QuestionListResponseDto> findAll(Pageable pageable, QuestionParams params) {
         Page<Question> questions = repository.findAll(
                 pageable,
                 userTool.getUserId(),
-                QuestionsPredicate.generate(params)
+                QuestionPredicate.generate(params)
         );
 
         return pageAssembler.toModel(questions, listAssembler);
     }
 
-    public QuestionVO findById(Long id) {
+    public QuestionResponseDto findById(Long id) {
         Question question = repository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 없습니다. id= " + id));
 
@@ -62,14 +62,14 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public QuestionVO create(QuestionsRO ro) {
+    public QuestionResponseDto create(QuestionRequestDto ro) {
         Question question = repository.save(domainMapper.toEntity(userTool.getUserId(), ro));
         question = repository.findById(question.getId()).get();
         return serializer.toModel(question);
     }
 
     @Transactional
-    public QuestionVO update(Long id, QuestionsRO ro) {
+    public QuestionResponseDto update(Long id, QuestionRequestDto ro) {
         Question question = repository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 없습니다. id= " + id));
 
@@ -81,7 +81,7 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public QuestionVO partial_update(Long id, QuestionsRO ro) {
+    public QuestionResponseDto partial_update(Long id, QuestionRequestDto ro) {
         Question question = repository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("해당 게시글이 없습니다. id= " + id));
 
@@ -89,7 +89,7 @@ public class UsersMeQuestionsService {
 
         Question updatedQuestion = domainMapper.toEntity(userTool.getUserId(), id, ro);
         question.partial_update(updatedQuestion);
-        return new QuestionVO(question);
+        return new QuestionResponseDto(question);
     }
 
     @Transactional

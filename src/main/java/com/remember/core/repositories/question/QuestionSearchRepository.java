@@ -2,7 +2,6 @@ package com.remember.core.repositories.question;
 
 import com.querydsl.core.types.Predicate;
 import com.remember.core.domains.Question;
-import com.remember.core.searchParams.users.QuestionsParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

@@ -7,7 +7,7 @@ import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.repositories.PracticeStatususRepository;
 
-import com.remember.core.requestDtos.QuestionsRO;
+import com.remember.core.requestDtos.QuestionRequestDto;
 import com.remember.core.tools.uriToIdConverter.BasicUriToIdConverter;
 import com.remember.core.tools.uriToIdConverter.UriToIdConverter;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class QuestionDomainMapper extends BasicUriToIdConverter {
     private final AlgorithmsRepository algorithmsRepository;
     private final UriToIdConverter uriToIdConverter;
 
-    public Question toEntity(Long userId, QuestionsRO ro) {
+    public Question toEntity(Long userId, QuestionRequestDto ro) {
         String status_str =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 
@@ -44,7 +44,7 @@ public class QuestionDomainMapper extends BasicUriToIdConverter {
         return addAlgorithms(question, ro.getAlgorithms());
     }
 
-    public Question toEntity(Long userId, Long id, QuestionsRO ro) {
+    public Question toEntity(Long userId, Long id, QuestionRequestDto ro) {
         String status_str =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 

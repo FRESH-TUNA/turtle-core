@@ -7,12 +7,12 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @NoArgsConstructor
-public class PracticeStatusVO extends RepresentationModel<PracticeStatusVO> {
+public class PracticeStatusResponseDto extends RepresentationModel<PracticeStatusResponseDto> {
     private Long id;
     private String status;
     private String color;
 
-    public PracticeStatusVO(PracticeStatus p) {
+    public PracticeStatusResponseDto(PracticeStatus p) {
         this.id = p.getId();
         this.status = p.getStatus();
         this.color = p.getColor();

@@ -7,11 +7,11 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @NoArgsConstructor
-public class AlgorithmVO extends RepresentationModel<AlgorithmVO> {
+public class AlgorithmResponseDto extends RepresentationModel<AlgorithmResponseDto> {
     private Long id;
     private String name;
 
-    public AlgorithmVO(Algorithm algorithm) {
+    public AlgorithmResponseDto(Algorithm algorithm) {
         this.id = algorithm.getId();
         this.name = algorithm.getName();
     }

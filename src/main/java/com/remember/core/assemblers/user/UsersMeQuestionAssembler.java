@@ -3,9 +3,9 @@ package com.remember.core.assemblers.user;
 import com.remember.core.domains.Question;
 import com.remember.core.tools.LinkBuilder;
 import com.remember.core.tools.ServerContext;
-import com.remember.core.responseDtos.question.QuestionVO;
-import com.remember.core.responseDtos.question.QuestionPlatformVO;
-import com.remember.core.responseDtos.question.QuestionPracticeStatusVO;
+import com.remember.core.responseDtos.question.QuestionResponseDto;
+import com.remember.core.responseDtos.question.QuestionPlatformResponseDto;
+import com.remember.core.responseDtos.question.QuestionPracticeStatusResponseDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
@@ -13,7 +13,7 @@ import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Question, QuestionVO> {
+public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Question, QuestionResponseDto> {
     @Autowired
     private ServerContext serverContext;
 
@@ -25,8 +25,8 @@ public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Qu
     private final String PRACTICE_STATUS_RESOURCES = "practiceStatusus";
 
     @Override
-    public QuestionVO toModel(Question question) {
-        QuestionVO vo = new QuestionVO(question);
+    public QuestionResponseDto toModel(Question question) {
+        QuestionResponseDto vo = new QuestionResponseDto(question);
         vo = addSelfLink(vo);
         vo = practiceStatusAssemble(vo);
         vo = platformAssemble(vo);
@@ -36,7 +36,7 @@ public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Qu
     /**
      * helpers
      */
-    private QuestionVO addSelfLink(QuestionVO vo) {
+    private QuestionResponseDto addSelfLink(QuestionResponseDto vo) {
         StringBuilder url = new StringBuilder();
         String root = serverContext.getRoot();
 
@@ -48,16 +48,16 @@ public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Qu
         return vo;
     }
 
-    private QuestionVO practiceStatusAssemble(QuestionVO vo) {
+    private QuestionResponseDto practiceStatusAssemble(QuestionResponseDto vo) {
         String baseUrl = serverContext.getRoot();
-        QuestionPracticeStatusVO ps = vo.getPracticeStatus();
+        QuestionPracticeStatusResponseDto ps = vo.getPracticeStatus();
         ps.add(builder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
         return vo;
     }
 
-    private QuestionVO platformAssemble(QuestionVO vo) {
+    private QuestionResponseDto platformAssemble(QuestionResponseDto vo) {
         String baseUrl = serverContext.getRoot();
-        QuestionPlatformVO p = vo.getPlatform();
+        QuestionPlatformResponseDto p = vo.getPlatform();
         p.add(builder.getDetailLink(baseUrl, PLATFORM_RESOURCES, p.getId()).withSelfRel());
         return vo;
     }

@@ -2,7 +2,7 @@ package com.remember.core.services;
 
 import com.remember.core.assemblers.AlgorithmsAssembler;
 import com.remember.core.repositories.AlgorithmsRepository;
-import com.remember.core.responseDtos.AlgorithmVO;
+import com.remember.core.responseDtos.AlgorithmResponseDto;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.hateoas.CollectionModel;
@@ -14,7 +14,7 @@ public class AlgorithmsService {
     private final AlgorithmsRepository repository;
     private final AlgorithmsAssembler assembler;
 
-    public CollectionModel<AlgorithmVO> findAll() {
+    public CollectionModel<AlgorithmResponseDto> findAll() {
         return assembler.toCollectionModel(repository.findAll());
     }
 }

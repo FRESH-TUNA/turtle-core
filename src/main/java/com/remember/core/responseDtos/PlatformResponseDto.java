@@ -7,12 +7,12 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @NoArgsConstructor
-public class PlatformVO extends RepresentationModel<PlatformVO> {
+public class PlatformResponseDto extends RepresentationModel<PlatformResponseDto> {
     private Long id;
     private String name;
     private String link;
 
-    public PlatformVO(Platform platform) {
+    public PlatformResponseDto(Platform platform) {
         this.id = platform.getId();
         this.name = platform.getName();
         this.link = platform.getLink();
