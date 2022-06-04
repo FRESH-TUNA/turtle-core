@@ -94,6 +94,9 @@ public class UsersMeQuestionsService {
 
     @Transactional
     public void delete(Long id) {
+        authorizer.checkCurrentUserIsOwner(repository
+                        .findUserOfQuestionById(id)
+                        .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다. id= " + id)));
         repository.deleteById(id);
     }
 }

@@ -14,4 +14,6 @@ public interface QuestionSearchRepository<T, ID> {
     Page<T> findAll(Pageable pageable, ID user);
 
     Optional<T> findById(ID id);
+
+    Optional<Long> findUserOfQuestionById(ID id);
 }

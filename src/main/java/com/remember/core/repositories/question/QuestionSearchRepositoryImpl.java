@@ -61,6 +61,15 @@ public class QuestionSearchRepositoryImpl
         return Optional.ofNullable(query.fetchOne());
     }
 
+    @Override
+    public Optional<Long> findUserOfQuestionById(Long id) {
+        QQuestion question = QQuestion.question;
+        return Optional.ofNullable(queryFactory
+                .select(question.user)
+                .from(question)
+                .where(question.id.eq(id))
+                .fetchOne());
+    }
 
 
     /*

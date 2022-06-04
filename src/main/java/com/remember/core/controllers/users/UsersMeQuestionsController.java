@@ -115,6 +115,9 @@ public class UsersMeQuestionsController {
         return "redirect:";
     }
 
+    /*
+     * forms
+     */
     @GetMapping("/questions/forms/create")
     public String createView( Model model) {
         CollectionModel<PlatformVO> platforms = platformsService.findAll();
