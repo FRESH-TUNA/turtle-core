@@ -1,12 +1,10 @@
 package com.remember.core.repositories.question;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.remember.core.domains.QQuestion;
 import com.remember.core.domains.Question;
-import com.remember.core.searchParams.users.UsersQuestionsSearchParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,10 +25,9 @@ public class QuestionSearchRepositoryImpl
     }
 
     @Override
-    public Page<Question> findAll(Pageable pageable, Long user, UsersQuestionsSearchParams params) {
+    public Page<Question> findAll(Pageable pageable, Long user, Predicate predicate) {
         JPAQuery<Long> counts_query = counts_base_query(user);
         JPAQuery<Question> query = findAll_base_query(user);
-        BooleanBuilder predicate = findAllPredicate(params);
 
         // count query all
         Long counts = counts_query.where(predicate).fetchOne();
@@ -64,24 +61,11 @@ public class QuestionSearchRepositoryImpl
         return Optional.ofNullable(query.fetchOne());
     }
 
+
+
     /*
-     * helper
+     * base queries
      */
-    private static BooleanBuilder findAllPredicate(UsersQuestionsSearchParams params){
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        booleanBuilder.and(titleEq(params.getTitle()));
-        booleanBuilder.and(practiceStatusEq(params.getPracticeStatus()));
-        return booleanBuilder;
-    }
-
-    private static BooleanExpression titleEq(String title) {
-        return title == null ? null:QQuestion.question.title.contains(title);
-    }
-    private static BooleanExpression practiceStatusEq(Long status) {
-        return status == null ? null:QQuestion.question.practiceStatus.id.eq(status);
-    }
-
     private JPAQuery<Question> findAll_base_query(Long user) {
         QQuestion question = QQuestion.question;
         return queryFactory

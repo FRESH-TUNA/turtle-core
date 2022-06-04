@@ -3,8 +3,8 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <div layout:fragment="content">
-    <div th:text="${#authentication.principal.getUsername}">
-        The value of the "name" property of the authentication object should appear here.
+    <div th:if="${#request.userPrincipal}" th:text="${#authentication.principal.getUsername}">
+        <!-- content for anonymous -->
     </div>
 </div>
 </html>

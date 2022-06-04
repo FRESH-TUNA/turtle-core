@@ -1,5 +1,6 @@
 package com.remember.core.domains;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class PracticeStatus {
     @Id
@@ -23,13 +26,13 @@ public class PracticeStatus {
     /*
      * contructors
      */
-    @Builder
-    public PracticeStatus(
-            Long id,
-            String status,
-            String color) {
-        this.id = id;
-        this.status = status;
-        this.color = color;
-    }
+//    @Builder
+//    public PracticeStatus(
+//            Long id,
+//            String status,
+//            String color) {
+//        this.id = id;
+//        this.status = status;
+//        this.color = color;
+//    }
 }

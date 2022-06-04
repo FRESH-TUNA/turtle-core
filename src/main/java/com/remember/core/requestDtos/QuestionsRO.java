@@ -1,15 +1,14 @@
-package com.remember.core.ros.user;
+package com.remember.core.requestDtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @AllArgsConstructor // for ModelAttribute
-@NoArgsConstructor // for requestbody processing jackson
+//@NoArgsConstructor // for requestbody processing jackson
 @Getter
-public class UserQuestionsRO {
+public class QuestionsRO {
     private String title;
     private String link;
     private Integer level;

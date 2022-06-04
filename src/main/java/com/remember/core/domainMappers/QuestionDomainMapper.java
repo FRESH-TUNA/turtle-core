@@ -1,4 +1,4 @@
-package com.remember.core.domainMakers.user;
+package com.remember.core.domainMappers;
 
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
@@ -7,7 +7,7 @@ import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.repositories.PracticeStatususRepository;
 
-import com.remember.core.ros.user.UserQuestionsRO;
+import com.remember.core.requestDtos.QuestionsRO;
 import com.remember.core.tools.uriToIdConverter.BasicUriToIdConverter;
 import com.remember.core.tools.uriToIdConverter.UriToIdConverter;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +17,13 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class UserQuestionsDomainMaker extends BasicUriToIdConverter {
+public class QuestionDomainMapper extends BasicUriToIdConverter {
     private final PlatformsRepository platformsRepository;
     private final PracticeStatususRepository practiceStatususRepository;
     private final AlgorithmsRepository algorithmsRepository;
     private final UriToIdConverter uriToIdConverter;
 
-    public Question toEntity(Long userId, UserQuestionsRO ro) {
+    public Question toEntity(Long userId, QuestionsRO ro) {
         String status_str =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 
@@ -41,10 +41,10 @@ public class UserQuestionsDomainMaker extends BasicUriToIdConverter {
                 .title(ro.getTitle())
                 .build();
 
-        return addQuestions(question, ro.getAlgorithms());
+        return addAlgorithms(question, ro.getAlgorithms());
     }
 
-    public Question toEntity(Long userId, Long id, UserQuestionsRO ro) {
+    public Question toEntity(Long userId, Long id, QuestionsRO ro) {
         String status_str =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 
@@ -63,10 +63,10 @@ public class UserQuestionsDomainMaker extends BasicUriToIdConverter {
                 .title(ro.getTitle())
                 .build();
 
-        return addQuestions(question, ro.getAlgorithms());
+        return addAlgorithms(question, ro.getAlgorithms());
     }
 
-    private Question addQuestions(Question question, List<String> algorithms) {
+    private Question addAlgorithms(Question question, List<String> algorithms) {
         if(algorithms == null) return question;
         for (String algo : algorithms)
             question.addAlgorithm(algorithmsRepository.getById(uriToIdConverter.convert(algo)));

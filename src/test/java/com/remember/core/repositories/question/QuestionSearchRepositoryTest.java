@@ -6,7 +6,6 @@ import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
 import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.repositories.PracticeStatususRepository;
-import com.remember.core.searchParams.users.UsersQuestionsSearchParams;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

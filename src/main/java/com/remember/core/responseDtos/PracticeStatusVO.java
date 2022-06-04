@@ -1,4 +1,4 @@
-package com.remember.core.vos;
+package com.remember.core.responseDtos;
 
 import com.remember.core.domains.PracticeStatus;
 import lombok.Getter;

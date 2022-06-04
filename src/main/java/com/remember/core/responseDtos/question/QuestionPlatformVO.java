@@ -1,4 +1,4 @@
-package com.remember.core.vos.user.question;
+package com.remember.core.responseDtos.question;
 
 import com.remember.core.domains.Platform;
 import lombok.Getter;
@@ -8,12 +8,12 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @NoArgsConstructor
-public class UserQuestionPlatformVO extends RepresentationModel<UserQuestionPlatformVO> {
+public class QuestionPlatformVO extends RepresentationModel<QuestionPlatformVO> {
     private Long id;
     private String name;
     private String link;
 
-    public UserQuestionPlatformVO(Platform p) {
+    public QuestionPlatformVO(Platform p) {
         this.id = p.getId();
         this.name = p.getName();
         this.link = p.getLink();

@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * https://petrepopescu.tech/2021/01/exposing-sequential-ids-is-bad-here-is-how-to-avoid-it/
+ * https://www.baeldung.com/registration-with-spring-mvc-and-spring-security
+ * https://gregor77.github.io/2021/04/21/spring-security-02/
+ */
 @Entity
 @NoArgsConstructor
 @Getter
@@ -26,11 +31,6 @@ public class User {
 
     @Column
     private String nickname;
-
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "uuid2")
-    @Column(columnDefinition = "BINARY(16)")
-    private UUID uuid;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(

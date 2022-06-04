@@ -1,4 +1,4 @@
-package com.remember.core.vos.user.question;
+package com.remember.core.responseDtos.question;
 
 import com.remember.core.domains.Algorithm;
 import lombok.Getter;
@@ -7,11 +7,11 @@ import org.springframework.hateoas.RepresentationModel;
 
 @Getter
 @NoArgsConstructor
-public class UserQuestionAlgorithmsVO extends RepresentationModel<UserQuestionAlgorithmsVO> {
+public class QuestionAlgorithmsVO extends RepresentationModel<QuestionAlgorithmsVO> {
     private Long id;
     private String name;
 
-    public UserQuestionAlgorithmsVO(Algorithm a) {
+    public QuestionAlgorithmsVO(Algorithm a) {
         this.id = a.getId();
         this.name = a.getName();
     }

@@ -1,4 +1,4 @@
-package com.remember.core.vos;
+package com.remember.core.responseDtos;
 
 import com.remember.core.domains.Algorithm;
 import lombok.Getter;
