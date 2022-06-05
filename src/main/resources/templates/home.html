@@ -3,8 +3,5 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <div layout:fragment="content">
-    <div th:if="${#request.userPrincipal}" th:text="${#authentication.principal.getUsername}">
-        <!-- content for anonymous -->
-    </div>
 </div>
 </html>
