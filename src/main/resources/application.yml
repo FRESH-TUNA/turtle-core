@@ -7,29 +7,3 @@ spring:
       filter:
         enabled: true
     static-path-pattern: /static/**
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true #To beautify or pretty print the SQL
-        show_sql: true #show sql
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://${REMEMBER_MAIN_DEV_DB_HOST}:${REMEMBER_MAIN_DEV_DB_PORT}/${REMEMBER_MAIN_DEV_DB_NAME}?characterEncoding=UTF-8&serverTimezone=UTC
-    username: ${REMEMBER_MAIN_DEV_DB_USER}
-    password: ${REMEMBER_MAIN_DEV_DB_PASSWORD}
-  thymeleaf:
-    #    prefix: classpath:/templates/
-    # prefix: file:src/main/resources/templates/
-    cache: false
----
-spring:
-  config:
-    activate:
-      on-profile: prod

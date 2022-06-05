@@ -1,0 +1,20 @@
+server:
+  servlet:
+    context-path: /api/v1
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true #To beautify or pretty print the SQL
+        show_sql: true #show sql
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://localhost:3306/remember_main_test?characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: kokokoko123
