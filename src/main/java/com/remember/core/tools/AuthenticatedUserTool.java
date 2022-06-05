@@ -1,6 +1,7 @@
 package com.remember.core.tools;
 
-import com.remember.core.authService.RememberUserDetails;
+import com.remember.core.security.userDetails.BasicUserDetails;
+import com.remember.core.security.userDetails.OauthUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,6 +16,12 @@ public class AuthenticatedUserTool {
         if (auth instanceof AnonymousAuthenticationToken)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이후 이용하세요");
 
-        return ((RememberUserDetails) auth.getPrincipal()).getId();
+        Object principal = auth.getPrincipal();
+
+        if(principal instanceof BasicUserDetails)
+            return ((BasicUserDetails) auth.getPrincipal()).getId();
+        else
+            return ((OauthUserDetails) auth.getPrincipal()).getId();
     }
 }
+

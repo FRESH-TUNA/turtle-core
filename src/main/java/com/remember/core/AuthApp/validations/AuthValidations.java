@@ -1,4 +1,4 @@
-package com.remember.core.authService.validations;
+package com.remember.core.AuthApp.validations;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

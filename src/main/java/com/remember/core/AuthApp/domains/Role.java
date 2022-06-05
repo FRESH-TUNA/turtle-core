@@ -1,4 +1,4 @@
-package com.remember.core.authService.domains;
+package com.remember.core.AuthApp.domains;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

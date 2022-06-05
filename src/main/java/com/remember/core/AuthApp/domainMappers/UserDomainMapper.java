@@ -1,8 +1,8 @@
-package com.remember.core.authService.serializers;
+package com.remember.core.AuthApp.domainMappers;
 
-import com.remember.core.authService.domains.User;
-import com.remember.core.authService.repositories.RolesRepository;
-import com.remember.core.authService.ros.UserRO;
+import com.remember.core.AuthApp.domains.User;
+import com.remember.core.AuthApp.repositories.RolesRepository;
+import com.remember.core.AuthApp.requestDtos.UserRequestDto;
 
 import com.remember.core.tools.uriToIdConverter.UriToIdConverter;
 import lombok.RequiredArgsConstructor;
@@ -12,14 +12,13 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class UsersSerializer {
+public class UserDomainMapper {
     private final RolesRepository rolesRepository;
     private final UriToIdConverter uriToIdConverter;
 
-    public User toEntity(UserRO ro) {
+    public User toEntity(UserRequestDto ro) {
         User user = User.builder()
                 .username(ro.getUsername())
-                .nickname(ro.getNickname())
                 .password(ro.getPassword())
                 .build();
         return user;

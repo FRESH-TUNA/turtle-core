@@ -1,7 +1,8 @@
-package com.remember.core.authService;
+package com.remember.core.AuthApp;
 
-import com.remember.core.authService.services.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.remember.core.AuthApp.services.AuthService;
+import com.remember.core.AuthApp.services.CustomOAuth2UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,10 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * https://stackoverflow.com/questions/60968888/a-granted-authority-textual-representation-is-required-in-spring-security
  */
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+    private final CustomOAuth2UserService customOAuth2UserService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -48,6 +50,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .maximumSessions(1)
                 .maxSessionsPreventsLogin(true)
         ;
+
+        http
+                .oauth2Login()
+                .userInfoEndpoint() // oauth2 로그인 성공 후 가져올 때의 설정들
+                // 소셜로그인 성공 시 후속 조치를 진행할 UserService 인터페이스 구현체 등록
+                .userService(customOAuth2UserService); // 리소스 서버에서 사용자 정보를 가져온 상태에서 추가로 진행하고자 하는 기능 명시
     }
 
     @Override

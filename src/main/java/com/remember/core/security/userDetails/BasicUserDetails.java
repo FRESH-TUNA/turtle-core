@@ -1,7 +1,5 @@
-package com.remember.core.authService;
+package com.remember.core.security.userDetails;
 
-import com.remember.core.authService.domains.User;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -10,29 +8,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class RememberUserDetails implements UserDetails {
+
+public class BasicUserDetails implements UserDetails {
     private Long id;
     private String username;
-    private String nickname;
     private String password;
     private List<String> roles;
 
-    public RememberUserDetails(User user) {
-        this.id = user.getId();
-        this.password = user.getPassword();
-        this.username = user.getUsername();
-        this.nickname = user.getNickname();
-        this.roles = user.getRoles().stream().map(r->r.getName()).collect(Collectors.toList());
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getNickname() {
-        return this.nickname;
+    @Builder
+    public BasicUserDetails(Long id, String password, String username, List<String> roles) {
+        this.id = id;
+        this.password = password;
+        this.username = username;
+        this.roles = roles;
     }
 
     @Override
@@ -42,6 +31,10 @@ public class RememberUserDetails implements UserDetails {
             authorities.add(new SimpleGrantedAuthority(role));
         }
         return authorities;
+    }
+
+    public Long getId() {
+        return this.id;
     }
 
     @Override

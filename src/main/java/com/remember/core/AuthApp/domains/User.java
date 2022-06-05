@@ -1,14 +1,12 @@
-package com.remember.core.authService.domains;
+package com.remember.core.AuthApp.domains;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * https://petrepopescu.tech/2021/01/exposing-sequential-ids-is-bad-here-is-how-to-avoid-it/
@@ -27,10 +25,13 @@ public class User {
     private String username;
 
     @Column
+    private String email;
+
+    @Column
     private String password;
 
     @Column
-    private String nickname;
+    private String picture;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -47,11 +48,21 @@ public class User {
         this.roles.add(role);
     }
 
+    public boolean isOauth() {
+        return !this.email.equals(this.username);
+    }
+
+    public void oauthUserUpdate(String username, String picture) {
+        this.username = username;
+        this.picture = picture;
+    }
+
     @Builder
-    public User(Long id, String password, String username, String nickname) {
+    public User(Long id, String password, String username, String email, String picture) {
         this.id = id;
         this.password = password;
         this.username = username;
-        this.nickname = nickname;
+        this.email = email;
+        this.picture = picture;
     }
 }
