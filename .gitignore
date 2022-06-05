@@ -38,4 +38,5 @@ out/
 
 ### env ###
 .env
-src/test/resources/application*
+src/test/resources/application.yml
+src/test/resources/application*.yml
