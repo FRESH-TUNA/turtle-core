@@ -23,7 +23,6 @@ class UsersMeQuestionsAssemblerTest {
                 .title("title")
                 .link("link")
                 .user(1L)
-                .level(1)
                 .platform(Platform.builder().name("name").build())
                 .practiceStatus(PracticeStatus.builder().status("status").build())
                 .build();

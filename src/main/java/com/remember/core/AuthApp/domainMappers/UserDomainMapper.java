@@ -2,7 +2,7 @@ package com.remember.core.AuthApp.domainMappers;
 
 import com.remember.core.AuthApp.domains.User;
 import com.remember.core.AuthApp.repositories.RolesRepository;
-import com.remember.core.AuthApp.requestDtos.UserRequestDto;
+import com.remember.core.AuthApp.dtos.UserRequestDto;
 
 import com.remember.core.utils.uriToIdConverter.UriToIdConverter;
 import lombok.RequiredArgsConstructor;

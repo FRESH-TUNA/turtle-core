@@ -191,7 +191,7 @@ class QuestionSearchRepositoryTest {
     private Question create_question(String title, Platform platform, PracticeStatus practiceStatus) {
         return questionRepository.saveAndFlush(
                 Question.builder()
-                        .title(title).link("link").level(1).user(1L)
+                        .title(title).link("link").user(1L)
                         .platform(platform).practiceStatus(practiceStatus)
                         .build()
         );
