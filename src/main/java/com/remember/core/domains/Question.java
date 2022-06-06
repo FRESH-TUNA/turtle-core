@@ -21,9 +21,6 @@ public class Question extends BaseTimeDomain{
     @Column(length = 255, nullable = false)
     private String link;
 
-    @Column
-    private Integer level;
-
     @ManyToOne
     @JoinColumn(name = "platform_id", nullable = false)
     private Platform platform;
@@ -68,14 +65,12 @@ public class Question extends BaseTimeDomain{
             String link,
             Platform platform,
             PracticeStatus practiceStatus,
-            Integer level,
             Long user) {
         this.id = id;
         this.title = title;
         this.link = link;
         this.platform = platform;
         this.practiceStatus = practiceStatus;
-        this.level = level;
         this.user = user;
     }
 }

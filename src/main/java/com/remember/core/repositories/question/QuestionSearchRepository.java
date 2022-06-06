@@ -7,12 +7,12 @@ import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
-public interface QuestionSearchRepository<T, ID> {
-    Page<Question> findAll(Pageable pageable, Object user, Predicate predicate);
+public interface QuestionSearchRepository<T, ID, USERID> {
+    Page<Question> findAll(Pageable pageable, USERID user, Predicate predicate);
 
-    Page<T> findAll(Pageable pageable, ID user);
+    Page<T> findAll(Pageable pageable, USERID user);
 
     Optional<T> findById(ID id);
 
-    Optional<Object> findUserOfQuestionById(ID id);
+    Optional<USERID> findUserOfQuestionById(ID id);
 }

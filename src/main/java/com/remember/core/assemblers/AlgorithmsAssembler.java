@@ -3,7 +3,7 @@ package com.remember.core.assemblers;
 import com.remember.core.domains.Algorithm;
 import com.remember.core.utils.linkBuilders.LinkBuilder;
 import com.remember.core.utils.ServerContext;
-import com.remember.core.responseDtos.AlgorithmResponseDto;
+import com.remember.core.responses.AlgorithmResponseDto;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;

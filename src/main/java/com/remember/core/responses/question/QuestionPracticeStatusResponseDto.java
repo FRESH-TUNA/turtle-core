@@ -1,4 +1,4 @@
-package com.remember.core.responseDtos.question;
+package com.remember.core.responses.question;
 
 import com.remember.core.domains.PracticeStatus;
 import lombok.Getter;

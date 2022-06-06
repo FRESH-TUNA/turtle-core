@@ -1,6 +1,8 @@
 package com.remember.core.controllers.users;
 
-import com.remember.core.requestDtos.QuestionRequestDto;
+import com.remember.core.exceptions.UnauthorizedException;
+import com.remember.core.requests.QuestionRequestDto;
+import com.remember.core.responses.question.QuestionAlgorithmResponseDto;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
@@ -9,11 +11,11 @@ import com.remember.core.services.PracticeStatususService;
 import com.remember.core.services.users.UsersMeQuestionsService;
 import com.remember.core.utils.linkBuilders.LinkBuilder;
 
-import com.remember.core.responseDtos.AlgorithmResponseDto;
-import com.remember.core.responseDtos.PlatformResponseDto;
-import com.remember.core.responseDtos.PracticeStatusResponseDto;
-import com.remember.core.responseDtos.question.QuestionResponseDto;
-import com.remember.core.responseDtos.question.QuestionListResponseDto;
+import com.remember.core.responses.AlgorithmResponseDto;
+import com.remember.core.responses.PlatformResponseDto;
+import com.remember.core.responses.PracticeStatusResponseDto;
+import com.remember.core.responses.question.QuestionResponseDto;
+import com.remember.core.responses.question.QuestionListResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
@@ -23,8 +25,12 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.BasicLinkBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -33,9 +39,10 @@ import java.util.stream.Collectors;
 /**
  * 참고자료
  * https://bulnabang99.tistory.com/59
+ * https://stackoverflow.com/questions/16394296/in-which-layer-should-validation-be-performed
  */
+
 @Controller
-//@PreAuthorize("@userQuestionsAuthorizer.check(#userId, authentication)")
 @RequiredArgsConstructor
 @RequestMapping("/users/me/questions")
 public class UsersMeQuestionsController {
@@ -81,14 +88,24 @@ public class UsersMeQuestionsController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String create(@ModelAttribute QuestionRequestDto ro) {
+    public String create(@ModelAttribute @Validated QuestionRequestDto ro,
+                         BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:questions/forms/create";
+        }
+
         service.create(ro);
 
         return "redirect:questions";
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String update(@PathVariable Long id, @ModelAttribute QuestionRequestDto ro) {
+    public String update(@PathVariable Long id, @ModelAttribute @Validated QuestionRequestDto ro,
+                         BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            return "redirect:" + id + "/forms/update";
+        }
+
         service.update(id, ro);
 
         return "redirect:/users/me/questions/" + id;
@@ -135,9 +152,10 @@ public class UsersMeQuestionsController {
         CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
         CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
         CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
-        Set<Long> curAlgorithms = question.getAlgorithms().stream().map(a -> a.getId()).collect(Collectors.toSet());
+        Set<Long> curAlgorithms = question.getAlgorithms().stream()
+                .map(QuestionAlgorithmResponseDto::getId)
+                .collect(Collectors.toSet());
 
-        String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
         model.addAttribute("algorithms", algorithms.getContent());
         model.addAttribute("curAlgorithms", curAlgorithms);
         model.addAttribute("platforms", platforms);
@@ -153,5 +171,18 @@ public class UsersMeQuestionsController {
 
         model.addAttribute("delete_link", delete_link);
         return "users/questions/forms/delete";
+    }
+
+    /*
+     * exception handlers
+     */
+    @ExceptionHandler
+    public ModelAndView entityNotFound(EntityNotFoundException e) {
+        return new ModelAndView("redirect:");
+    }
+
+    @ExceptionHandler
+    public ModelAndView unAuthorized(UnauthorizedException e) {
+        return new ModelAndView("redirect:");
     }
 }

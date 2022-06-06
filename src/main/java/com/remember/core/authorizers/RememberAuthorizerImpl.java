@@ -1,20 +1,18 @@
 package com.remember.core.authorizers;
 
-import com.remember.core.security.AuthenticatedUserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
+import com.remember.core.exceptions.UnauthorizedException;
+import com.remember.core.utils.AuthenticatedUserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
+@RequiredArgsConstructor
 public class RememberAuthorizerImpl implements RememberAuthorizer<Long> {
-    @Autowired
-    private AuthenticatedUserService userTool;
+    private final AuthenticatedUserService<Long> userTool;
 
     @Override
     public void checkCurrentUserIsOwner(Long userIdOfTarget) {
-
         if(!userTool.getUserId().equals(userIdOfTarget))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "사용자의 리소스가 아닙니다.");
+            throw new UnauthorizedException("권한이 없습니다.");
     }
 }

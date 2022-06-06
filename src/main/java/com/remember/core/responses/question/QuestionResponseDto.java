@@ -1,4 +1,4 @@
-package com.remember.core.responseDtos.question;
+package com.remember.core.responses.question;
 
 import com.remember.core.domains.Question;
 import lombok.Getter;
@@ -15,7 +15,6 @@ public class QuestionResponseDto extends RepresentationModel<QuestionResponseDto
     private String title;
     private String link;
     private QuestionPlatformResponseDto platform;
-    private Integer level;
     private QuestionPracticeStatusResponseDto practiceStatus;
     private List<QuestionAlgorithmResponseDto> algorithms;
 
@@ -23,8 +22,6 @@ public class QuestionResponseDto extends RepresentationModel<QuestionResponseDto
         this.id = q.getId();
         this.title = q.getTitle();
         this.link = q.getLink();
-        this.level = q.getLevel();
-
         this.platform = new QuestionPlatformResponseDto(q.getPlatform());
         this.practiceStatus = new QuestionPracticeStatusResponseDto(q.getPracticeStatus());
         this.algorithms = q.getAlgorithms()

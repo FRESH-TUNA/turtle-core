@@ -1,4 +1,4 @@
-package com.remember.core.responseDtos.question;
+package com.remember.core.responses.question;
 
 import com.remember.core.domains.Question;
 import lombok.Getter;
@@ -13,14 +13,12 @@ public class QuestionListResponseDto extends RepresentationModel<QuestionListRes
     private String title;
     private String link;
     private String platform;
-    private Integer level;
     private QuestionPracticeStatusResponseDto practiceStatus;
 
     public QuestionListResponseDto(Question q) {
         this.id = q.getId();
         this.title = q.getTitle();
         this.link = q.getLink();
-        this.level = q.getLevel();
         this.platform = q.getPlatform().getName();
         this.practiceStatus = new QuestionPracticeStatusResponseDto(q.getPracticeStatus());
     }

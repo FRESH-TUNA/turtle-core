@@ -7,7 +7,7 @@ import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.repositories.PracticeStatususRepository;
 
-import com.remember.core.requestDtos.QuestionRequestDto;
+import com.remember.core.requests.QuestionRequestDto;
 import com.remember.core.utils.uriToIdConverter.BasicUriToIdConverter;
 import com.remember.core.utils.uriToIdConverter.UriToIdConverter;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +34,6 @@ public class QuestionDomainMapper extends BasicUriToIdConverter {
 
         Question question = Question.builder()
                 .user((Long) userId)
-                .level(ro.getLevel())
                 .practiceStatus(status)
                 .platform(platform)
                 .link(ro.getLink())
@@ -56,7 +55,6 @@ public class QuestionDomainMapper extends BasicUriToIdConverter {
         Question question = Question.builder()
                 .id(id)
                 .user((Long) userId)
-                .level(ro.getLevel())
                 .practiceStatus(status)
                 .platform(platform)
                 .link(ro.getLink())

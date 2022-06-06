@@ -1,14 +1,14 @@
 package com.remember.core.services.users;
 
 import com.remember.core.searchParams.QuestionParams;
-import com.remember.core.security.AuthenticatedUserService;
 import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
 import com.remember.core.domainMappers.QuestionDomainMapper;
 import com.remember.core.domains.Question;
 import com.remember.core.repositories.question.QuestionRepository;
-import com.remember.core.requestDtos.QuestionRequestDto;
-import com.remember.core.responseDtos.question.QuestionResponseDto;
-import com.remember.core.responseDtos.question.QuestionListResponseDto;
+import com.remember.core.requests.QuestionRequestDto;
+import com.remember.core.responses.question.QuestionResponseDto;
+import com.remember.core.responses.question.QuestionListResponseDto;
+import com.remember.core.utils.AuthenticatedUserService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;

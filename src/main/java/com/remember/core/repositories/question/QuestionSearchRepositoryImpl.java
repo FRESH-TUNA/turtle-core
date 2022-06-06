@@ -15,7 +15,7 @@ import java.util.Optional;
 
 public class QuestionSearchRepositoryImpl
         extends QuerydslRepositorySupport
-        implements QuestionSearchRepository<Question, Long> {
+        implements QuestionSearchRepository<Question, Long, Long> {
 
     private final JPAQueryFactory queryFactory;
 
@@ -25,7 +25,7 @@ public class QuestionSearchRepositoryImpl
     }
 
     @Override
-    public Page<Question> findAll(Pageable pageable, Object user, Predicate predicate) {
+    public Page<Question> findAll(Pageable pageable, Long user, Predicate predicate) {
         JPAQuery<Long> counts_query = counts_base_query(user);
         JPAQuery<Question> query = findAll_base_query(user);
 
@@ -62,7 +62,7 @@ public class QuestionSearchRepositoryImpl
     }
 
     @Override
-    public Optional<Object> findUserOfQuestionById(Long id) {
+    public Optional<Long> findUserOfQuestionById(Long id) {
         QQuestion question = QQuestion.question;
         return Optional.ofNullable(queryFactory
                 .select(question.user)
@@ -75,20 +75,20 @@ public class QuestionSearchRepositoryImpl
     /*
      * base queries
      */
-    private JPAQuery<Question> findAll_base_query(Object user) {
+    private JPAQuery<Question> findAll_base_query(Long user) {
         QQuestion question = QQuestion.question;
         return queryFactory
                 .select(question)
                 .from(question)
                 .innerJoin(question.platform).fetchJoin()
                 .innerJoin(question.practiceStatus).fetchJoin()
-                .where(question.user.eq((Long) user));
+                .where(question.user.eq(user));
     }
 
-    private JPAQuery<Long> counts_base_query(Object user) {
+    private JPAQuery<Long> counts_base_query(Long user) {
         QQuestion question = QQuestion.question;
         return queryFactory.select(question.count())
                 .from(question)
-                .where(question.user.eq((Long) user));
+                .where(question.user.eq(user));
     }
 }

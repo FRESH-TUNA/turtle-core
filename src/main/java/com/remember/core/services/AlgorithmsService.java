@@ -2,7 +2,7 @@ package com.remember.core.services;
 
 import com.remember.core.assemblers.AlgorithmsAssembler;
 import com.remember.core.repositories.AlgorithmsRepository;
-import com.remember.core.responseDtos.AlgorithmResponseDto;
+import com.remember.core.responses.AlgorithmResponseDto;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.hateoas.CollectionModel;

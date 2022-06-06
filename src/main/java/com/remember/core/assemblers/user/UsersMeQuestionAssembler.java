@@ -3,9 +3,9 @@ package com.remember.core.assemblers.user;
 import com.remember.core.domains.Question;
 import com.remember.core.utils.linkBuilders.LinkBuilder;
 import com.remember.core.utils.ServerContext;
-import com.remember.core.responseDtos.question.QuestionResponseDto;
-import com.remember.core.responseDtos.question.QuestionPlatformResponseDto;
-import com.remember.core.responseDtos.question.QuestionPracticeStatusResponseDto;
+import com.remember.core.responses.question.QuestionResponseDto;
+import com.remember.core.responses.question.QuestionPlatformResponseDto;
+import com.remember.core.responses.question.QuestionPracticeStatusResponseDto;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
