@@ -1,9 +1,9 @@
 package com.remember.core.assemblers.user;
 
 import com.remember.core.domains.Question;
-import com.remember.core.tools.LinkBuilder;
+import com.remember.core.utils.linkBuilders.LinkBuilder;
 
-import com.remember.core.tools.ServerContext;
+import com.remember.core.utils.ServerContext;
 import com.remember.core.responseDtos.question.QuestionListResponseDto;
 import com.remember.core.responseDtos.question.QuestionPracticeStatusResponseDto;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,8 @@
-package com.remember.core.tools.uriToIdConverter;
+package com.remember.core.utils.uriToIdConverter;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class BasicUriToIdConverter implements UriToIdConverter{
     @Override
     public Long convert(String uri) {

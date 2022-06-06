@@ -1,7 +1,7 @@
 package com.remember.core.services.users;
 
 import com.remember.core.searchParams.QuestionParams;
-import com.remember.core.tools.AuthenticatedUserTool;
+import com.remember.core.security.AuthenticatedUserService;
 import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
 import com.remember.core.domainMappers.QuestionDomainMapper;
 import com.remember.core.domains.Question;
@@ -29,13 +29,13 @@ public class QuestionsService {
     private final PagedResourcesAssembler<Question> pageAssembler;
     private final EntityManager entityManager;
 
-    private final AuthenticatedUserTool userTool;
+    private final AuthenticatedUserService userTool;
 
     public PagedModel<QuestionListResponseDto> findAll(Pageable pageable, QuestionParams params) {
         String baseUri = requestURL();
 
 
-        Long user = userTool.getUserId();
+        //Long user = userTool.getUserId();
         return null;
         //return pageAssembler.toModel(repository.findAll(pageable, user, params), listAssembler);
     }

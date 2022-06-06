@@ -11,7 +11,7 @@ import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.requestDtos.QuestionRequestDto;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.assemblers.user.UsersMeQuestionAssembler;
-import com.remember.core.tools.AuthenticatedUserTool;
+import com.remember.core.security.AuthenticatedUserService;
 import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
 
 import com.remember.core.responseDtos.question.QuestionResponseDto;
@@ -40,7 +40,7 @@ public class UsersMeQuestionsService {
     private final UsersMeQuestionAssembler serializer;
     private final PagedResourcesAssembler<Question> pageAssembler;
 
-    private final AuthenticatedUserTool userTool;
+    private final AuthenticatedUserService userTool;
     private final RememberAuthorizer authorizer;
 
     public PagedModel<QuestionListResponseDto> findAll(Pageable pageable, QuestionParams params) {

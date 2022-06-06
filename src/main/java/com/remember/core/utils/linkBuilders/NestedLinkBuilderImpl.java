@@ -1,10 +1,10 @@
-package com.remember.core.tools;
+package com.remember.core.utils.linkBuilders;
 
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.hateoas.Link;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class NestedLinkBuilderImpl implements NestedLinkBuilder {
 
     @Override

@@ -7,7 +7,7 @@ import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
 
 import com.remember.core.services.users.UsersMeQuestionsService;
-import com.remember.core.tools.LinkBuilder;
+import com.remember.core.utils.linkBuilders.LinkBuilder;
 
 import com.remember.core.responseDtos.AlgorithmResponseDto;
 import com.remember.core.responseDtos.PlatformResponseDto;

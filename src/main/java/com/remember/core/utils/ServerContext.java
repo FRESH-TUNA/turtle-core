@@ -1,9 +1,9 @@
-package com.remember.core.tools;
+package com.remember.core.utils;
 
 import org.springframework.hateoas.server.mvc.BasicLinkBuilder;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class ServerContext {
     public String getRoot() {
         return BasicLinkBuilder.linkToCurrentMapping().toString();

@@ -1,28 +1,25 @@
-package com.remember.core.security.userDetails;
+package com.remember.core.security;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
-
-public class BasicUserDetails implements UserDetails {
-    private Long id;
+@Builder
+@AllArgsConstructor
+public class RememberUserDetails implements UserDetails, OAuth2User {
+    private Object id;
     private String username;
     private String password;
     private List<String> roles;
-
-    @Builder
-    public BasicUserDetails(Long id, String password, String username, List<String> roles) {
-        this.id = id;
-        this.password = password;
-        this.username = username;
-        this.roles = roles;
-    }
+    private Map<String, Object> attributes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -33,7 +30,7 @@ public class BasicUserDetails implements UserDetails {
         return authorities;
     }
 
-    public Long getId() {
+    public Object getId() {
         return this.id;
     }
 
@@ -65,5 +62,18 @@ public class BasicUserDetails implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    /*
+     * oauth
+     */
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
+    }
+
+    @Override
+    public String getName() {
+        return this.username;
     }
 }

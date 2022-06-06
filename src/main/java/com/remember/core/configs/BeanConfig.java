@@ -1,8 +1,8 @@
 package com.remember.core.configs;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.remember.core.tools.uriToIdConverter.BasicUriToIdConverter;
-import com.remember.core.tools.uriToIdConverter.UriToIdConverter;
+import com.remember.core.utils.uriToIdConverter.BasicUriToIdConverter;
+import com.remember.core.utils.uriToIdConverter.UriToIdConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

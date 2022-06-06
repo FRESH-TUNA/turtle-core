@@ -1,4 +1,4 @@
-package com.remember.core.tools;
+package com.remember.core.utils.linkBuilders;
 
 import org.springframework.hateoas.Link;
 

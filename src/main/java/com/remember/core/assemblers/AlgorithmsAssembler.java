@@ -1,8 +1,8 @@
 package com.remember.core.assemblers;
 
 import com.remember.core.domains.Algorithm;
-import com.remember.core.tools.LinkBuilder;
-import com.remember.core.tools.ServerContext;
+import com.remember.core.utils.linkBuilders.LinkBuilder;
+import com.remember.core.utils.ServerContext;
 import com.remember.core.responseDtos.AlgorithmResponseDto;
 
 import lombok.RequiredArgsConstructor;

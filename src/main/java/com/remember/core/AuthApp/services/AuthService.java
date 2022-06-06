@@ -1,6 +1,6 @@
 package com.remember.core.AuthApp.services;
 
-import com.remember.core.security.userDetails.BasicUserDetails;
+import com.remember.core.security.RememberUserDetails;
 import com.remember.core.AuthApp.repositories.UsersRepository;
 import com.remember.core.AuthApp.domains.User;
 import com.remember.core.AuthApp.requestDtos.UserRequestDto;
@@ -29,7 +29,7 @@ public class AuthService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 유저입니다"));
 
-        return BasicUserDetails.builder()
+        return RememberUserDetails.builder()
                 .id(user.getId())
                 .username(user.getUsername()).password(user.getPassword())
                 .roles(user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList()))
@@ -43,7 +43,7 @@ public class AuthService implements UserDetailsService {
         User user = serializer.toEntity(userRequestDto);
         user = userRepository.save(user);
 
-        UserDetails userDetails = BasicUserDetails.builder()
+        UserDetails userDetails = RememberUserDetails.builder()
                 .id(user.getId())
                 .username(user.getUsername()).password(user.getPassword())
                 .roles(user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList()))

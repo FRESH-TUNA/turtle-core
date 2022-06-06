@@ -11,10 +11,10 @@ public class RolesService {
     private final RolesRepository rolesRepository;
 
     public Role getAdminRole() {
-        return rolesRepository.findByName("ADMIN").get();
+        return rolesRepository.findByName("ROLE_ADMIN").get();
     }
 
     public Role getGuestRole() {
-        return rolesRepository.findByName("GUEST").get();
+        return rolesRepository.findByName("ROLE_GUEST").get();
     }
 }
