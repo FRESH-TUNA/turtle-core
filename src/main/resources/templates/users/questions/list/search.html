@@ -18,11 +18,11 @@
         <option
                 th:data-content="${
                                             '<span class=''badge'''
-                                            + 'style=''background-color: ' + s.getColor() + ''';''>'
+                                            + 'style=''background-color: ' + 'black' + ''';''>'
                                             + s.getStatus() + '</span>'}"
                 th:each="s: ${practiceStatusus}"
-                th:selected="${search_status eq s.getId()}"
-                th:value="${s.getId()}">
+                th:selected="${search_status eq s.getStatus()}"
+                th:value="${s.getStatus()}">
         </option>
       </select>
     </div>

@@ -37,16 +37,16 @@
                             <select class="selectpicker"
                                     data-width="100px"
                                     th:data-question="${q.getLink('self').get().getHref()}"
-                                    th:data-status="${q.getPracticeStatus.getLink('self').get().getHref()}"
+                                    th:data-status="${q.getPracticeStatus}"
                             >
                                 <option
                                         th:data-content="${
                                             '<span class=''badge'''
-                                            + 'style=''background-color: ' + s.getColor() + ''';''>'
+                                            + 'style=''background-color: ' + 'black' + ''';''>'
                                             + s.getStatus() + '</span>'}"
                                         th:each="s: ${practiceStatusus}"
-                                        th:value="${s.getLink('self').get().getHref()}"
-                                        th:selected="${s.getId() eq q.getPracticeStatus.getId}">
+                                        th:value="${s.getStatus()}"
+                                        th:selected="${s.getStatus() eq q.getPracticeStatus}">
                                 </option>
                             </select>
                         </td>

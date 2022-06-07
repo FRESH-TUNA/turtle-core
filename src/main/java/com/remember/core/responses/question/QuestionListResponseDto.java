@@ -13,13 +13,13 @@ public class QuestionListResponseDto extends RepresentationModel<QuestionListRes
     private String title;
     private String link;
     private String platform;
-    private QuestionPracticeStatusResponseDto practiceStatus;
+    private String practiceStatus;
 
     public QuestionListResponseDto(Question q) {
         this.id = q.getId();
         this.title = q.getTitle();
         this.link = q.getLink();
         this.platform = q.getPlatform().getName();
-        this.practiceStatus = new QuestionPracticeStatusResponseDto(q.getPracticeStatus());
+        this.practiceStatus = q.getPracticeStatus().name();
     }
 }

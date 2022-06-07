@@ -8,7 +8,7 @@
     <h2 th:text="${question.getTitle}"/>
     <h2 th:text="${question.getLink}"/>
     <h2 th:text="${question.getPlatform.getName}"/>
-    <h2 th:text="${question.getPracticeStatus.getStatus}"/>
+    <h2 th:text="${question.getPracticeStatus}"/>
     <h3 th:each="algo: ${question.algorithms}" th:text="${algo.name}"/>
   </div>
 </div>

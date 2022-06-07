@@ -54,7 +54,6 @@ public class QuestionSearchRepositoryImpl
                 .select(question)
                 .from(question)
                 .innerJoin(question.platform).fetchJoin()
-                .innerJoin(question.practiceStatus).fetchJoin()
                 .leftJoin(question.algorithms).fetchJoin()
                 .where(question.id.eq(id));
 
@@ -81,7 +80,6 @@ public class QuestionSearchRepositoryImpl
                 .select(question)
                 .from(question)
                 .innerJoin(question.platform).fetchJoin()
-                .innerJoin(question.practiceStatus).fetchJoin()
                 .where(question.user.eq(user));
     }
 

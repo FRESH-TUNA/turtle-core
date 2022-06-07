@@ -14,8 +14,8 @@ public class QuestionResponseDto extends RepresentationModel<QuestionResponseDto
     private Long id;
     private String title;
     private String link;
+    private String practiceStatus;
     private QuestionPlatformResponseDto platform;
-    private QuestionPracticeStatusResponseDto practiceStatus;
     private List<QuestionAlgorithmResponseDto> algorithms;
 
     public QuestionResponseDto(Question q) {
@@ -23,7 +23,7 @@ public class QuestionResponseDto extends RepresentationModel<QuestionResponseDto
         this.title = q.getTitle();
         this.link = q.getLink();
         this.platform = new QuestionPlatformResponseDto(q.getPlatform());
-        this.practiceStatus = new QuestionPracticeStatusResponseDto(q.getPracticeStatus());
+        this.practiceStatus = q.getPracticeStatus().name();
         this.algorithms = q.getAlgorithms()
                 .stream()
                 .map(a -> new QuestionAlgorithmResponseDto(a))

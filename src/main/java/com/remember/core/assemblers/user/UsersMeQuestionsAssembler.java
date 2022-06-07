@@ -4,8 +4,6 @@ import com.remember.core.domains.Question;
 
 import com.remember.core.utils.ServerContext;
 import com.remember.core.responses.question.QuestionListResponseDto;
-import com.remember.core.responses.question.QuestionPracticeStatusResponseDto;
-import com.remember.core.utils.linkBuilders.LinkBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -19,12 +17,10 @@ public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Q
 
     private final String PARENT_RESOURCES = "users";
     private final String RESOURCES = "questions";
-    private final String PRACTICE_STATUS_RESOURCES = "practiceStatusus";
 
     public QuestionListResponseDto toModel(Question question) {
         QuestionListResponseDto vo = new QuestionListResponseDto(question);
         vo = addSelfLink(vo);
-        vo = practiceStatusAssemble(vo);
         return vo;
     }
 
@@ -42,13 +38,6 @@ public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Q
 
         vo.add(Link.of(url.toString()).withSelfRel());
 
-        return vo;
-    }
-
-    private QuestionListResponseDto practiceStatusAssemble(QuestionListResponseDto vo) {
-        String baseUrl = serverContext.getRoot();
-        QuestionPracticeStatusResponseDto ps = vo.getPracticeStatus();
-        ps.add(LinkBuilder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
         return vo;
     }
 }

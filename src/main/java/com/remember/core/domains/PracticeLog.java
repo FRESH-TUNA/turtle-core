@@ -15,7 +15,6 @@ public class PracticeLog extends BaseTimeDomain {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
-    @ManyToOne
-    @JoinColumn(name = "practice_status_id", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PracticeStatus practiceStatus;
 }

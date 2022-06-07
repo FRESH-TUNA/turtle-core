@@ -7,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class QuestionParams {
     private String title;
-    private Long practiceStatus;
+    private String practiceStatus;
 }

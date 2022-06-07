@@ -5,7 +5,6 @@ import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
 import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
-import com.remember.core.repositories.PracticeStatususRepository;
 
 import com.remember.core.requests.QuestionRequestDto;
 import com.remember.core.utils.UriToIdConverter;
@@ -18,21 +17,18 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuestionFactory {
     private final PlatformsRepository platformsRepository;
-    private final PracticeStatususRepository practiceStatususRepository;
     private final AlgorithmsRepository algorithmsRepository;
 
-    public Question toEntity(Object userId, QuestionRequestDto ro) {
-        String status_str =  ro.getPracticeStatus();
+    public Question toEntity(Long userId, QuestionRequestDto ro) {
+        String status =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 
-        Platform platform = platform_str == null ?
-                null : platformsRepository.getById(UriToIdConverter.convert(platform_str));
-        PracticeStatus status = status_str == null ?
-                null : practiceStatususRepository.getById(UriToIdConverter.convert(status_str));
+        Platform platform = platformsRepository.getById(UriToIdConverter.convert(platform_str));
+        PracticeStatus practiceStatus = PracticeStatus.valueOf(status);
 
         Question question = Question.builder()
-                .user((Long) userId)
-                .practiceStatus(status)
+                .user(userId)
+                .practiceStatus(practiceStatus)
                 .platform(platform)
                 .link(ro.getLink())
                 .title(ro.getTitle())
@@ -41,19 +37,18 @@ public class QuestionFactory {
         return addAlgorithms(question, ro.getAlgorithms());
     }
 
-    public Question toEntity(Object userId, Long id, QuestionRequestDto ro) {
-        String status_str =  ro.getPracticeStatus();
+    public Question toEntity(Long userId, Long id, QuestionRequestDto ro) {
+        String status =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 
         Platform platform = platform_str == null ?
                 null : platformsRepository.getById(UriToIdConverter.convert(platform_str));
-        PracticeStatus status = status_str == null ?
-                null : practiceStatususRepository.getById(UriToIdConverter.convert(status_str));
+        PracticeStatus practiceStatus = PracticeStatus.valueOf(status);
 
         Question question = Question.builder()
                 .id(id)
-                .user((Long) userId)
-                .practiceStatus(status)
+                .user(userId)
+                .practiceStatus(practiceStatus)
                 .platform(platform)
                 .link(ro.getLink())
                 .title(ro.getTitle())

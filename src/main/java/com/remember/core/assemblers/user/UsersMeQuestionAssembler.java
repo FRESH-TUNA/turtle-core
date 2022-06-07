@@ -4,7 +4,6 @@ import com.remember.core.domains.Question;
 import com.remember.core.utils.ServerContext;
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionPlatformResponseDto;
-import com.remember.core.responses.question.QuestionPracticeStatusResponseDto;
 
 import com.remember.core.utils.linkBuilders.LinkBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +18,11 @@ public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Qu
 
     private final String RESOURCES = "users/me/questions";
     private final String PLATFORM_RESOURCES = "platforms";
-    private final String PRACTICE_STATUS_RESOURCES = "practiceStatusus";
 
     @Override
     public QuestionResponseDto toModel(Question question) {
         QuestionResponseDto vo = new QuestionResponseDto(question);
         vo = addSelfLink(vo);
-        vo = practiceStatusAssemble(vo);
         vo = platformAssemble(vo);
         return vo;
     }
@@ -42,13 +39,6 @@ public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Qu
 
         vo.add(Link.of(url.toString()).withSelfRel());
 
-        return vo;
-    }
-
-    private QuestionResponseDto practiceStatusAssemble(QuestionResponseDto vo) {
-        String baseUrl = serverContext.getRoot();
-        QuestionPracticeStatusResponseDto ps = vo.getPracticeStatus();
-        ps.add(LinkBuilder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
         return vo;
     }
 

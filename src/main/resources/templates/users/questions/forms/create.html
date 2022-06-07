@@ -27,8 +27,8 @@
             <label th:for="practiceStatus">풀이여부</label>
             <select name="practiceStatus">
                 <option th:each="status : ${practiceStatusus}"
-                        th:value="${status.getLink('self').get().getHref()}"
-                        th:utext="${status.getStatus()}"
+                        th:value="${status}"
+                        th:utext="${status}"
                 />
             </select>
         </div>

@@ -1,5 +1,6 @@
 package com.remember.core.AuthApp.OAuth2UserInfos;
 
+import com.remember.core.AuthApp.domains.ProviderType;
 import com.remember.core.AuthApp.domains.Role;
 import com.remember.core.AuthApp.domains.User;
 
@@ -36,6 +37,7 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo{
                 .username(getId())
                 .email(getEmail())
                 .picture(getImageUrl())
+                .providerType(ProviderType.GOOGLE)
                 .role(Role.ROLE_GUEST)
                 .build();
     }

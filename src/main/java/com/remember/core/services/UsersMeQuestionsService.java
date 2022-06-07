@@ -1,4 +1,4 @@
-package com.remember.core.services.users;
+package com.remember.core.services;
 
 import com.remember.core.authorizers.RememberAuthorizer;
 import com.remember.core.domainFactories.QuestionFactory;

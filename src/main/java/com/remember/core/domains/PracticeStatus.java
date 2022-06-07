@@ -1,38 +1,23 @@
 package com.remember.core.domains;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 
-import javax.persistence.*;
+public enum PracticeStatus {
+    SOLVED,
+    TIMEOUT,
+    FAILED;
 
-@Entity
-@Getter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class PracticeStatus {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private static List<PracticeStatus> allList;
 
-    @Column(length = 100, nullable = false)
-    private String status;
-
-    @Column(length = 100, nullable = false)
-    private String color;
-
-    /*
-     * contructors
-     */
-//    @Builder
-//    public PracticeStatus(
-//            Long id,
-//            String status,
-//            String color) {
-//        this.id = id;
-//        this.status = status;
-//        this.color = color;
-//    }
+    public static List<PracticeStatus> findAll() {
+        if (Objects.isNull(allList)) {
+            allList = new ArrayList<>(
+                    Arrays.asList(SOLVED, TIMEOUT, FAILED)
+            );
+        }
+        return allList;
+    }
 }

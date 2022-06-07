@@ -17,8 +17,8 @@ public class PracticeStatususAssembler  implements RepresentationModelAssembler<
     private final String resources = "practiceStatusus";
 
     public List<PracticeStatusResponseDto> assemble(String baseUrl, List<PracticeStatusResponseDto> practiceStatusus) {
-        for (PracticeStatusResponseDto vo :practiceStatusus)
-            vo.add(LinkBuilder.getDetailLink(baseUrl, resources, vo.getId()).withSelfRel());
+//        for (PracticeStatusResponseDto vo :practiceStatusus)
+//            vo.add(LinkBuilder.getDetailLink(baseUrl, resources, vo.getId()).withSelfRel());
         return practiceStatusus;
     }
 
@@ -26,7 +26,7 @@ public class PracticeStatususAssembler  implements RepresentationModelAssembler<
     public PracticeStatusResponseDto toModel(PracticeStatus entity) {
         PracticeStatusResponseDto practiceStatusResponseDto = new PracticeStatusResponseDto(entity);
         String base = serverContext.getRoot();
-        practiceStatusResponseDto.add(LinkBuilder.getDetailLink(base, resources, practiceStatusResponseDto.getId()).withSelfRel());
+//        practiceStatusResponseDto.add(LinkBuilder.getDetailLink(base, resources, practiceStatusResponseDto.getId()).withSelfRel());
         return practiceStatusResponseDto;
     }
 }

@@ -1,18 +1,19 @@
 package com.remember.core.controllers.users;
 
+import com.remember.core.domains.PracticeStatus;
 import com.remember.core.exceptions.UnauthorizedException;
 import com.remember.core.requests.QuestionRequestDto;
+import com.remember.core.responses.PracticeStatusResponseDto;
 import com.remember.core.responses.question.QuestionAlgorithmResponseDto;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
 
-import com.remember.core.services.users.UsersMeQuestionsService;
+import com.remember.core.services.UsersMeQuestionsService;
 
 import com.remember.core.responses.AlgorithmResponseDto;
 import com.remember.core.responses.PlatformResponseDto;
-import com.remember.core.responses.PracticeStatusResponseDto;
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionListResponseDto;
 import com.remember.core.utils.linkBuilders.LinkBuilder;
@@ -32,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -62,7 +64,7 @@ public class UsersMeQuestionsController {
                           Model model) {
 
         PagedModel<QuestionListResponseDto> questions = service.findAll(pageable, params);
-        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
 
         /*
          * modeling
@@ -72,7 +74,7 @@ public class UsersMeQuestionsController {
         model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
         model.addAttribute("questions_url", request.getRequestURL());
         model.addAttribute("questions", questions);
-        model.addAttribute("practiceStatusus", practiceStatusus.getContent());
+        model.addAttribute("practiceStatusus", practiceStatusus);
         return "users/questions/list";
     }
 
@@ -132,7 +134,7 @@ public class UsersMeQuestionsController {
     @GetMapping("/forms/create")
     public String createView( Model model) {
         CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
-        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
         CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
 
@@ -148,7 +150,7 @@ public class UsersMeQuestionsController {
     public String updateView(@PathVariable Long id, Model model) {
         QuestionResponseDto question = service.findById(id);
         CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
-        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
         CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
         Set<Long> curAlgorithms = question.getAlgorithms().stream()
                 .map(QuestionAlgorithmResponseDto::getId)

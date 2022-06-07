@@ -18,6 +18,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -47,9 +48,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
 
         Optional<User> userWrapper = userRepository.findByEmail(userInfo.getEmail());
+        User savedUser;
 
         if (userWrapper.isPresent()) {
-            User savedUser = userWrapper.get();
+            savedUser = userWrapper.get();
 
             if (providerType != savedUser.getProviderType()) {
                 throw new OAuthProviderMissMatchException(
@@ -58,12 +60,15 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 );
             }
             savedUser.oauthUserUpdate(userInfo.getId(), userInfo.getImageUrl());
-        } else {
-            userRepository.save(userInfo.toEntity());
-        }
 
-        return (OAuth2User) RememberUserDetails.builder()
+        } else
+            savedUser = userRepository.save(userInfo.toEntity());
+
+        return RememberUserDetails.builder()
+                .id(savedUser.getId())
                 .username(userInfo.getEmail())
-                .attributes(userInfo.getAttributes());
+                .attributes(userInfo.getAttributes())
+                .roles(Collections.singletonList(savedUser.getRole().name()))
+                .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.remember.core.domains;
 
-import com.remember.core.AuthApp.domains.ProviderType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,8 +25,7 @@ public class Question extends BaseTimeDomain{
     @JoinColumn(name = "platform_id", nullable = false)
     private Platform platform;
 
-    @ManyToOne
-    @JoinColumn(name = "practice_status_id", nullable = false)
+    @Enumerated(EnumType.STRING)
     private PracticeStatus practiceStatus;
 
     @ManyToMany
