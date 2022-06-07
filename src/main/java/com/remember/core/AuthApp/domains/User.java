@@ -19,21 +19,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column
+    @Column(unique=true)
     private String username;
 
-    @Column
+    @Column(unique=true)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column
     private String picture;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 

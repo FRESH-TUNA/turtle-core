@@ -3,12 +3,12 @@ package com.remember.core.AuthApp.dtos;
 import com.remember.core.AuthApp.domains.ProviderType;
 import com.remember.core.AuthApp.domains.Role;
 import com.remember.core.AuthApp.domains.User;
+import com.remember.core.AuthApp.anotations.Password;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 /**
  * 참고자료
@@ -20,6 +20,7 @@ import java.util.List;
 //@NoArgsConstructor // for requestbody processing jackson
 @Getter
 public class UserRequestDto {
+    @Password
     @NotBlank(message="패스워드를 입력해주세요")
     private String password;
 
@@ -32,6 +33,7 @@ public class UserRequestDto {
     public User toEntity(Role role, ProviderType providerType) {
         User user = User.builder()
                 .username(getUsername())
+                .email(getUsername())
                 .password(getPassword())
                 .role(role)
                 .providerType(providerType)

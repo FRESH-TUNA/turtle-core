@@ -1,5 +1,5 @@
 package com.remember.core.utils;
 
-public interface AuthenticatedFacade<ID> {
-    public ID getUserId();
+public interface AuthenticatedFacade {
+    public Long getUserId();
 }

@@ -44,7 +44,7 @@ public class UsersMeQuestionsService {
     private final UsersMeQuestionAssembler assembler;
     private final PagedResourcesAssembler<Question> pageAssembler;
 
-    private final AuthenticatedFacade<Long> authenticatedFacade;
+    private final AuthenticatedFacade authenticatedFacade;
     private final RememberAuthorizer authorizer;
 
     public PagedModel<QuestionListResponseDto> findAll(Pageable pageable, QuestionParams params) {
