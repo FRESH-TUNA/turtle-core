@@ -1,11 +1,11 @@
 package com.remember.core.assemblers.user;
 
 import com.remember.core.domains.Question;
-import com.remember.core.utils.linkBuilders.LinkBuilder;
 
 import com.remember.core.utils.ServerContext;
 import com.remember.core.responses.question.QuestionListResponseDto;
 import com.remember.core.responses.question.QuestionPracticeStatusResponseDto;
+import com.remember.core.utils.linkBuilders.LinkBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -14,9 +14,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Question, QuestionListResponseDto> {
-    @Autowired
-    private LinkBuilder builder;
-
     @Autowired
     private ServerContext serverContext;
 
@@ -51,7 +48,7 @@ public class UsersMeQuestionsAssembler implements RepresentationModelAssembler<Q
     private QuestionListResponseDto practiceStatusAssemble(QuestionListResponseDto vo) {
         String baseUrl = serverContext.getRoot();
         QuestionPracticeStatusResponseDto ps = vo.getPracticeStatus();
-        ps.add(builder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
+        ps.add(LinkBuilder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
         return vo;
     }
 }

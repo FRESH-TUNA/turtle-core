@@ -1,68 +1,69 @@
 package com.remember.core.AuthApp.services;
 
-import com.remember.core.AuthApp.dtos.OAuthAttributes;
+import com.remember.core.AuthApp.domains.ProviderType;
 import com.remember.core.AuthApp.domains.User;
+import com.remember.core.AuthApp.OAuth2UserInfos.OAuth2UserInfo;
+import com.remember.core.AuthApp.exceptions.OAuthProviderMissMatchException;
+import com.remember.core.AuthApp.factories.OAuth2UserInfoFactory;
 import com.remember.core.AuthApp.repositories.UsersRepository;
 import com.remember.core.security.RememberUserDetails;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    private final UsersRepository usersRepository;
-    private final HttpSession httpSession;
+public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+
+    private final UsersRepository userRepository;
 
     @Override
+    @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService<OAuth2UserRequest, OAuth2User> delegate = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = delegate.loadUser(userRequest);
+        OAuth2User user = super.loadUser(userRequest);
 
-        // OAuth2 서비스 id (구글, 카카오, 네이버)
-        String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        // OAuth2 로그인 진행 시 키가 되는 필드 값(PK)
-        String userNameAttributeName = userRequest
-                .getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-
-        // OAuth2UserService
-        OAuthAttributes attributes = OAuthAttributes.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-        User user = saveOrUpdate(attributes);
-
-        //httpSession.setAttribute("user", new SessionUser(user)); // SessionUser (직렬화된 dto 클래스 사용)
-
-        return RememberUserDetails.builder()
-                .roles(user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toList()))
-                .username(user.getEmail()).attributes(attributes.getAttributes()).id(user.getId()).build();
+        try {
+            return this.process(userRequest, user);
+        } catch (AuthenticationException ex) {
+            throw ex;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
+        }
     }
 
-    // 유저 생성 및 수정 서비스 로직
-    private User saveOrUpdate(OAuthAttributes attributes){
-        Optional<User> user = usersRepository.findByEmail(attributes.getEmail());
+    private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
+        ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
-        if(!user.isPresent()) {
-            return usersRepository.save(attributes.toEntity());
-            //role 설정
+        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
+
+        Optional<User> userWrapper = userRepository.findByEmail(userInfo.getEmail());
+
+        if (userWrapper.isPresent()) {
+            User savedUser = userWrapper.get();
+
+            if (providerType != savedUser.getProviderType()) {
+                throw new OAuthProviderMissMatchException(
+                        "Looks like you're signed up with " + providerType +
+                                " account. Please use your " + savedUser.getProviderType() + " account to login."
+                );
+            }
+            savedUser.oauthUserUpdate(userInfo.getId(), userInfo.getImageUrl());
+        } else {
+            userRepository.save(userInfo.toEntity());
         }
 
-        User realUser = user.get();
-        if(!realUser.isOauth()) {
-            //exception
-            return realUser;
-        }
-        else {
-            realUser.oauthUserUpdate(attributes.getName(), attributes.getPicture());
-        }
-
-        return usersRepository.save(realUser);
+        return (OAuth2User) RememberUserDetails.builder()
+                .username(userInfo.getEmail())
+                .attributes(userInfo.getAttributes());
     }
 }

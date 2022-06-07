@@ -1,5 +1,6 @@
 package com.remember.core.domains;
 
+import com.remember.core.AuthApp.domains.ProviderType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,8 +38,6 @@ public class Question extends BaseTimeDomain{
 
     @OneToMany(mappedBy = "question")
     private List<PracticeLog> practiceLogs = new ArrayList<>();
-
-
 
     @Column(nullable = false)
     private Long user;

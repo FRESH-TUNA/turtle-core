@@ -1,10 +1,10 @@
 package com.remember.core.services.users;
 
 import com.remember.core.authorizers.RememberAuthorizer;
-import com.remember.core.domainMappers.QuestionDomainMapper;
+import com.remember.core.domainFactories.QuestionFactory;
 
 import com.remember.core.domains.Question;
-import com.remember.core.predicates.QuestionPredicate;
+import com.remember.core.predicateFactories.QuestionPredicateFactory;
 
 import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.requests.QuestionRequestDto;
@@ -14,7 +14,7 @@ import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
 
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionListResponseDto;
-import com.remember.core.utils.AuthenticatedUserService;
+import com.remember.core.utils.AuthenticatedFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,19 +39,19 @@ public class UsersMeQuestionsService {
     private final QuestionRepository repository;
     private final EntityManager entityManager;
 
-    private final QuestionDomainMapper domainMapper;
+    private final QuestionFactory domainMapper;
     private final UsersMeQuestionsAssembler listAssembler;
-    private final UsersMeQuestionAssembler serializer;
+    private final UsersMeQuestionAssembler assembler;
     private final PagedResourcesAssembler<Question> pageAssembler;
 
-    private final AuthenticatedUserService<Long> userTool;
-    private final RememberAuthorizer<Long> authorizer;
+    private final AuthenticatedFacade<Long> authenticatedFacade;
+    private final RememberAuthorizer authorizer;
 
     public PagedModel<QuestionListResponseDto> findAll(Pageable pageable, QuestionParams params) {
         Page<Question> questions = repository.findAll(
                 pageable,
-                userTool.getUserId(),
-                QuestionPredicate.generate(params)
+                authenticatedFacade.getUserId(),
+                QuestionPredicateFactory.generate(params)
         );
 
         return pageAssembler.toModel(questions, listAssembler);
@@ -61,15 +61,15 @@ public class UsersMeQuestionsService {
         Question question = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 문제가 없습니다"));
 
-        authorizer.checkCurrentUserIsOwner(question.getUser());
-        return serializer.toModel(question);
+        authorizer.checkCurrentUserIDIsOwner(question.getUser());
+        return assembler.toModel(question);
     }
 
     @Transactional
     public QuestionResponseDto create(QuestionRequestDto ro) {
-        Question question = repository.save(domainMapper.toEntity(userTool.getUserId(), ro));
+        Question question = repository.save(domainMapper.toEntity(authenticatedFacade.getUserId(), ro));
         question = repository.findById(question.getId()).get();
-        return serializer.toModel(question);
+        return assembler.toModel(question);
     }
 
     @Transactional
@@ -77,11 +77,11 @@ public class UsersMeQuestionsService {
         Question question = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 문제가 없습니다"));
 
-        authorizer.checkCurrentUserIsOwner(question.getUser());
+        authorizer.checkCurrentUserIDIsOwner(question.getUser());
 
-        Question updatedQuestion = domainMapper.toEntity(userTool.getUserId(), id, ro);
+        Question updatedQuestion = domainMapper.toEntity(authenticatedFacade.getUserId(), id, ro);
         question = entityManager.merge(updatedQuestion);
-        return serializer.toModel(question);
+        return assembler.toModel(question);
     }
 
     @Transactional
@@ -89,18 +89,18 @@ public class UsersMeQuestionsService {
         Question question = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 문제가 없습니다"));
 
-        authorizer.checkCurrentUserIsOwner(question.getUser());
+        authorizer.checkCurrentUserIDIsOwner(question.getUser());
 
-        Question updatedQuestion = domainMapper.toEntity(userTool.getUserId(), id, ro);
+        Question updatedQuestion = domainMapper.toEntity(authenticatedFacade.getUserId(), id, ro);
         question.partial_update(updatedQuestion);
         return new QuestionResponseDto(question);
     }
 
     @Transactional
     public void delete(Long id) {
-        authorizer.checkCurrentUserIsOwner(repository
-                        .findUserOfQuestionById(id)
-                        .orElseThrow(() -> new EntityNotFoundException("해당 문제가 없습니다")));
+        authorizer.checkCurrentUserIDIsOwner(
+                repository.findUserOfQuestionById(id).orElseThrow(() ->
+                        new EntityNotFoundException("해당 문제가 없습니다")));
         repository.deleteById(id);
     }
 }

@@ -1,12 +1,12 @@
 package com.remember.core.assemblers.user;
 
 import com.remember.core.domains.Question;
-import com.remember.core.utils.linkBuilders.LinkBuilder;
 import com.remember.core.utils.ServerContext;
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionPlatformResponseDto;
 import com.remember.core.responses.question.QuestionPracticeStatusResponseDto;
 
+import com.remember.core.utils.linkBuilders.LinkBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -16,9 +16,6 @@ import org.springframework.stereotype.Component;
 public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Question, QuestionResponseDto> {
     @Autowired
     private ServerContext serverContext;
-
-    @Autowired
-    private LinkBuilder builder;
 
     private final String RESOURCES = "users/me/questions";
     private final String PLATFORM_RESOURCES = "platforms";
@@ -51,14 +48,14 @@ public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Qu
     private QuestionResponseDto practiceStatusAssemble(QuestionResponseDto vo) {
         String baseUrl = serverContext.getRoot();
         QuestionPracticeStatusResponseDto ps = vo.getPracticeStatus();
-        ps.add(builder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
+        ps.add(LinkBuilder.getDetailLink(baseUrl, PRACTICE_STATUS_RESOURCES, ps.getId()).withSelfRel());
         return vo;
     }
 
     private QuestionResponseDto platformAssemble(QuestionResponseDto vo) {
         String baseUrl = serverContext.getRoot();
         QuestionPlatformResponseDto p = vo.getPlatform();
-        p.add(builder.getDetailLink(baseUrl, PLATFORM_RESOURCES, p.getId()).withSelfRel());
+        p.add(LinkBuilder.getDetailLink(baseUrl, PLATFORM_RESOURCES, p.getId()).withSelfRel());
         return vo;
     }
 }

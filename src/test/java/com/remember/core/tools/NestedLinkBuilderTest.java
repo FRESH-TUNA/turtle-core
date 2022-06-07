@@ -1,7 +1,6 @@
 package com.remember.core.tools;
 
 import com.remember.core.utils.linkBuilders.NestedLinkBuilder;
-import com.remember.core.utils.linkBuilders.NestedLinkBuilderImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.hateoas.Link;
@@ -9,7 +8,7 @@ import org.springframework.hateoas.Link;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class NestedLinkBuilderTest {
-    private final NestedLinkBuilder builder = new NestedLinkBuilderImpl();
+    private final NestedLinkBuilder builder = new NestedLinkBuilder();
     private final String ROOT = "";
     private final String parentResource = "parents";
     private final Long parentId = 1L;

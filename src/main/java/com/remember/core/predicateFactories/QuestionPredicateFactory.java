@@ -1,4 +1,4 @@
-package com.remember.core.predicates;
+package com.remember.core.predicateFactories;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
@@ -6,7 +6,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.remember.core.domains.QQuestion;
 import com.remember.core.searchParams.QuestionParams;
 
-public class QuestionPredicate {
+public class QuestionPredicateFactory {
     public static Predicate generate(QuestionParams params){
         BooleanBuilder booleanBuilder = new BooleanBuilder();
 

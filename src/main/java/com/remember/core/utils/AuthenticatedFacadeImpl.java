@@ -5,17 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
-@Service
-public class AuthenticatedUserServiceImpl implements AuthenticatedUserService<Long> {
-    @Override
+@Component
+public class AuthenticatedFacadeImpl implements AuthenticatedFacade<Long> {
     public Long getUserId() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof AnonymousAuthenticationToken)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이후 이용하세요");
 
-        return (Long) ((RememberUserDetails) auth.getPrincipal()).getId();
+        return ((RememberUserDetails) auth.getPrincipal()).getId();
     }
 }

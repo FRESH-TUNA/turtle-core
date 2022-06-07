@@ -14,8 +14,8 @@ import java.util.Map;
 
 @Builder
 @AllArgsConstructor
-public class RememberUserDetails implements UserDetails, OAuth2User {
-    private Object id;
+public class RememberUserDetails implements UserDetails, OAuth2User, UserDetailsSupport<Long> {
+    private Long id;
     private String username;
     private String password;
     private List<String> roles;
@@ -30,7 +30,8 @@ public class RememberUserDetails implements UserDetails, OAuth2User {
         return authorities;
     }
 
-    public Object getId() {
+    @Override
+    public Long getId() {
         return this.id;
     }
 

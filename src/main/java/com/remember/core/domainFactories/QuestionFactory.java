@@ -1,4 +1,4 @@
-package com.remember.core.domainMappers;
+package com.remember.core.domainFactories;
 
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
@@ -8,8 +8,7 @@ import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.repositories.PracticeStatususRepository;
 
 import com.remember.core.requests.QuestionRequestDto;
-import com.remember.core.utils.uriToIdConverter.BasicUriToIdConverter;
-import com.remember.core.utils.uriToIdConverter.UriToIdConverter;
+import com.remember.core.utils.UriToIdConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,20 +16,19 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class QuestionDomainMapper extends BasicUriToIdConverter {
+public class QuestionFactory {
     private final PlatformsRepository platformsRepository;
     private final PracticeStatususRepository practiceStatususRepository;
     private final AlgorithmsRepository algorithmsRepository;
-    private final UriToIdConverter uriToIdConverter;
 
     public Question toEntity(Object userId, QuestionRequestDto ro) {
         String status_str =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 
         Platform platform = platform_str == null ?
-                null : platformsRepository.getById(uriToIdConverter.convert(platform_str));
+                null : platformsRepository.getById(UriToIdConverter.convert(platform_str));
         PracticeStatus status = status_str == null ?
-                null : practiceStatususRepository.getById(uriToIdConverter.convert(status_str));
+                null : practiceStatususRepository.getById(UriToIdConverter.convert(status_str));
 
         Question question = Question.builder()
                 .user((Long) userId)
@@ -48,9 +46,9 @@ public class QuestionDomainMapper extends BasicUriToIdConverter {
         String platform_str = ro.getPlatform();
 
         Platform platform = platform_str == null ?
-                null : platformsRepository.getById(uriToIdConverter.convert(platform_str));
+                null : platformsRepository.getById(UriToIdConverter.convert(platform_str));
         PracticeStatus status = status_str == null ?
-                null : practiceStatususRepository.getById(uriToIdConverter.convert(status_str));
+                null : practiceStatususRepository.getById(UriToIdConverter.convert(status_str));
 
         Question question = Question.builder()
                 .id(id)
@@ -67,7 +65,7 @@ public class QuestionDomainMapper extends BasicUriToIdConverter {
     private Question addAlgorithms(Question question, List<String> algorithms) {
         if(algorithms == null) return question;
         for (String algo : algorithms)
-            question.addAlgorithm(algorithmsRepository.getById(uriToIdConverter.convert(algo)));
+            question.addAlgorithm(algorithmsRepository.getById(UriToIdConverter.convert(algo)));
         return question;
     }
 }

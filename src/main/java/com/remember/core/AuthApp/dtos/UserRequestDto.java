@@ -1,5 +1,8 @@
 package com.remember.core.AuthApp.dtos;
 
+import com.remember.core.AuthApp.domains.ProviderType;
+import com.remember.core.AuthApp.domains.Role;
+import com.remember.core.AuthApp.domains.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -26,7 +29,14 @@ public class UserRequestDto {
     @Email(message="mail의 형식을 지켜주세요")
     private String username;
 
-    private String nickname;
-    private List<String> roles;
+    public User toEntity(Role role, ProviderType providerType) {
+        User user = User.builder()
+                .username(getUsername())
+                .password(getPassword())
+                .role(role)
+                .providerType(providerType)
+                .build();
+        return user;
+    }
 }
 

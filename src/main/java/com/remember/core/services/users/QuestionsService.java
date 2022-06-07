@@ -2,13 +2,13 @@ package com.remember.core.services.users;
 
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
-import com.remember.core.domainMappers.QuestionDomainMapper;
+import com.remember.core.domainFactories.QuestionFactory;
 import com.remember.core.domains.Question;
 import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.requests.QuestionRequestDto;
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionListResponseDto;
-import com.remember.core.utils.AuthenticatedUserService;
+import com.remember.core.utils.AuthenticatedFacade;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Pageable;
@@ -24,12 +24,12 @@ import javax.persistence.EntityManager;
 @RequiredArgsConstructor
 public class QuestionsService {
     private final QuestionRepository repository;
-    private final QuestionDomainMapper deassembler;
+    private final QuestionFactory deassembler;
     private final UsersMeQuestionsAssembler listAssembler;
     private final PagedResourcesAssembler<Question> pageAssembler;
     private final EntityManager entityManager;
 
-    private final AuthenticatedUserService userTool;
+    private final AuthenticatedFacade userTool;
 
     public PagedModel<QuestionListResponseDto> findAll(Pageable pageable, QuestionParams params) {
         String baseUri = requestURL();

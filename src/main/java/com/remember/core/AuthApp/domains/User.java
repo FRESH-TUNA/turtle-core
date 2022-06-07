@@ -5,8 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * https://petrepopescu.tech/2021/01/exposing-sequential-ids-is-bad-here-is-how-to-avoid-it/
@@ -33,23 +31,14 @@ public class User {
     @Column
     private String picture;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private List<Role> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private ProviderType providerType;
 
-    /*
-     * methods
-     */
-    public void addRole(Role role) {
-        this.roles.add(role);
-    }
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     public boolean isOauth() {
-        return !this.email.equals(this.username);
+        return !this.providerType.equals(ProviderType.LOCAL);
     }
 
     public void oauthUserUpdate(String username, String picture) {
@@ -58,11 +47,19 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String password, String username, String email, String picture) {
+    public User(Long id,
+                String password,
+                String username,
+                String email,
+                String picture,
+                Role role,
+                ProviderType providerType) {
         this.id = id;
         this.password = password;
         this.username = username;
         this.email = email;
         this.picture = picture;
+        this.role = role;
+        this.providerType = providerType;
     }
 }

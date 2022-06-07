@@ -9,13 +9,13 @@ import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
 
 import com.remember.core.services.users.UsersMeQuestionsService;
-import com.remember.core.utils.linkBuilders.LinkBuilder;
 
 import com.remember.core.responses.AlgorithmResponseDto;
 import com.remember.core.responses.PlatformResponseDto;
 import com.remember.core.responses.PracticeStatusResponseDto;
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionListResponseDto;
+import com.remember.core.utils.linkBuilders.LinkBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
@@ -50,8 +50,6 @@ public class UsersMeQuestionsController {
     private final PracticeStatususService practiceStatususService;
     private final PlatformsService platformsService;
     private final AlgorithmsService algorithmsService;
-
-    private final LinkBuilder linkBuilder;
     private final String RESOURCES = "users/me/questions";
 
     /*
@@ -138,7 +136,7 @@ public class UsersMeQuestionsController {
         CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
 
-        String create_link = linkBuilder.getListLink(baseUri, RESOURCES).getHref();
+        String create_link = LinkBuilder.getListLink(baseUri, RESOURCES).getHref();
         model.addAttribute("create_link", create_link);
         model.addAttribute("platforms", platforms);
         model.addAttribute("practiceStatusus", practiceStatusus);
@@ -167,7 +165,7 @@ public class UsersMeQuestionsController {
     @GetMapping("/{id}/forms/delete")
     public String deleteView(@PathVariable Long id, Model model) {
         String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
-        String delete_link = linkBuilder.getDetailLink(baseUri, RESOURCES, id).getHref();
+        String delete_link = LinkBuilder.getDetailLink(baseUri, RESOURCES, id).getHref();
 
         model.addAttribute("delete_link", delete_link);
         return "users/questions/forms/delete";
