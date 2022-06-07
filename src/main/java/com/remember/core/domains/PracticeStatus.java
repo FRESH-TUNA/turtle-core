@@ -6,11 +6,33 @@ import java.util.List;
 import java.util.Objects;
 
 public enum PracticeStatus {
-    SOLVED,
-    TIMEOUT,
-    FAILED;
+    /*
+     * datas
+     */
+    SOLVED("성공", "#00ff00"),
+    TIMEOUT("시간초과", "#ffdb4d"),
+    FAILED("실패", "#ff3333");
 
     private static List<PracticeStatus> allList;
+
+    private final String STATUS;
+    private final String COLOR;
+
+    /*
+     * constructor
+     */
+    PracticeStatus(String STATUS, String COLOR) {
+        this.STATUS = STATUS;
+        this.COLOR = COLOR;
+    }
+
+    public String getStatus() {
+        return STATUS;
+    }
+
+    public String getColor() {
+        return COLOR;
+    }
 
     public static List<PracticeStatus> findAll() {
         if (Objects.isNull(allList)) {
