@@ -1,6 +1,6 @@
 package com.remember.core.utils;
 
-import com.remember.core.security.RememberUserDetails;
+import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

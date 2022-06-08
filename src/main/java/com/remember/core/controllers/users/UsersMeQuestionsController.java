@@ -1,7 +1,6 @@
 package com.remember.core.controllers.users;
 
-import com.remember.core.domains.PracticeStatus;
-import com.remember.core.exceptions.UnauthorizedException;
+import com.remember.core.exceptions.AuthorizationException;
 import com.remember.core.requests.QuestionRequestDto;
 import com.remember.core.responses.PracticeStatusResponseDto;
 import com.remember.core.responses.question.QuestionAlgorithmResponseDto;
@@ -182,7 +181,7 @@ public class UsersMeQuestionsController {
     }
 
     @ExceptionHandler
-    public ModelAndView unAuthorized(UnauthorizedException e) {
+    public ModelAndView unAuthorized(AuthorizationException e) {
         return new ModelAndView("redirect:");
     }
 }
