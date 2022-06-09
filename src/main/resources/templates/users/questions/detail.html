@@ -3,21 +3,41 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 
-<div layout:fragment="content">
-  <div class="container">
-    <h1 th:text="${question.getTitle}"/>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/static/css/users/questions/detail.css}"/>
+</th:block>
 
-    <h4>링크</h4>
-    <p th:text="${question.getLink}"/>
+<div layout:fragment="content" class="users question">
+    <th:block th:replace="users/questions/detail/header :: header"></th:block>
+    <th:block th:replace="users/questions/detail/updateForm :: updateForm"></th:block>
 
-    <h4>수록 플랫폼</h4>
-    <p th:text="${question.getPlatform.getName}"/>
+    <div class="container body">
+      <h4>링크</h4>
+      <p th:text="${question.getLink}"/>
 
+      <h4>수록 플랫폼</h4>
+      <p th:text="${question.getPlatform.getName}"/>
 
-<!--    <h2 th:text="${question.getPracticeStatus}"/>-->
+      <h4>풀이상태</h4>
+      <select class="selectpicker"
+              data-width="100px"
+              th:data-question="${question.getLink('self').get().getHref()}"
+              th:data-status="${question.getPracticeStatus}"
+      >
+        <option
+                th:data-content="${
+                                            '<span class=''badge'''
+                                            + 'style=''background-color: ' + s.getColor() + ''';''>'
+                                            + s.getStatus() + '</span>'}"
+                th:each="s: ${practiceStatusus}"
+                th:value="${s.getId()}"
+                th:selected="${s.getId() eq question.getPracticeStatus}">
+        </option>
+      </select>
 
-    <h4>알고리즘</h4>
+      <h4>알고리즘</h4>
       <p th:each="algo: ${question.algorithms}" th:text="${algo.name}"/>
-  </div>
+    </div>
+
 </div>
 </html>

@@ -1,0 +1,14 @@
+<html lagn="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<header th:fragment="header" class="container">
+    <div class="users question header">
+        <h3 th:text="'내가 푼 문제들 / ' + ${question.getTitle}"></h3>
+        <div>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">수정</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">삭제</button>
+        </div>
+    </div>
+</header>
+
+</html>

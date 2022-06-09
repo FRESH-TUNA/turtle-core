@@ -85,6 +85,13 @@ public class UsersMeQuestionsController {
             Model model, @PathVariable Long id) {
         QuestionResponseDto question = service.findById(id);
 
+        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
+        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
+
+        model.addAttribute("algorithms", algorithms);
+        model.addAttribute("practiceStatusus", practiceStatusus);
+        model.addAttribute("platforms", platforms);
         model.addAttribute("question", question);
         return "users/questions/detail";
     }

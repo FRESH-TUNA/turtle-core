@@ -1,0 +1,9 @@
+.users.question.header {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+}
+
+.users.question > .body > h4 {
+    padding-top: 30px;
+}

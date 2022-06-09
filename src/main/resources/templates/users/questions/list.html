@@ -21,7 +21,6 @@
                     <th scope="col">First</th>
                     <th scope="col">Last</th>
                     <th scope="col">Handle</th>
-                    <th scope="col">상태</th>
                 </tr>
             </thead>
             <tbody>
@@ -30,8 +29,14 @@
                         class="question"
                         th:classappend="${q.getId()}"
                 >
-                        <td th:text="${q.getTitle}"></td>
-                        <td th:text="${q.getLink}"></td>
+                        <td>
+                            <a th:text="${q.getTitle}" th:href="${q.getLink('self').get().getHref()}">
+                            </a>
+                        </td>
+                        <td>
+                            <a th:text="${q.getLink}" th:href="${q.getLink}">
+                            </a>
+                        </td>
                         <td th:text="${q.getPlatform}"></td>
                         <td>
                             <select class="selectpicker"
