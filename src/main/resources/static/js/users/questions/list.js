@@ -73,22 +73,22 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
     })
 
     // 검색 버튼을 클릭했을때
-    $('.users.questions.search > .form > button').on('click', function () {
+    $('.users.questions.search > .searchBar > button').on('click', function () {
         const status = $(".users.questions.search .selectpicker").val(); // selectpicker
         const questions_url = document
             .getElementsByClassName("users questions root")[0]
             .getAttribute("data-questions-url");
         const title = document
-            .querySelector(".users.questions.search > .form > .form-control").value;
+            .querySelector(".users.questions.search > .searchBar > input").value;
 
         reload_questions(questions_url, status, title);
     });
 
     // 검색어를 입력한후 엔터를 쳣을때
-    $('.users.questions.search > .form > input').on('keypress', function (event) {
+    $('.users.questions.search > .searchBar > input').on('keypress', function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            document.querySelector(".users.questions.search > .form > button").click();
+            document.querySelector(".users.questions.search > .searchBar > button").click();
         }
     });
 });

@@ -5,6 +5,13 @@
 
 <div layout:fragment="content">
     <div class="container">
+
+        <div class="alert alert-primary d-flex align-items-center" role="alert" th:if="${error}">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+            <div th:text="${error}">
+            </div>
+        </div>
+
         <form action="/api/v1/auth/login" method="post">
             <div class="form-group">
                 <label th:for="username">이메일</label>

@@ -3,14 +3,14 @@ package com.remember.core.AuthenticationApp.services;
 import com.remember.core.AuthenticationApp.domains.ProviderType;
 import com.remember.core.AuthenticationApp.domains.User;
 import com.remember.core.AuthenticationApp.dtos.OAuth2UserInfos.OAuth2UserInfo;
-import com.remember.core.exceptions.AuthenticationException;
+import com.remember.core.exceptions.RememberAuthenticationException;
 import com.remember.core.AuthenticationApp.factories.OAuth2UserInfoFactory;
 import com.remember.core.AuthenticationApp.repositories.UsersRepository;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CustomOAuth2UserService extends DefaultOAuth2UserService {
+public class RememberOAuth2UserService extends DefaultOAuth2UserService {
 
     private final UsersRepository userRepository;
 
@@ -34,11 +34,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         try {
             return this.process(userRequest, user);
-        } catch (org.springframework.security.core.AuthenticationException ex) {
+        } catch (AuthenticationException ex) {
             throw ex;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new InternalAuthenticationServiceException(ex.getMessage(), ex.getCause());
         }
     }
 
@@ -54,7 +51,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (userWrapper.isPresent()) {
             savedUser = userWrapper.get();
             if (providerType != savedUser.getProviderType())
-                throw new AuthenticationException(ErrorCode.OAUTH_PROVIDER_MISMATCH);
+                throw new RememberAuthenticationException(ErrorCode.OAUTH_PROVIDER_MISMATCH);
             savedUser.oauthUserUpdate(userInfo.getId(), userInfo.getImageUrl());
 
         } else

@@ -1,4 +1,4 @@
-package com.remember.core.controllers.users;
+package com.remember.core.controllers;
 
 import com.remember.core.exceptions.AuthorizationException;
 import com.remember.core.requests.QuestionRequestDto;
@@ -61,10 +61,11 @@ public class UsersMeQuestionsController {
                           HttpServletRequest request,
                           @ModelAttribute QuestionParams params,
                           Model model) {
-
         PagedModel<QuestionListResponseDto> questions = service.findAll(pageable, params);
-        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
 
+        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
+        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
         /*
          * modeling
          */
@@ -73,6 +74,8 @@ public class UsersMeQuestionsController {
         model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
         model.addAttribute("questions_url", request.getRequestURL());
         model.addAttribute("questions", questions);
+        model.addAttribute("platforms", platforms);
+        model.addAttribute("algorithms", algorithms);
         model.addAttribute("practiceStatusus", practiceStatusus);
         return "users/questions/list";
     }

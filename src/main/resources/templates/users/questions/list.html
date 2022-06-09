@@ -11,8 +11,8 @@
     <link rel="stylesheet" th:href="@{/static/css/users/questions/list.css}"/>
 </th:block>
 
-<div layout:fragment="content" class="users questions root" th:data-questions-url="${questions_url}">
-    <div class="container">
+<div layout:fragment="content" class="users questions root container" th:data-questions-url="${questions_url}">
+        <th:block th:replace="users/questions/list/header :: header"></th:block>
         <th:block th:replace="users/questions/list/search :: search"></th:block>
         <table class="table datas">
             <thead>
@@ -54,9 +54,7 @@
                 </tr>
             </tbody>
         </table>
-
         <th:block th:replace="users/questions/list/paginator :: paginator"></th:block>
-    </div>
 </div>
 
 </html>
