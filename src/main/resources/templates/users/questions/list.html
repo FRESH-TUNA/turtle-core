@@ -11,7 +11,11 @@
     <link rel="stylesheet" th:href="@{/static/css/users/questions/list.css}"/>
 </th:block>
 
-<div layout:fragment="content" class="users questions root container" th:data-questions-url="${questions_url}">
+<div layout:fragment="content" class="users questions root container"
+     th:data-questions-url="${questions_url}"
+     th:data-platforms_url="${platforms_url}"
+     th:data-algorithms_url="${algorithms_url}"
+>
         <th:block th:replace="users/questions/list/header :: header"></th:block>
         <th:block th:replace="users/questions/list/search :: search"></th:block>
         <table class="table datas">
@@ -30,12 +34,10 @@
                         th:classappend="${q.getId()}"
                 >
                         <td>
-                            <a th:text="${q.getTitle}" th:href="${q.getLink('self').get().getHref()}">
-                            </a>
+                            <a th:text="${q.getTitle}" th:href="${q.getLink('self').get().getHref()}"></a>
                         </td>
                         <td>
-                            <a th:text="${q.getLink}" th:href="${q.getLink}">
-                            </a>
+                            <a th:text="${q.getLink}" th:href="${q.getLink}"></a>
                         </td>
                         <td th:text="${q.getPlatform}"></td>
                         <td>

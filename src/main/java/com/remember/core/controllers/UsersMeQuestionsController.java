@@ -15,6 +15,7 @@ import com.remember.core.responses.AlgorithmResponseDto;
 import com.remember.core.responses.PlatformResponseDto;
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionListResponseDto;
+import com.remember.core.utils.ServerContext;
 import com.remember.core.utils.linkBuilders.LinkBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -48,10 +49,16 @@ import java.util.stream.Collectors;
 @RequestMapping("/users/me/questions")
 public class UsersMeQuestionsController {
     private final UsersMeQuestionsService service;
+
+    // for models
     private final PracticeStatususService practiceStatususService;
     private final PlatformsService platformsService;
     private final AlgorithmsService algorithmsService;
+
+    private final ServerContext context;
     private final String RESOURCES = "users/me/questions";
+    private final String ALGORITHMS = "algorithms";
+    private final String PLATFORMS = "platforms";
 
     /*
      * SSR views
@@ -63,19 +70,20 @@ public class UsersMeQuestionsController {
                           Model model) {
         PagedModel<QuestionListResponseDto> questions = service.findAll(pageable, params);
 
-        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
-        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
-        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
         /*
          * modeling
          */
+        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+
         model.addAttribute("search_status",
                 params.getPracticeStatus() == null ? 0L : params.getPracticeStatus());
         model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
-        model.addAttribute("questions_url", request.getRequestURL());
         model.addAttribute("questions", questions);
-
-        model.addAttribute("platforms", platforms);
+        model.addAttribute("questions_url", request.getRequestURL());
+        model.addAttribute("platforms_url", LinkBuilder
+                .getListLink(context.getRoot(), PLATFORMS).getHref());
+        model.addAttribute("algorithms_url", LinkBuilder
+                .getListLink(context.getRoot(), ALGORITHMS).getHref());
         model.addAttribute("practiceStatusus", practiceStatusus);
         return "users/questions/list";
     }
@@ -85,13 +93,12 @@ public class UsersMeQuestionsController {
             Model model, @PathVariable Long id) {
         QuestionResponseDto question = service.findById(id);
 
-        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
+        /*
+         * modeling
+         */
         List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
-        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
 
-        model.addAttribute("algorithms", algorithms);
         model.addAttribute("practiceStatusus", practiceStatusus);
-        model.addAttribute("platforms", platforms);
         model.addAttribute("question", question);
         return "users/questions/detail";
     }
@@ -102,9 +109,7 @@ public class UsersMeQuestionsController {
         if(bindingResult.hasErrors()){
             return "redirect:questions/forms/create";
         }
-
         service.create(ro);
-
         return "redirect:questions";
     }
 
@@ -137,36 +142,19 @@ public class UsersMeQuestionsController {
         return "redirect:";
     }
 
-    /*
-     * forms
-     */
-    @GetMapping("/forms/create")
-    public String createView( Model model) {
-        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
-        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
-        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
-        String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
-
-        String create_link = LinkBuilder.getListLink(baseUri, RESOURCES).getHref();
-        model.addAttribute("create_link", create_link);
-        model.addAttribute("platforms", platforms);
-        model.addAttribute("practiceStatusus", practiceStatusus);
-        model.addAttribute("algorithms", algorithms.getContent());
-        return "users/questions/forms/create";
-    }
-
     @GetMapping("/{id}/forms/update")
     public String updateView(@PathVariable Long id, Model model) {
         QuestionResponseDto question = service.findById(id);
         CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
         List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
         CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
-        Set<Long> curAlgorithms = question.getAlgorithms().stream()
-                .map(QuestionAlgorithmResponseDto::getId)
-                .collect(Collectors.toSet());
 
-        model.addAttribute("algorithms", algorithms.getContent());
+        /*
+         * modeling
+         */
+        Set<Long> curAlgorithms = question.getAlgorithms().stream().map(a -> a.getId()).collect(Collectors.toSet());
         model.addAttribute("curAlgorithms", curAlgorithms);
+        model.addAttribute("algorithms", algorithms.getContent());
         model.addAttribute("platforms", platforms);
         model.addAttribute("practiceStatusus", practiceStatusus);
         model.addAttribute("question", question);

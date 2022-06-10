@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 
-<div layout:fragment="content">
+<div layout:fragment="content" class="container">
     <form th:action="${question.getLink('self').get().getHref()}" method="post">
         <input type="hidden" name="_method" value="PUT"/>
         <div class="form-group">
@@ -27,17 +27,30 @@
         </div>
         <div class="form-group">
             <label th:for="practiceStatus">풀이여부</label>
-            <select name="practiceStatus">
-                <option th:each="status : ${practiceStatusus}"
-                        th:value="${status.getStatus}"
-                        th:utext="${status.getStatus}"
-                        th:selected="${status.getStatus eq question.getPracticeStatus}"
-                />
+            <select class="selectpicker"
+                    data-width="100px"
+                    name="practiceStatus"
+                    title="선택"
+            >
+                <option
+                        th:selected="${s.getId() eq question.getPracticeStatus()}"
+                        th:each="s: ${practiceStatusus}"
+                        th:data-content="${
+                                            '<span class=''badge'''
+                                            + 'style=''background-color: ' + s.getColor() + ''';''>'
+                                            + s.getStatus() + '</span>'}"
+                        th:value="${s.getId()}">
+                </option>
             </select>
         </div>
         <div class="form-group">
-            <label for="algorithms">알고리즘</label>
-            <select multiple class="form-control" id="algorithms" name="algorithms">
+            <label th:for="algorithms">알고리즘</label>
+            <select class="selectpicker algorithms"
+                    data-width="100px"
+                    name="algorithms"
+                    title="선택"
+                    multiple
+            >
                 <option th:each="algorithm : ${algorithms}"
                         th:value="${algorithm.getLink('self').get().getHref()}"
                         th:utext="${algorithm.getName}"

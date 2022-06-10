@@ -18,9 +18,11 @@ public class AlgorithmsAssembler implements RepresentationModelAssembler<Algorit
 
     @Override
     public AlgorithmResponseDto toModel(Algorithm entity) {
-        AlgorithmResponseDto algorithm = new AlgorithmResponseDto(entity);
-        String base = serverContext.getRoot();
-        algorithm.add(LinkBuilder.getDetailLink(base, resources, algorithm.getId()).withSelfRel());
-        return algorithm;
+        return addSelfLink(new AlgorithmResponseDto(entity), entity.getId());
+    }
+
+    public AlgorithmResponseDto addSelfLink(AlgorithmResponseDto dto, Long id) {
+        dto.add(LinkBuilder.getDetailLink(serverContext.getRoot(), resources, id).withSelfRel());
+        return dto;
     }
 }

@@ -51,15 +51,6 @@ function platform_dom(platform) {
 /*
  * service
  */
-function reload_questions(questions_url, status, title) {
-    questions_url = new URL(questions_url);
-
-    if(title != "")
-        questions_url.searchParams.append("title", title);
-    if(status != 0)
-        questions_url.searchParams.append("practiceStatus", status);
-    window.location.href=questions_url;
-}
 
 async function question_status_update_handler(select_dom, question, old_status, new_status) {
     if (old_status != new_status) {
@@ -78,7 +69,7 @@ async function algorithms_fetch_when_select_click(select) {
     const select_dom = select[0];
 
     const algorithms_url = document
-        .getElementsByClassName("users questions root")[0]
+        .getElementsByClassName("users question root")[0]
         .getAttribute("data-algorithms_url");
 
     const data = await findall(algorithms_url);
@@ -93,7 +84,7 @@ async function platforms_fetch_when_select_click(select) {
     const select_dom = select[0];
 
     const platforms_url = document
-        .getElementsByClassName("users questions root")[0]
+        .getElementsByClassName("users question root")[0]
         .getAttribute("data-platforms_url");
 
     const data = await findall(platforms_url);
@@ -128,48 +119,9 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
     })
 
     /*
-     * search handler
-     */
-    // 상태 필터를 걸었을때
-    $('.users.questions.search select').on('changed.bs.select', async function (e, clickedIndex, isSelected, oldValue) {
-        // selectpicker 메소드를 통해 조작시 clickedIndex와 isSelected는 null 이 된다.
-        if (clickedIndex != null) {
-            const status = $(this).val(); // selectpicker
-            const questions_url = document
-                .getElementsByClassName("users questions root")[0]
-                .getAttribute("data-questions-url");
-            const title = document
-                .querySelector(".users.questions.search > .searchBar > input").value;
-
-            reload_questions(questions_url, status, title);
-        }
-        $(".users.questions.search .selectpicker").val()
-    })
-
-    // 검색 버튼을 클릭했을때
-    $('.users.questions.search > .searchBar > button').on('click', function () {
-        const status = $(".users.questions.search .selectpicker").val(); // selectpicker
-        const questions_url = document
-            .getElementsByClassName("users questions root")[0]
-            .getAttribute("data-questions-url");
-        const title = document
-            .querySelector(".users.questions.search > .searchBar > input").value;
-
-        reload_questions(questions_url, status, title);
-    });
-
-    // 검색어를 입력한후 엔터를 쳣을때
-    $('.users.questions.search > .searchBar > input').on('keypress', function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            document.querySelector(".users.questions.search > .searchBar > button").click();
-        }
-    });
-
-    /*
      * 알고리즘 정보를 읽어옴
      */
-    $('.users.questions.create-modal .algorithms.selectpicker')
+    $('.users.question.update-modal .algorithms.selectpicker')
         .on('show.bs.select', async function (e, clickedIndex, isSelected, previousValue) {
             if(!ALGORITHMS_FETCHED) {
                 try {
@@ -179,10 +131,10 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
                     alertify.error('서버 장애가 발생했습니다. 잠시후 다시 시도하세요');
                 }
             }
-    });
+        });
 
     // 플랫폼 정보를 읽어옴
-    $('.users.questions.create-modal .platforms.selectpicker')
+    $('.users.question.update-modal .platforms.selectpicker')
         .on('show.bs.select', async function (e, clickedIndex, isSelected, previousValue) {
             if(!PLATFORMS_FETCHERD) {
                 try {
@@ -192,5 +144,5 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
                     alertify.error('서버 장애가 발생했습니다. 잠시후 다시 시도하세요');
                 }
             }
-    });
+        });
 });

@@ -3,11 +3,15 @@
 
 <header th:fragment="header" class="container">
     <div class="users question header">
-        <h3 th:text="'내가 푼 문제들 / ' + ${question.getTitle}"></h3>
+        <h3 th:text="'내가 푼 문제들 / ' + ${question.getTitle}"
+            th:data-question_title="${question.getTitle}"
+            class="title"
+        />
         <div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateModal">수정</button>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">삭제</button>
+            <a th:href="${question.getLink('self').get().getHref()} + '/forms/update'"><button type="button" class="btn btn-primary">수정</button></a>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">삭제</button>
         </div>
+        <th:block th:replace="users/questions/detail/deleteModal :: deleteModal"></th:block>
     </div>
 </header>
 
