@@ -2,6 +2,7 @@
     display: flex;
     padding-top: 30px;
     padding-bottom: 15px;
+    flex-flow: wrap;
 }
 
 .users.questions.search form {
@@ -12,6 +13,7 @@
     display: flex;
     justify-content: space-between;
     padding-top: 30px;
+    flex-flow: wrap;
 }
 
 .users.questions.search .options .practiceStatus{
@@ -23,6 +25,9 @@
     direction: rtl;
 }
 
+/*
+ * searchBar
+ */
 .searchBar {
     width: 200px;
     display: flex;
