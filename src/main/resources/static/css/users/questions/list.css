@@ -76,3 +76,10 @@
 .searchBar #searchQuerySubmit:hover {
     cursor: pointer;
 }
+
+/*
+ * createModal
+ */
+.users.questions.root .create-modal .form-group {
+    padding-bottom: 20px;
+}

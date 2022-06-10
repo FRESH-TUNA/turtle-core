@@ -16,8 +16,10 @@
      th:data-platforms_url="${platforms_url}"
      th:data-algorithms_url="${algorithms_url}"
 >
-        <th:block th:replace="users/questions/list/header :: header"></th:block>
-        <th:block th:replace="users/questions/list/search :: search"></th:block>
+    <th:block th:replace="users/questions/list/header :: header"></th:block>
+    <th:block th:replace="users/questions/list/search :: search"></th:block>
+
+    <div class="table-responsive-lg">
         <table class="table datas">
             <thead>
                 <tr>
@@ -61,7 +63,8 @@
                 </tr>
             </tbody>
         </table>
-        <th:block th:replace="users/questions/list/paginator :: paginator"></th:block>
+    </div>
+    <th:block th:replace="users/questions/list/paginator :: paginator"></th:block>
 </div>
 
 </html>
