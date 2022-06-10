@@ -21,8 +21,9 @@
     float: right;
 }
 
-.users.questions.root .pagination {
-    direction: rtl;
+.users.questions.root .paginator {
+    display: flex;
+    justify-content: flex-end;
 }
 
 /*
@@ -87,4 +88,16 @@
  */
 .users.questions.root .create-modal .form-group {
     padding-bottom: 20px;
+}
+
+/*
+ * table
+ */
+td {
+    min-width: 100px;
+    max-width: 200px;
+}
+
+td.title {
+    min-width: 150px;
 }

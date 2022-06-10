@@ -19,7 +19,7 @@
     <th:block th:replace="users/questions/list/header :: header"></th:block>
     <th:block th:replace="users/questions/list/search :: search"></th:block>
 
-    <div class="table-responsive-lg">
+    <div class="table-responsive-xl">
         <table class="table datas">
             <thead>
                 <tr>
@@ -35,11 +35,11 @@
                         class="question"
                         th:classappend="${q.getId()}"
                 >
-                        <td>
+                        <td class="title">
                             <a th:text="${q.getTitle}" th:href="${q.getLink('self').get().getHref()}"></a>
                         </td>
                         <td>
-                            <a th:text="${q.getLink}" th:href="${q.getLink}"></a>
+                            <a th:text="${q.getLink}" th:href="${q.getLink}" target="_blank" rel="noopener noreferrer"></a>
                         </td>
                         <td th:text="${q.getPlatform}"></td>
                         <td>

@@ -1,7 +1,7 @@
 <html lagn="ko"
       xmlns:th="http://www.thymeleaf.org">
 
-<nav aria-label="Page navigation example" th:fragment="paginator" class="container">
+<nav th:fragment="paginator" class="paginator container">
     <ul class="pagination"
         th:with="start=${questions.getMetadata().getNumber()},
                          totalPages=${questions.getMetadata().getTotalPages()},

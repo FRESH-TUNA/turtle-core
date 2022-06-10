@@ -54,15 +54,10 @@ public class UsersMeQuestionsController {
     private final PracticeStatususService practiceStatususService;
     private final PlatformsService platformsService;
     private final AlgorithmsService algorithmsService;
-
     private final ServerContext context;
-    private final String RESOURCES = "users/me/questions";
     private final String ALGORITHMS = "algorithms";
     private final String PLATFORMS = "platforms";
 
-    /*
-     * SSR views
-     */
     @GetMapping
     public String findAll(Pageable pageable,
                           HttpServletRequest request,
@@ -142,6 +137,9 @@ public class UsersMeQuestionsController {
         return "redirect:";
     }
 
+    /*
+     * update form
+     */
     @GetMapping("/{id}/forms/update")
     public String updateView(@PathVariable Long id, Model model) {
         QuestionResponseDto question = service.findById(id);
