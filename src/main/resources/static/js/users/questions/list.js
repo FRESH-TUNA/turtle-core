@@ -2,11 +2,11 @@
  * state variables
  */
 let ALGORITHMS_FETCHED = false;
-
+let PLATFORMS_FETCHERD = false;
 
 
 /*
- * request functions
+ * components
  */
 async function findall(url) {
     return axios({
@@ -26,9 +26,6 @@ async function question_status_update(question_url, status_url) {
     });
 }
 
-/*
- * components
- */
 function algorithms_dom_create(algorithms) {
     return algorithms.map(algorithm_dom);
 }
@@ -37,6 +34,17 @@ function algorithm_dom(algorithm) {
     const dom = document.createElement("option");
     dom.setAttribute("data-content", algorithm.name);
     dom.value = algorithm._links.self.href;
+    return dom;
+}
+
+function platforms_dom_create(platforms) {
+    return platforms.map(platform_dom);
+}
+
+function platform_dom(platform) {
+    const dom = document.createElement("option");
+    dom.setAttribute("data-content", platform.name);
+    dom.value = platform._links.self.href;
     return dom;
 }
 
@@ -66,8 +74,6 @@ async function question_status_update_handler(select_dom, question, old_status, 
     }
 }
 
-
-
 async function algorithms_fetch_when_select_click(select) {
     const select_dom = select[0];
     const data = await findall("http://localhost:8080/api/v1/algorithms");
@@ -77,6 +83,17 @@ async function algorithms_fetch_when_select_click(select) {
         select_dom.appendChild(a);
     select.selectpicker('refresh');
 }
+
+async function platforms_fetch_when_select_click(select) {
+    const select_dom = select[0];
+    const data = await findall("http://localhost:8080/api/v1/platforms");
+    const platforms = platforms_dom_create(data.data._embedded.platforms);
+
+    for(a of platforms)
+        select_dom.appendChild(a);
+    select.selectpicker('refresh');
+}
+
 
 /*
  * event handlers
@@ -145,8 +162,17 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
     $('.users.questions.create-modal .algorithms.selectpicker')
         .on('show.bs.select', async function (e, clickedIndex, isSelected, previousValue) {
             if(!ALGORITHMS_FETCHED) {
-                await algorithms_fetch_when_select_click($(this), e.target);
+                await algorithms_fetch_when_select_click($(this));
                 ALGORITHMS_FETCHED = true;
+            }
+    });
+
+    // 플랫폼 정보를 읽어옴
+    $('.users.questions.create-modal .platforms.selectpicker')
+        .on('show.bs.select', async function (e, clickedIndex, isSelected, previousValue) {
+            if(!PLATFORMS_FETCHERD) {
+                await platforms_fetch_when_select_click($(this));
+                PLATFORMS_FETCHERD = true;
             }
     });
 });

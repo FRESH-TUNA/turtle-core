@@ -22,15 +22,10 @@
                     </div>
                     <div class="form-group">
                         <label th:for="platform">플랫폼</label>
-                        <select class="selectpicker"
+                        <select class="selectpicker platforms"
                                 data-width="100px"
                                 name="platform"
                         >
-                            <option
-                                    th:each="platform: ${platforms}"
-                                    th:data-content="${platform.getName}"
-                                    th:value="${platform.getLink('self').get().getHref()}">
-                            </option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -55,14 +50,8 @@
                         <select class="selectpicker algorithms"
                                 data-width="100px"
                                 name="algorithms"
-
                                 multiple
                         >
-<!--                            <option-->
-<!--                                    th:each="algorithm : ${algorithms}"-->
-<!--                                    th:data-content="${algorithm.getName}"-->
-<!--                                    th:value="${algorithm.getLink('self').get().getHref()}">-->
-<!--                            </option>-->
                         </select>
                     </div>
             </div>
