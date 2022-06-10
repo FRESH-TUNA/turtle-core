@@ -161,15 +161,6 @@ public class UsersMeQuestionsController {
         return "users/questions/forms/update";
     }
 
-    @GetMapping("/{id}/forms/delete")
-    public String deleteView(@PathVariable Long id, Model model) {
-        String baseUri = BasicLinkBuilder.linkToCurrentMapping().toString();
-        String delete_link = LinkBuilder.getDetailLink(baseUri, RESOURCES, id).getHref();
-
-        model.addAttribute("delete_link", delete_link);
-        return "users/questions/forms/delete";
-    }
-
     /*
      * exception handlers
      */

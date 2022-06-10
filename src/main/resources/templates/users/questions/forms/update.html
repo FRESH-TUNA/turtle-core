@@ -3,7 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/static/css/users/questions/forms/update.css}"/>
+</th:block>
+
 <div layout:fragment="content" class="container">
+    <h3 th:text="${question.getTitle()} + ' / 수정'"></h3>
+
     <form th:action="${question.getLink('self').get().getHref()}" method="post">
         <input type="hidden" name="_method" value="PUT"/>
         <div class="form-group">
@@ -59,7 +65,7 @@
                 </option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">수정</button>
     </form>
 </div>
 </html>

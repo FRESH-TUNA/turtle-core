@@ -30,7 +30,7 @@
       <h4>풀이상태</h4>
       <select class="selectpicker practiceStatus"
               data-width="100px"
-              th:data-question="${question.getLink('self').get().getHref()}"
+              th:data-question_url="${question.getLink('self').get().getHref()}"
               th:data-question_status="${question.getPracticeStatus}"
       >
         <option
