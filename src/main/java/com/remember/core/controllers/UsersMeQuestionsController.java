@@ -74,8 +74,8 @@ public class UsersMeQuestionsController {
         model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
         model.addAttribute("questions_url", request.getRequestURL());
         model.addAttribute("questions", questions);
+
         model.addAttribute("platforms", platforms);
-        model.addAttribute("algorithms", algorithms);
         model.addAttribute("practiceStatusus", practiceStatusus);
         return "users/questions/list";
     }

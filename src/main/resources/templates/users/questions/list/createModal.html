@@ -52,17 +52,17 @@
                     </div>
                     <div class="form-group">
                         <label th:for="algorithms">알고리즘</label>
-                        <select class="selectpicker"
+                        <select class="selectpicker algorithms"
                                 data-width="100px"
                                 name="algorithms"
 
                                 multiple
                         >
-                            <option
-                                    th:each="algorithm : ${algorithms}"
-                                    th:data-content="${algorithm.getName}"
-                                    th:value="${algorithm.getLink('self').get().getHref()}">
-                            </option>
+<!--                            <option-->
+<!--                                    th:each="algorithm : ${algorithms}"-->
+<!--                                    th:data-content="${algorithm.getName}"-->
+<!--                                    th:value="${algorithm.getLink('self').get().getHref()}">-->
+<!--                            </option>-->
                         </select>
                     </div>
             </div>

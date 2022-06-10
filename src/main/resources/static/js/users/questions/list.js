@@ -1,3 +1,21 @@
+/*
+ * state variables
+ */
+let ALGORITHMS_FETCHED = false;
+
+
+
+/*
+ * request functions
+ */
+async function findall(url) {
+    return axios({
+        url: url,
+        method: "GET",
+        headers: { "Content-Type": `application/json`}
+    });
+}
+
 async function question_status_update(question_url, status_url) {
     return axios({
         url: question_url,
@@ -6,6 +24,33 @@ async function question_status_update(question_url, status_url) {
         withCredentials: true,
         headers: { "Content-Type": `application/json`}
     });
+}
+
+/*
+ * components
+ */
+function algorithms_dom_create(algorithms) {
+    return algorithms.map(algorithm_dom);
+}
+
+function algorithm_dom(algorithm) {
+    const dom = document.createElement("option");
+    dom.setAttribute("data-content", algorithm.name);
+    dom.value = algorithm._links.self.href;
+    return dom;
+}
+
+/*
+ * service
+ */
+function reload_questions(questions_url, status, title) {
+    questions_url = new URL(questions_url);
+
+    if(title != "")
+        questions_url.searchParams.append("title", title);
+    if(status != 0)
+        questions_url.searchParams.append("practiceStatus", status);
+    window.location.href=questions_url;
 }
 
 async function question_status_update_handler(select_dom, question, old_status, new_status) {
@@ -21,18 +66,20 @@ async function question_status_update_handler(select_dom, question, old_status, 
     }
 }
 
-function reload_questions(questions_url, status, title) {
-    questions_url = new URL(questions_url);
 
-    if(title != "")
-        questions_url.searchParams.append("title", title);
-    if(status != 0)
-        questions_url.searchParams.append("practiceStatus", status);
-    window.location.href=questions_url;
+
+async function algorithms_fetch_when_select_click(select) {
+    const select_dom = select[0];
+    const data = await findall("http://localhost:8080/api/v1/algorithms");
+    const algorithms = algorithms_dom_create(data.data._embedded.algorithms);
+
+    for(a of algorithms)
+        select_dom.appendChild(a);
+    select.selectpicker('refresh');
 }
 
 /*
- * handlers
+ * event handlers
  */
 document.addEventListener("DOMContentLoaded", function() {    // Handler when the DOM is fully loaded});
     $('.users.questions .datas select').on('changed.bs.select', async function (e, clickedIndex, isSelected, oldValue) {
@@ -90,5 +137,16 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
             event.preventDefault();
             document.querySelector(".users.questions.search > .searchBar > button").click();
         }
+    });
+
+    /*
+     * 알고리즘 정보를 읽어옴
+     */
+    $('.users.questions.create-modal .algorithms.selectpicker')
+        .on('show.bs.select', async function (e, clickedIndex, isSelected, previousValue) {
+            if(!ALGORITHMS_FETCHED) {
+                await algorithms_fetch_when_select_click($(this), e.target);
+                ALGORITHMS_FETCHED = true;
+            }
     });
 });
