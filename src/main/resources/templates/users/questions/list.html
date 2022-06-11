@@ -9,17 +9,19 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/static/css/users/questions/list.css}"/>
+    <link th:href="@{/static/css/components/error.css}" rel="stylesheet">
 </th:block>
 
-<div layout:fragment="content" class="users questions root container"
+<div layout:fragment="content" class="users questions root"
      th:data-questions-url="${questions_url}"
      th:data-platforms_url="${platforms_url}"
      th:data-algorithms_url="${algorithms_url}"
 >
+    <th:block th:replace="components/error :: error"></th:block>
     <th:block th:replace="users/questions/list/header :: header"></th:block>
     <th:block th:replace="users/questions/list/search :: search"></th:block>
 
-    <div class="table-responsive-xl">
+    <div class="table-responsive-xl container">
         <table class="table datas">
             <thead>
                 <tr>

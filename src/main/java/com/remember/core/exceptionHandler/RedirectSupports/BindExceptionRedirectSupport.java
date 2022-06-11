@@ -24,6 +24,8 @@ public class BindExceptionRedirectSupport {
         switch (pathInfo) {
             case "/users":
                 return "/users/forms/create";
+            case "/users/me/questions":
+                return "/users/me/questions";
             default:
                 return "/";
         }

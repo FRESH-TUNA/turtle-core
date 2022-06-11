@@ -3,12 +3,10 @@ package com.remember.core.controllers;
 import com.remember.core.exceptions.AuthorizationException;
 import com.remember.core.requests.QuestionRequestDto;
 import com.remember.core.responses.PracticeStatusResponseDto;
-import com.remember.core.responses.question.QuestionAlgorithmResponseDto;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
-
 import com.remember.core.services.UsersMeQuestionsService;
 
 import com.remember.core.responses.AlgorithmResponseDto;
@@ -23,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.server.mvc.BasicLinkBuilder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -70,16 +68,19 @@ public class UsersMeQuestionsController {
          */
         List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
 
+        model.addAttribute("questions", questions);
+        model.addAttribute("practiceStatusus", practiceStatusus);
+
         model.addAttribute("search_status",
                 params.getPracticeStatus() == null ? 0L : params.getPracticeStatus());
         model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
-        model.addAttribute("questions", questions);
+
         model.addAttribute("questions_url", request.getRequestURL());
         model.addAttribute("platforms_url", LinkBuilder
                 .getListLink(context.getRoot(), PLATFORMS).getHref());
         model.addAttribute("algorithms_url", LinkBuilder
                 .getListLink(context.getRoot(), ALGORITHMS).getHref());
-        model.addAttribute("practiceStatusus", practiceStatusus);
+
         return "users/questions/list";
     }
 
@@ -99,11 +100,7 @@ public class UsersMeQuestionsController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String create(@ModelAttribute @Validated QuestionRequestDto ro,
-                         BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
-            return "redirect:questions/forms/create";
-        }
+    public String create(@ModelAttribute @Validated QuestionRequestDto ro) {
         service.create(ro);
         return "redirect:questions";
     }

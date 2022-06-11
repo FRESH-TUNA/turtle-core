@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <div th:fragment="error" class="container">
+        <div th:if="${error}">
+            <div class="alert alert-primary d-flex align-items-center" role="alert" th:if="${error.getErrors().isEmpty()}">
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                <div th:text="${error.getMessage()}">
+                </div>
+            </div>
+
+            <div class="alert alert-primary d-flex align-items-center" role="alert"
+                 th:each="e: ${error.getErrors()}" th:text="${e.getReason()}"
+            >
+                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+                <div th:text="e.getReason()">
+                </div>
+            </div>
+        </div>
+    </div>
+</html>
