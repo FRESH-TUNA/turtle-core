@@ -11,6 +11,7 @@ import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.RememberAuthenticationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class UsersService {
     private final UsersRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
     private final SessionTool sessionTool;
 
     @Transactional
@@ -28,6 +30,8 @@ public class UsersService {
 
         if(userRepository.findByEmail(userRequestDto.getUsername()).isPresent())
             throw new RememberAuthenticationException(ErrorCode.SAME_EMAIL_EXSITED);
+
+        user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
 
         user = userRepository.save(user);
 

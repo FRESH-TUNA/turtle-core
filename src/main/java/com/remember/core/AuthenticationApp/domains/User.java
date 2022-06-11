@@ -48,6 +48,10 @@ public class User {
         this.picture = picture;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Builder
     public User(Long id,
                 String password,

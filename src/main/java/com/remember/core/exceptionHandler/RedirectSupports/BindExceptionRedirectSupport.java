@@ -24,8 +24,8 @@ public class BindExceptionRedirectSupport {
     private static String viewName(HttpServletRequest request) {
         String pathInfo = request.getServletPath();
         switch (pathInfo) {
-            case "/users":
-                return "/users/forms/create";
+            case "/auth/signup":
+                return "/auth/forms/signup";
             case "/users/me/questions":
                 return "/users/me/questions";
         }

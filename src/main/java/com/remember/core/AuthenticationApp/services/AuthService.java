@@ -6,7 +6,6 @@ import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
 import com.remember.core.AuthenticationApp.repositories.UsersRepository;
 import com.remember.core.AuthenticationApp.domains.User;
 
-import com.remember.core.AuthenticationApp.tools.SessionTool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

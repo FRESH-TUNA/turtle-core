@@ -3,27 +3,13 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 
-<div layout:fragment="content">
-    <div class="container">
-        <div th:if="${error}">
-            <div class="alert alert-primary d-flex align-items-center" role="alert" th:if="${error.getErrors().isEmpty()}">
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-                <div th:text="${error.getMessage()}">
-                </div>
-            </div>
+<th:block layout:fragment="css">
+    <link th:href="@{/static/css/components/error.css}" rel="stylesheet">
+</th:block>
 
-            <div class="alert alert-primary d-flex align-items-center" role="alert"
-                 th:each="e: ${error.getErrors()}" th:text="${e.getReason()}"
-            >
-                <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
-                <div th:text="e.getReason()">
-                </div>
-            </div>
-        </div>
-
-        </h2>
-
-        <form action="/api/v1/users" method="post">
+<div layout:fragment="content" class="container">
+    <th:block th:replace="components/error :: error"></th:block>
+    <form th:action="@{/auth/signup}" method="post">
             <div class="form-group">
                 <label th:for="username">이메일</label>
                 <input type="text" name="username" class="form-control" placeholder="이메일 입력해주세요">
@@ -41,7 +27,6 @@
                 <input type="password" class="form-control" name="nickname" placeholder="비밀번호">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
+    </form>
 </div>
 </html>

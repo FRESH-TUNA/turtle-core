@@ -4,10 +4,12 @@ import com.remember.core.AuthenticationApp.services.AuthService;
 import com.remember.core.AuthenticationApp.services.RememberOAuth2UserService;
 import com.remember.core.exceptionHandler.OAuth2AuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,6 +30,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Override
+    public void configure(WebSecurity web){
+        // static 리소스 무시
+        web
+                .ignoring()
+                .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 향후 csrf를 보완할것
         http
@@ -38,9 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/users/me/questions/**").authenticated()
                 .antMatchers("/auth/**").permitAll()
-                .anyRequest().authenticated()
         ;
 
         http
@@ -73,6 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 소셜로그인 성공 시 후속 조치를 진행할 UserService 인터페이스 구현체 등록
                 .userService(rememberOAuth2UserService); // 리소스 서버에서 사용자 정보를 가져온 상태에서 추가로 진행하고자 하는 기능 명시
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
