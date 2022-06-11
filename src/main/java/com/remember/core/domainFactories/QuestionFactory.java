@@ -6,7 +6,7 @@ import com.remember.core.domains.Question;
 import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 
-import com.remember.core.requests.QuestionRequestDto;
+import com.remember.core.requests.QuestionRequest;
 import com.remember.core.utils.UriToIdConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class QuestionFactory {
     private final PlatformsRepository platformsRepository;
     private final AlgorithmsRepository algorithmsRepository;
 
-    public Question toEntity(Long userId, QuestionRequestDto ro) {
+    public Question toEntity(Long userId, QuestionRequest ro) {
         String status =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 
@@ -37,7 +37,7 @@ public class QuestionFactory {
         return addAlgorithms(question, ro.getAlgorithms());
     }
 
-    public Question toEntity(Long userId, Long id, QuestionRequestDto ro) {
+    public Question toEntity(Long userId, Long id, QuestionRequest ro) {
         String status =  ro.getPracticeStatus();
         String platform_str = ro.getPlatform();
 

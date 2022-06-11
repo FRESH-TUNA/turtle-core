@@ -13,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor // for ModelAttribute
 //@NoArgsConstructor // for requestbody processing jackson
 @Getter
-public class QuestionRequestDto {
+public class QuestionRequest {
     @NotBlank(message="문제의 이름을 입력해주세요")
     private String title;
 

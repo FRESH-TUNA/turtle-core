@@ -1,15 +1,17 @@
 package com.remember.core.domains;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Algorithm extends BaseTimeDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,7 +19,4 @@ public class Algorithm extends BaseTimeDomain {
 
     @Column(length = 100, nullable = false)
     private String name;
-
-    @ManyToMany(mappedBy = "algorithms")
-    private List<Question> questions = new ArrayList<>();
 }

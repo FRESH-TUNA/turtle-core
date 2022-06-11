@@ -1,7 +1,7 @@
 package com.remember.core.controllers;
 
 import com.remember.core.exceptions.AuthorizationException;
-import com.remember.core.requests.QuestionRequestDto;
+import com.remember.core.requests.QuestionRequest;
 import com.remember.core.responses.PracticeStatusResponseDto;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
@@ -23,14 +23,12 @@ import org.springframework.http.MediaType;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -93,13 +91,13 @@ public class UsersMeQuestionsController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String create(@ModelAttribute @Validated QuestionRequestDto ro) {
+    public String create(@ModelAttribute @Validated QuestionRequest ro) {
         service.create(ro);
         return "redirect:questions";
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String update(@PathVariable Long id, @ModelAttribute @Validated QuestionRequestDto ro) {
+    public String update(@PathVariable Long id, @ModelAttribute @Validated QuestionRequest ro) {
         service.update(id, ro);
         return "redirect:/users/me/questions/" + id;
     }
@@ -110,7 +108,7 @@ public class UsersMeQuestionsController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public QuestionResponseDto partial_update(@PathVariable Long id, @RequestBody QuestionRequestDto ro) {
+    public QuestionResponseDto partial_update(@PathVariable Long id, @RequestBody QuestionRequest ro) {
         return service.partial_update(id, ro);
     }
 

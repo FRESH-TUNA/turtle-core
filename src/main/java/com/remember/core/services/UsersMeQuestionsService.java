@@ -7,7 +7,7 @@ import com.remember.core.domains.Question;
 import com.remember.core.predicateFactories.QuestionPredicateFactory;
 
 import com.remember.core.repositories.question.QuestionRepository;
-import com.remember.core.requests.QuestionRequestDto;
+import com.remember.core.requests.QuestionRequest;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.assemblers.user.UsersMeQuestionAssembler;
 import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
@@ -66,14 +66,14 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public QuestionResponseDto create(QuestionRequestDto ro) {
+    public QuestionResponseDto create(QuestionRequest ro) {
         Question question = repository.save(domainMapper.toEntity(authenticatedFacade.getUserId(), ro));
         question = repository.findById(question.getId()).get();
         return assembler.toModel(question);
     }
 
     @Transactional
-    public QuestionResponseDto update(Long id, QuestionRequestDto ro) {
+    public QuestionResponseDto update(Long id, QuestionRequest ro) {
         Question question = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 문제가 없습니다"));
 
@@ -85,7 +85,7 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public QuestionResponseDto partial_update(Long id, QuestionRequestDto ro) {
+    public QuestionResponseDto partial_update(Long id, QuestionRequest ro) {
         Question question = repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 문제가 없습니다"));
 
