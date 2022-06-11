@@ -99,14 +99,8 @@ public class UsersMeQuestionsController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String update(@PathVariable Long id, @ModelAttribute @Validated QuestionRequestDto ro,
-                         BindingResult bindingResult) {
-        if(bindingResult.hasErrors()){
-            return "redirect:" + id + "/forms/update";
-        }
-
+    public String update(@PathVariable Long id, @ModelAttribute @Validated QuestionRequestDto ro) {
         service.update(id, ro);
-
         return "redirect:/users/me/questions/" + id;
     }
 

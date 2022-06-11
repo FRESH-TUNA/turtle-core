@@ -8,26 +8,37 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 public class BindExceptionRedirectSupport {
+    private static String USERS_ME_QUESTIONS_ID = "/users/me/questions/([^\\/?\\s]+)$";
+
     public static RedirectView process(HttpServletRequest request,
                                        BindException e,
                                        RedirectAttributes attributes) {
         ErrorResponse error = ErrorResponse.of(ErrorCode.REQUEST_VALIDATION_FAIL, e.getBindingResult());
-        String viewName = viewName(request.getServletPath());
+        String viewName = viewName(request);
         RedirectView response = new RedirectView(viewName, true);
         attributes.addFlashAttribute("error", error);
         return response;
     }
 
-    private static String viewName(String pathInfo) {
+    private static String viewName(HttpServletRequest request) {
+        String pathInfo = request.getServletPath();
         switch (pathInfo) {
             case "/users":
                 return "/users/forms/create";
             case "/users/me/questions":
                 return "/users/me/questions";
-            default:
-                return "/";
         }
+
+        if (checkUsersMeQuestionsIdUpdateRequest(request))
+            return pathInfo + "/forms/update";
+
+        //리다이렉션이 동일한 경우 동일하게 처리한다.
+        return pathInfo;
+    }
+
+    private static boolean checkUsersMeQuestionsIdUpdateRequest(HttpServletRequest request) {
+        return request.getServletPath().matches(USERS_ME_QUESTIONS_ID)
+                && request.getMethod().equals("PUT");
     }
 }

@@ -5,9 +5,12 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/static/css/users/questions/forms/update.css}"/>
+    <link th:href="@{/static/css/components/error.css}" rel="stylesheet">
 </th:block>
 
 <div layout:fragment="content" class="container">
+    <th:block th:replace="components/error :: error"></th:block>
+
     <h3 th:text="${question.getTitle()} + ' / 수정'"></h3>
 
     <form th:action="${question.getLink('self').get().getHref()}" method="post">
@@ -23,7 +26,11 @@
         <div class="form-group">
             <label th:for="platform">플랫폼</label>
 
-            <select name="platform">
+            <select class="selectpicker platforms"
+                    data-width="100px"
+                    name="platform"
+                    title="선택 (필수)"
+            >
                 <option th:each="platform : ${platforms}"
                         th:value="${platform.getLink('self').get().getHref()}"
                         th:utext="${platform.getName}"
