@@ -10,7 +10,7 @@ public enum ErrorCode {
      */
     PASSWORD_CONFORM_FAILED(400, "A_001", "패스워드가 일치하지 않습니다"),
     SAME_EMAIL_EXSITED(400, "A_002", "같은 이메일을 가진 계정이 존재합니다"),
-    NAME_OF_USER_NOTFOUND(400, "A_003", "이메일을 가진 계정이 없습니다"),
+    BAD_EMAIL_PASSWORD(400, "A_003", "이메일이나 패스워드가 잘못되었습니다"),
     OAUTH_PROVIDER_MISMATCH(400, "A_004", "이미 같은 이메일을 가진 계정을 가지고 있습니다. 회원가입했던 계정으로 다시시도해주세요"),
     NOT_LOGINED(400, "A_005", "로그인후 이용해주세요"),
 

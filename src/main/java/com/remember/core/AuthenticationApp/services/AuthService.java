@@ -21,7 +21,7 @@ public class AuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RememberAuthenticationException(ErrorCode.NAME_OF_USER_NOTFOUND));
+                .orElseThrow(() -> new RememberAuthenticationException(ErrorCode.BAD_EMAIL_PASSWORD));
 
         return RememberUserDetails.builder()
                 .id(user.getId())

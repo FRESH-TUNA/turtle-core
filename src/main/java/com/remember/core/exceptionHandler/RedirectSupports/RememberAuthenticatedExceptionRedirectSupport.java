@@ -22,8 +22,8 @@ public class RememberAuthenticatedExceptionRedirectSupport {
 
     private static String viewName(String pathInfo) {
         switch (pathInfo) {
-            case "/users":
-                return "/users/forms/create";
+            case "/auth/signup":
+                return "/auth/forms/signup";
             default:
                 return "/";
         }

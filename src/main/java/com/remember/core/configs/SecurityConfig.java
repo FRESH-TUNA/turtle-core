@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /*
@@ -26,8 +27,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthService authService;
     private final RememberOAuth2UserService rememberOAuth2UserService;
-    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+//    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
     private final AuthenticationEntryPoint authenticationEntryPoint;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
 
     @Override
     public void configure(WebSecurity web){
@@ -57,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/auth/forms/login")
                 .loginProcessingUrl("/auth/login")
                 .defaultSuccessUrl("/")
-                .failureUrl("/auth/forms/login")
+                .failureHandler(authenticationFailureHandler)
                 .usernameParameter("username")
                 .passwordParameter("password")
         ;
@@ -77,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .oauth2Login()
-                .failureHandler(oAuth2AuthenticationFailureHandler)
+                .failureHandler(authenticationFailureHandler)
                 .userInfoEndpoint() // oauth2 로그인 성공 후 가져올 때의 설정들
                 // 소셜로그인 성공 시 후속 조치를 진행할 UserService 인터페이스 구현체 등록
                 .userService(rememberOAuth2UserService); // 리소스 서버에서 사용자 정보를 가져온 상태에서 추가로 진행하고자 하는 기능 명시

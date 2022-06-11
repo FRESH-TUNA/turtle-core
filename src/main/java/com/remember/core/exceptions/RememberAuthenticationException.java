@@ -8,7 +8,7 @@ public class RememberAuthenticationException extends AuthenticationException {
     private final ErrorCode errorCode;
 
     public RememberAuthenticationException(ErrorCode errorCode) {
-        super(errorCode.getMessage());
+        super(errorCode.name());
         this.errorCode = errorCode;
     }
 }
