@@ -54,7 +54,6 @@ public class UsersMeQuestionsController {
     private final AlgorithmsService algorithmsService;
     private final ServerContext context;
     private final String ALGORITHMS = "algorithms";
-    private final String PLATFORMS = "platforms";
 
     @GetMapping
     public String findAll(Pageable pageable,
@@ -66,21 +65,17 @@ public class UsersMeQuestionsController {
         /*
          * modeling
          */
-        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
-
         model.addAttribute("questions", questions);
-        model.addAttribute("practiceStatusus", practiceStatusus);
+        model.addAttribute("platforms", platformsService.findAll());
+        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
 
         model.addAttribute("search_status",
                 params.getPracticeStatus() == null ? 0L : params.getPracticeStatus());
         model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
 
         model.addAttribute("questions_url", request.getRequestURL());
-        model.addAttribute("platforms_url", LinkBuilder
-                .getListLink(context.getRoot(), PLATFORMS).getHref());
         model.addAttribute("algorithms_url", LinkBuilder
                 .getListLink(context.getRoot(), ALGORITHMS).getHref());
-
         return "users/questions/list";
     }
 
@@ -92,10 +87,8 @@ public class UsersMeQuestionsController {
         /*
          * modeling
          */
-        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
-
-        model.addAttribute("practiceStatusus", practiceStatusus);
         model.addAttribute("question", question);
+        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
         return "users/questions/detail";
     }
 

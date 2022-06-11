@@ -13,7 +13,7 @@
 </th:block>
 
 <div layout:fragment="content" class="users questions root"
-     th:data-questions-url="${questions_url}"
+     th:data-questions-url="${questions.getLink('self').get().getHref()}"
      th:data-platforms_url="${platforms_url}"
      th:data-algorithms_url="${algorithms_url}"
 >

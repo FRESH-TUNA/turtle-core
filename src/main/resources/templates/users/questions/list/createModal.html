@@ -26,8 +26,12 @@
                         <select class="selectpicker platforms"
                                 data-width="100px"
                                 name="platform"
-                                title="선택"
+                                title="선택 (필수)"
                         >
+                            <option th:each="platform : ${platforms}"
+                                    th:value="${platform.getLink('self').get().getHref()}"
+                                    th:utext="${platform.getName}"
+                            />
                         </select>
                     </div>
                     <div class="form-group">
@@ -36,7 +40,7 @@
                         <select class="selectpicker"
                                 data-width="100px"
                                 name="practiceStatus"
-                                title="선택"
+                                title="선택 (필수)"
                         >
                             <option
                                     th:each="s: ${practiceStatusus}"
