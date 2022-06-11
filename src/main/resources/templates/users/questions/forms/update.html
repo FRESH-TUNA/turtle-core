@@ -5,12 +5,9 @@
 
 <th:block layout:fragment="css">
     <link rel="stylesheet" th:href="@{/static/css/users/questions/forms/update.css}"/>
-    <link th:href="@{/static/css/components/error.css}" rel="stylesheet">
 </th:block>
 
 <div layout:fragment="content" class="container">
-    <th:block th:replace="components/error :: error"></th:block>
-
     <h3 th:text="${question.getTitle()} + ' / 수정'"></h3>
 
     <form th:action="${question.getLink('self').get().getHref()}" method="post">

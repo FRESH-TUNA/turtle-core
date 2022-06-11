@@ -1,0 +1,29 @@
+.signup {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 70%;
+    justify-content: center;
+}
+
+.signup .form-group {
+    margin-top: 30px;
+}
+
+.signup form, .signup .social, hr{
+    width: 400px;
+}
+
+hr.remember-signup-separator {
+    margin: 30px;
+}
+
+.signup button, .signup a {
+    width: 100%;
+    margin-top: 30px;
+}
+
+p.remember-signup-title {
+    opacity: 0.6;
+    margin-bottom: 0;
+}
