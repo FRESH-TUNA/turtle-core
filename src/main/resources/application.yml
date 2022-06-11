@@ -7,3 +7,7 @@ spring:
       filter:
         enabled: true
     static-path-pattern: /static/**
+
+  data:
+    rest:
+      detection-strategy: annotated
