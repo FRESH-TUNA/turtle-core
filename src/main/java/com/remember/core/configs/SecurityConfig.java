@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /*
  * https://stackoverflow.com/questions/60968888/a-granted-authority-textual-representation-is-required-in-spring-security
@@ -23,18 +25,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthService authService;
     private final RememberOAuth2UserService rememberOAuth2UserService;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // 향후 csrf를 보완할것
         http
                 .csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
         ;
 
         http
                 .authorizeRequests()
+                .antMatchers("/").permitAll()
                 .antMatchers("/auth/**").permitAll()
-                .anyRequest().permitAll()
+                .anyRequest().authenticated()
         ;
 
         http
@@ -46,6 +52,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
         ;
+
+        http
+                .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/auth/logout"))
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+                .logoutSuccessUrl("/");
 
         http
                 .sessionManagement()

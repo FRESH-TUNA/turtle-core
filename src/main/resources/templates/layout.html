@@ -4,15 +4,14 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 
+<!-- config fragment 사용 -->
+<th:block th:replace="layout/config :: configFragment" ></th:block>
+
 <head>
     <meta charset="UTF-8" />
     <title>Remember</title>
-
-    <!-- config fragment 사용 -->
-    <th:block th:replace="layout/config :: configFragment" ></th:block>
 </head>
 
-<body>
 <!-- header fragment 사용 -->
 <th:block th:replace="layout/header :: headerFragment"></th:block>
 
@@ -24,6 +23,5 @@
 
 <!-- footer fragment 사용 -->
 <th:block th:replace="layout/footer :: footerFragment"> </th:block>
-</body>
 
 </html>

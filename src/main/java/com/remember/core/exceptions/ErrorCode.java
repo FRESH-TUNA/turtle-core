@@ -12,6 +12,7 @@ public enum ErrorCode {
     SAME_EMAIL_EXSITED(400, "A_002", "같은 이메일을 가진 계정이 존재합니다"),
     NAME_OF_USER_NOTFOUND(400, "A_003", "이메일을 가진 계정이 없습니다"),
     OAUTH_PROVIDER_MISMATCH(400, "A_004", "이미 같은 이메일을 가진 계정을 가지고 있습니다. 회원가입했던 계정으로 다시시도해주세요"),
+    NOT_LOGINED(400, "A_005", "로그인후 이용해주세요"),
 
     /*
      * authorization

@@ -28,7 +28,11 @@
                            th:text="${#request.userPrincipal.getName()}"
                         ></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">로그아웃</a></li>
+                            <li>
+                                <form th:action="@{/auth/logout}" method="post">
+                                    <button type="submit" class="btn btn-primary">로그아웃</button>
+                                </form>
+                            </li>
                         </ul>
                     </li>
                 </ul>
