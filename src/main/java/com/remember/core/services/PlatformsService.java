@@ -2,6 +2,7 @@ package com.remember.core.services;
 
 import com.remember.core.assemblers.PlatformsAssembler;
 import com.remember.core.repositories.PlatformsRepository;
+import com.remember.core.requests.PlatformRequest;
 import com.remember.core.responses.PlatformResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
@@ -15,5 +16,9 @@ public class PlatformsService {
 
     public CollectionModel<PlatformResponseDto> findAll() {
         return assembler.toCollectionModel(repository.findAll());
+    }
+
+    public PlatformResponseDto create(PlatformRequest request) {
+        return assembler.toModel(repository.save(request.toEntity()));
     }
 }

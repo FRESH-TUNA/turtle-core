@@ -50,10 +50,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(authenticationEntryPoint)
         ;
 
+        /*
+         * url 요청시 인증된 유저의 권한을 검사를 거쳐야 통과시킨다.
+         */
         http
                 .authorizeRequests()
+                // users/me/questions
                 .antMatchers("/users/me/questions/**").authenticated()
+                // algorithms
                 .antMatchers(HttpMethod.POST, "/algorithms").hasRole("ADMIN")
+                // platforms
+                .antMatchers(HttpMethod.POST, "/platforms").hasRole("ADMIN")
+                // auth
                 .antMatchers("/auth/**").permitAll()
         ;
 
