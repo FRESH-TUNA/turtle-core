@@ -7,7 +7,13 @@ spring:
       filter:
         enabled: true
     static-path-pattern: /static/**
-
   data:
     rest:
       detection-strategy: annotated
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
