@@ -24,7 +24,7 @@
                     <div class="form-group">
                         <label th:for="platform">플랫폼</label>
                         <select class="selectpicker platforms"
-                                data-width="100px"
+                                data-width="100%"
                                 name="platform"
                                 title="선택 (필수)"
                         >
@@ -38,9 +38,9 @@
                         <label th:for="practiceStatus">풀이여부</label>
 
                         <select class="selectpicker"
-                                data-width="100px"
                                 name="practiceStatus"
                                 title="선택 (필수)"
+                                data-width="100%"
                         >
                             <option
                                     th:each="s: ${practiceStatusus}"
@@ -55,7 +55,7 @@
                     <div class="form-group">
                         <label th:for="algorithms">알고리즘</label>
                         <select class="selectpicker algorithms"
-                                data-width="100px"
+                                data-width="100%"
                                 name="algorithms"
                                 data-none-selected-text="선택"
                                 multiple

@@ -90,6 +90,10 @@
     padding-bottom: 20px;
 }
 
+.users.questions.root .create-modal .form-group > input, button {
+    margin-top: 5px;
+}
+
 /*
  * table
  */
