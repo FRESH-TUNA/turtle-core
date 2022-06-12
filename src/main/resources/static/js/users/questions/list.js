@@ -75,7 +75,10 @@ async function question_status_update_handler(select_dom, question, old_status, 
 }
 
 async function algorithms_fetch_when_select_click(select) {
-    const select_dom = await select[0];
+    select.selectpicker({noneSelectedText: "로딩중..."});
+    select.selectpicker('render');
+
+    const select_dom = select[0];
     const algorithms_url = document
         .getElementsByClassName("users questions root")[0]
         .getAttribute("data-algorithms_url");
@@ -85,6 +88,9 @@ async function algorithms_fetch_when_select_click(select) {
 
     for(a of algorithms)
         select_dom.appendChild(a);
+
+    select.selectpicker({noneSelectedText: "선택"});
+    select.selectpicker('render');
     select.selectpicker('refresh');
 }
 
@@ -172,10 +178,11 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
         .on('show.bs.select', async function (e, clickedIndex, isSelected, previousValue) {
             if(!ALGORITHMS_FETCHED) {
                 try {
-                    alertify.success('알고리즘 정보 로딩');
                     await algorithms_fetch_when_select_click($(this));
                     ALGORITHMS_FETCHED = true;
                 } catch (e) {
+                    $(this).selectpicker({noneSelectedText: "로딩 실패"});
+                    $(this).selectpicker('render');
                     alertify.error('서버 장애가 발생했습니다. 잠시후 다시 시도하세요');
                 }
             }

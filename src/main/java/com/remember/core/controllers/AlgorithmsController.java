@@ -5,7 +5,6 @@ import com.remember.core.responses.AlgorithmResponseDto;
 import com.remember.core.services.AlgorithmsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
