@@ -18,7 +18,7 @@
     </div>
     <hr class="my-12 remember-login-separator"/>
     <p class="remember-login-title">리멤버 계정으로 로그인</p>
-    <form action="/api/v1/auth/login" method="post">
+    <form th:action="@{/auth/login}" method="post">
         <div class="form-group">
             <label th:for="username">이메일</label>
             <input type="text" name="username" class="form-control" placeholder="이메일 입력해주세요">

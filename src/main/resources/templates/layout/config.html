@@ -42,6 +42,9 @@
 
         <!-- Content Page의 script fragment 삽입 -->
         <th:block layout:fragment="script"></th:block>
+
+        <!-- csrf -->
+        <meta th:id="${_csrf.headerName}" th:content="${_csrf.token}"/>
     </head>
 </th:block>
 </html>

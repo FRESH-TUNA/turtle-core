@@ -17,10 +17,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /*
  * https://stackoverflow.com/questions/60968888/a-granted-authority-textual-representation-is-required-in-spring-security
+ * https://binchoo.tistory.com/46
  */
 @Configuration
 @RequiredArgsConstructor
@@ -43,11 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // 향후 csrf를 보완할것
+        /*
+         * csrf and authenticationEntryPoint
+         */
         http
-                .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
+                .csrf().csrfTokenRepository(sessionCsrfRepository()).and()
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
         ;
 
         /*
@@ -65,6 +69,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/**").permitAll()
         ;
 
+        /*
+         * login 곤련 처리
+         */
         http
                 .formLogin()
                 .loginPage("/auth/forms/login")
@@ -84,7 +91,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .sessionManagement()
+                // 동시 최대 세션
                 .maximumSessions(1)
+                // 동시 로그인 차단, false인 경우 기존 세션 만료(default)
                 .maxSessionsPreventsLogin(true)
         ;
 
@@ -100,6 +109,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(authService).passwordEncoder(passwordEncoder());
+    }
+
+    /*
+     * beans
+     */
+    @Bean
+    public HttpSessionCsrfTokenRepository sessionCsrfRepository() {
+        HttpSessionCsrfTokenRepository csrfRepository = new HttpSessionCsrfTokenRepository();
+
+        // HTTP 헤더에서 토큰을 인덱싱하는 문자열 설정
+        csrfRepository.setHeaderName("X-CSRF-TOKEN");
+        // URL 파라미터에서 토큰에 대응되는 변수 설정
+        csrfRepository.setParameterName("_csrf");
+        // 세션에서 토큰을 인덱싱 하는 문자열을 설정. 기본값이 무척 길어서 오버라이딩 하는 게 좋아요.
+        // 기본값: "org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository.CSRF_TOKEN"
+        csrfRepository.setSessionAttributeName("CSRF_TOKEN");
+
+        return csrfRepository;
     }
 
     @Bean

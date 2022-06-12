@@ -14,8 +14,15 @@ async function question_status_update(question_url, status_url) {
         method: "PATCH",
         data: JSON.stringify({ practiceStatus: status_url }),
         withCredentials: true,
-        headers: { "Content-Type": `application/json`}
+        headers: {
+            "Content-Type": `application/json`,
+            "X-CSRF-TOKEN": getCsrfToken()
+        }
     });
+}
+
+function getCsrfToken() {
+    return document.getElementById("X-CSRF-TOKEN").getAttribute("content");
 }
 
 /*
