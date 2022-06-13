@@ -36,7 +36,7 @@
                         th:classappend="${q.getId()}"
                 >
                         <td class="title">
-                            <a th:text="${q.getTitle}" th:href="${q.getLink('self').get().getHref()}"></a>
+                            <a th:text="${q.getTitle}" th:href="${q.getLink('self').get().getHref()}" class="title text-dark"></a>
                         </td>
                         <td>
                             <a th:text="${q.getLink}" th:href="${q.getLink}" target="_blank" rel="noopener noreferrer"></a>

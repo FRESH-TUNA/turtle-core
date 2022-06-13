@@ -26,6 +26,13 @@
     justify-content: flex-end;
 }
 
+.users.questions.root table a.title {
+    font-weight: 400;
+}
+
+.users.questions.root table a.title:hover {
+    text-decoration: underline;
+}
 /*
  * searchBar
  */

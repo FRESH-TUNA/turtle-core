@@ -9,7 +9,7 @@
         />
         <div>
             <a th:href="${question.getLink('self').get().getHref()} + '/forms/update'"><button type="button" class="btn btn-primary">수정</button></a>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#deleteModal">삭제</button>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">삭제</button>
         </div>
         <th:block th:replace="users/questions/detail/deleteModal :: deleteModal"></th:block>
     </div>
