@@ -36,7 +36,7 @@ function algorithms_dom_create(algorithms) {
 function algorithm_dom(algorithm) {
     const dom = document.createElement("option");
     dom.setAttribute("data-content", algorithm.name);
-    dom.value = algorithm._links.self.href;
+    dom.value = algorithm.id;
     return dom;
 }
 
@@ -47,7 +47,7 @@ function platforms_dom_create(platforms) {
 function platform_dom(platform) {
     const dom = document.createElement("option");
     dom.setAttribute("data-content", platform.name);
-    dom.value = platform._links.self.href;
+    dom.value = platform.id;
     return dom;
 }
 

@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/static/css/users/questions/forms/update.css}"/>
 </th:block>
 
-<div layout:fragment="content" class="container">
+<div layout:fragment="content" class="users question update container">
     <h3 th:text="${question.getTitle()} + ' / 수정'"></h3>
 
     <form th:action="${question.getLink('self').get().getHref()}" method="post">
@@ -24,12 +24,12 @@
             <label th:for="platform">플랫폼</label>
 
             <select class="selectpicker platforms"
-                    data-width="100px"
+                    data-width="100%"
                     name="platform"
                     title="선택 (필수)"
             >
                 <option th:each="platform : ${platforms}"
-                        th:value="${platform.getLink('self').get().getHref()}"
+                        th:value="${platform.getId()}"
                         th:utext="${platform.getName}"
                         th:selected="${platform.id eq question.getPlatform.id}"
                 />
@@ -38,7 +38,7 @@
         <div class="form-group">
             <label th:for="practiceStatus">풀이여부</label>
             <select class="selectpicker"
-                    data-width="100px"
+                    data-width="100%"
                     name="practiceStatus"
                     title="선택"
             >
@@ -56,20 +56,23 @@
         <div class="form-group">
             <label th:for="algorithms">알고리즘</label>
             <select class="selectpicker algorithms"
-                    data-width="100px"
+                    data-width="100%"
                     name="algorithms"
                     title="선택"
                     multiple
             >
                 <option th:each="algorithm : ${algorithms}"
-                        th:value="${algorithm.getLink('self').get().getHref()}"
+                        th:value="${algorithm.getId()}"
                         th:utext="${algorithm.getName}"
                         th:selected="${curAlgorithms.contains(algorithm.getId())}"
                 >
                 </option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">수정</button>
+        <button type="submit" class="btn btn-primary update-submit">수정</button>
+        <a th:href="${question.getLink('self').get().getHref()}" class="back">
+            <button type="button" class="btn btn-secondary update-submit">취소</button>
+        </a>
     </form>
 </div>
 </html>

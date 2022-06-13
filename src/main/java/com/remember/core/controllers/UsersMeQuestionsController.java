@@ -30,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -64,12 +65,12 @@ public class UsersMeQuestionsController {
          * modeling
          */
         model.addAttribute("questions", questions);
-        model.addAttribute("platforms", platformsService.findAll());
-        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
+        model.addAttribute("platforms", platformsService.findAll().getContent());
+        model.addAttribute("practiceStatusus", practiceStatususService.findAll().getContent());
 
         model.addAttribute("search_status",
-                params.getPracticeStatus() == null ? 0L : params.getPracticeStatus());
-        model.addAttribute("search_input", params.getTitle() == null ? "" : params.getTitle());
+                Objects.isNull(params.getPracticeStatus()) ? 0L : params.getPracticeStatus());
+        model.addAttribute("search_input", Objects.isNull(params.getTitle()) ? "" : params.getTitle());
 
         model.addAttribute("questions_url", request.getRequestURL());
         model.addAttribute("algorithms_url", LinkBuilder
@@ -126,7 +127,7 @@ public class UsersMeQuestionsController {
     public String updateView(@PathVariable Long id, Model model) {
         QuestionResponseDto question = service.findById(id);
         CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
-        List<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
+        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
         CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
 
         /*
@@ -136,7 +137,7 @@ public class UsersMeQuestionsController {
         model.addAttribute("curAlgorithms", curAlgorithms);
         model.addAttribute("algorithms", algorithms.getContent());
         model.addAttribute("platforms", platforms);
-        model.addAttribute("practiceStatusus", practiceStatusus);
+        model.addAttribute("practiceStatusus", practiceStatusus.getContent());
         model.addAttribute("question", question);
         return "users/questions/forms/update";
     }

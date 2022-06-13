@@ -29,7 +29,7 @@
                                 title="선택 (필수)"
                         >
                             <option th:each="platform : ${platforms}"
-                                    th:value="${platform.getLink('self').get().getHref()}"
+                                    th:value="${platform.getId()}"
                                     th:utext="${platform.getName}"
                             />
                         </select>

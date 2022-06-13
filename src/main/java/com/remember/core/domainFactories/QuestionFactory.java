@@ -1,5 +1,6 @@
 package com.remember.core.domainFactories;
 
+import com.remember.core.domains.Algorithm;
 import com.remember.core.domains.Platform;
 import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.Question;
@@ -7,11 +8,11 @@ import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 
 import com.remember.core.requests.QuestionRequest;
-import com.remember.core.utils.UriToIdConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -21,15 +22,12 @@ public class QuestionFactory {
 
     public Question toEntity(Long userId, QuestionRequest ro) {
         String status =  ro.getPracticeStatus();
-        String platform_str = ro.getPlatform();
-
-        Platform platform = platformsRepository.getById(UriToIdConverter.convert(platform_str));
         PracticeStatus practiceStatus = PracticeStatus.valueOf(status);
 
         Question question = Question.builder()
                 .user(userId)
                 .practiceStatus(practiceStatus)
-                .platform(platform)
+                .platform(getPlatform(ro.getPlatform()))
                 .link(ro.getLink())
                 .title(ro.getTitle())
                 .build();
@@ -39,17 +37,13 @@ public class QuestionFactory {
 
     public Question toEntity(Long userId, Long id, QuestionRequest ro) {
         String status =  ro.getPracticeStatus();
-        String platform_str = ro.getPlatform();
-
-        Platform platform = platform_str == null ?
-                null : platformsRepository.getById(UriToIdConverter.convert(platform_str));
         PracticeStatus practiceStatus = PracticeStatus.valueOf(status);
 
         Question question = Question.builder()
                 .id(id)
                 .user(userId)
                 .practiceStatus(practiceStatus)
-                .platform(platform)
+                .platform(getPlatform(ro.getPlatform()))
                 .link(ro.getLink())
                 .title(ro.getTitle())
                 .build();
@@ -57,10 +51,19 @@ public class QuestionFactory {
         return addAlgorithms(question, ro.getAlgorithms());
     }
 
-    private Question addAlgorithms(Question question, List<String> algorithms) {
-        if(algorithms == null) return question;
-        for (String algo : algorithms)
-            question.addAlgorithm(algorithmsRepository.getById(UriToIdConverter.convert(algo)));
+    private Platform getPlatform(Long platformId) {
+        if (Objects.isNull(platformId)) return null;
+        return platformsRepository.getById(platformId);
+    }
+
+    private Question addAlgorithms(Question question, List<Long> algorithms) {
+        if(algorithms == null || algorithms.isEmpty()) return question;
+        for (Long algo : algorithms)
+            question.addAlgorithm(getAlgorithm(algo));
         return question;
+    }
+
+    private Algorithm getAlgorithm(Long algoId) {
+        return algorithmsRepository.getById(algoId);
     }
 }

@@ -10,7 +10,7 @@ import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.requests.QuestionRequest;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.assemblers.user.UsersMeQuestionAssembler;
-import com.remember.core.assemblers.user.UsersMeQuestionsAssembler;
+import com.remember.core.assemblers.user.UsersMeQuestionListAssembler;
 
 import com.remember.core.responses.question.QuestionResponseDto;
 import com.remember.core.responses.question.QuestionListResponseDto;
@@ -40,7 +40,7 @@ public class UsersMeQuestionsService {
     private final EntityManager entityManager;
 
     private final QuestionFactory domainMapper;
-    private final UsersMeQuestionsAssembler listAssembler;
+    private final UsersMeQuestionListAssembler listAssembler;
     private final UsersMeQuestionAssembler assembler;
     private final PagedResourcesAssembler<Question> pageAssembler;
 
@@ -58,9 +58,7 @@ public class UsersMeQuestionsService {
     }
 
     public QuestionResponseDto findById(Long id) {
-        Question question = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("해당 문제가 없습니다"));
-
+        Question question = getById(id);
         authorizer.checkCurrentUserIDIsOwner(question.getUser());
         return assembler.toModel(question);
     }
@@ -68,14 +66,12 @@ public class UsersMeQuestionsService {
     @Transactional
     public QuestionResponseDto create(QuestionRequest ro) {
         Question question = repository.save(domainMapper.toEntity(authenticatedFacade.getUserId(), ro));
-        question = repository.findById(question.getId()).get();
-        return assembler.toModel(question);
+        return assembler.toModel(getById(question.getId()));
     }
 
     @Transactional
     public QuestionResponseDto update(Long id, QuestionRequest ro) {
-        Question question = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("해당 문제가 없습니다"));
+        Question question = getById(id);
 
         authorizer.checkCurrentUserIDIsOwner(question.getUser());
 
@@ -86,8 +82,7 @@ public class UsersMeQuestionsService {
 
     @Transactional
     public QuestionResponseDto partial_update(Long id, QuestionRequest ro) {
-        Question question = repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("해당 문제가 없습니다"));
+        Question question = getById(id);
 
         authorizer.checkCurrentUserIDIsOwner(question.getUser());
 
@@ -102,5 +97,13 @@ public class UsersMeQuestionsService {
                 repository.findUserOfQuestionById(id).orElseThrow(() ->
                         new EntityNotFoundException("해당 문제가 없습니다")));
         repository.deleteById(id);
+    }
+
+    /*
+     * helpers
+     */
+    private Question getById(Long id) {
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("해당 문제가 없습니다"));
     }
 }

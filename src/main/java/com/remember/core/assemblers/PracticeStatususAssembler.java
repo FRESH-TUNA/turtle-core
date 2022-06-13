@@ -8,25 +8,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 @Component
 @RequiredArgsConstructor
 public class PracticeStatususAssembler  implements RepresentationModelAssembler<PracticeStatus, PracticeStatusResponseDto> {
     private final ServerContext serverContext;
     private final String resources = "practiceStatusus";
 
-    public List<PracticeStatusResponseDto> assemble(String baseUrl, List<PracticeStatusResponseDto> practiceStatusus) {
-//        for (PracticeStatusResponseDto vo :practiceStatusus)
-//            vo.add(LinkBuilder.getDetailLink(baseUrl, resources, vo.getId()).withSelfRel());
-        return practiceStatusus;
-    }
-
     @Override
     public PracticeStatusResponseDto toModel(PracticeStatus entity) {
-        PracticeStatusResponseDto practiceStatusResponseDto = new PracticeStatusResponseDto(entity);
-        String base = serverContext.getRoot();
-//        practiceStatusResponseDto.add(LinkBuilder.getDetailLink(base, resources, practiceStatusResponseDto.getId()).withSelfRel());
-        return practiceStatusResponseDto;
+        PracticeStatusResponseDto dto = new PracticeStatusResponseDto(entity);
+        dto.add(LinkBuilder.getDetailLink(serverContext.getRoot(), resources, entity.name()).withSelfRel());
+        return dto;
     }
 }

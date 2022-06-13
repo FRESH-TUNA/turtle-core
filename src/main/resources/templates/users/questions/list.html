@@ -55,7 +55,7 @@
                                             + s.getStatus() + '</span>'}"
                                         th:each="s: ${practiceStatusus}"
                                         th:value="${s.getId()}"
-                                        th:selected="${s.getId() eq q.getPracticeStatus}">
+                                        th:selected="${s.getId() eq q.getPracticeStatus.getId()}">
                                 </option>
                             </select>
                         </td>
