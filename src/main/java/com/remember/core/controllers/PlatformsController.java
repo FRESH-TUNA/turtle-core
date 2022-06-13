@@ -1,7 +1,7 @@
 package com.remember.core.controllers;
 
 import com.remember.core.requests.PlatformRequest;
-import com.remember.core.responses.PlatformResponseDto;
+import com.remember.core.responses.PlatformResponse;
 import com.remember.core.services.PlatformsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
@@ -14,12 +14,12 @@ public class PlatformsController {
     private final PlatformsService platformsService;
 
     @GetMapping
-    public CollectionModel<PlatformResponseDto> findAll() {
+    public CollectionModel<PlatformResponse> findAll() {
         return platformsService.findAll();
     }
 
     @PostMapping
-    public PlatformResponseDto create(@RequestBody PlatformRequest request) {
+    public PlatformResponse create(@RequestBody PlatformRequest request) {
         return platformsService.create(request);
     }
 }

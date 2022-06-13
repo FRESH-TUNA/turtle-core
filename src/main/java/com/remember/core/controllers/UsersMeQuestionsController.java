@@ -2,17 +2,17 @@ package com.remember.core.controllers;
 
 import com.remember.core.exceptions.AuthorizationException;
 import com.remember.core.requests.QuestionRequest;
-import com.remember.core.responses.PracticeStatusResponseDto;
+import com.remember.core.responses.PracticeStatusResponse;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
 import com.remember.core.services.UsersMeQuestionsService;
 
-import com.remember.core.responses.AlgorithmResponseDto;
-import com.remember.core.responses.PlatformResponseDto;
-import com.remember.core.responses.question.QuestionResponseDto;
-import com.remember.core.responses.question.QuestionListResponseDto;
+import com.remember.core.responses.AlgorithmResponse;
+import com.remember.core.responses.PlatformResponse;
+import com.remember.core.responses.question.QuestionResponse;
+import com.remember.core.responses.question.QuestionListResponse;
 import com.remember.core.utils.ServerContext;
 import com.remember.core.utils.linkBuilders.LinkBuilder;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -59,7 +58,7 @@ public class UsersMeQuestionsController {
                           HttpServletRequest request,
                           @ModelAttribute QuestionParams params,
                           Model model) {
-        PagedModel<QuestionListResponseDto> questions = service.findAll(pageable, params);
+        PagedModel<QuestionListResponse> questions = service.findAll(pageable, params);
 
         /*
          * modeling
@@ -81,7 +80,7 @@ public class UsersMeQuestionsController {
     @GetMapping("/{id}")
     public String findById(
             Model model, @PathVariable Long id) {
-        QuestionResponseDto question = service.findById(id);
+        QuestionResponse question = service.findById(id);
 
         /*
          * modeling
@@ -109,7 +108,7 @@ public class UsersMeQuestionsController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public QuestionResponseDto partial_update(@PathVariable Long id, @RequestBody QuestionRequest ro) {
+    public QuestionResponse partial_update(@PathVariable Long id, @RequestBody QuestionRequest ro) {
         return service.partial_update(id, ro);
     }
 
@@ -125,10 +124,10 @@ public class UsersMeQuestionsController {
      */
     @GetMapping("/{id}/forms/update")
     public String updateView(@PathVariable Long id, Model model) {
-        QuestionResponseDto question = service.findById(id);
-        CollectionModel<PlatformResponseDto> platforms = platformsService.findAll();
-        CollectionModel<PracticeStatusResponseDto> practiceStatusus = practiceStatususService.findAll();
-        CollectionModel<AlgorithmResponseDto> algorithms = algorithmsService.findAll();
+        QuestionResponse question = service.findById(id);
+        CollectionModel<PlatformResponse> platforms = platformsService.findAll();
+        CollectionModel<PracticeStatusResponse> practiceStatusus = practiceStatususService.findAll();
+        CollectionModel<AlgorithmResponse> algorithms = algorithmsService.findAll();
 
         /*
          * modeling

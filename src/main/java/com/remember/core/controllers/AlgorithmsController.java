@@ -1,7 +1,7 @@
 package com.remember.core.controllers;
 
 import com.remember.core.requests.AlgorithmRequest;
-import com.remember.core.responses.AlgorithmResponseDto;
+import com.remember.core.responses.AlgorithmResponse;
 import com.remember.core.services.AlgorithmsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
@@ -14,12 +14,12 @@ public class AlgorithmsController {
     private final AlgorithmsService algorithmsService;
 
     @GetMapping
-    public CollectionModel<AlgorithmResponseDto> findAll() {
+    public CollectionModel<AlgorithmResponse> findAll() {
         return algorithmsService.findAll();
     }
 
     @PostMapping
-    public AlgorithmResponseDto create(@RequestBody AlgorithmRequest request) {
+    public AlgorithmResponse create(@RequestBody AlgorithmRequest request) {
         return algorithmsService.create(request);
     }
 }

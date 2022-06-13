@@ -9,11 +9,11 @@ import org.springframework.hateoas.server.core.Relation;
 @Getter
 @NoArgsConstructor
 @Relation(collectionRelation = "algorithms")
-public class AlgorithmResponseDto extends RepresentationModel<AlgorithmResponseDto> {
+public class AlgorithmResponse extends RepresentationModel<AlgorithmResponse> {
     private Long id;
     private String name;
 
-    public AlgorithmResponseDto(Algorithm algorithm) {
+    public AlgorithmResponse(Algorithm algorithm) {
         this.id = algorithm.getId();
         this.name = algorithm.getName();
     }

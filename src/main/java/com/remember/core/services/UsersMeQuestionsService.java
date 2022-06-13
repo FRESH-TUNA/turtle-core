@@ -9,11 +9,11 @@ import com.remember.core.predicateFactories.QuestionPredicateFactory;
 import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.requests.QuestionRequest;
 import com.remember.core.searchParams.QuestionParams;
-import com.remember.core.assemblers.user.UsersMeQuestionAssembler;
-import com.remember.core.assemblers.user.UsersMeQuestionListAssembler;
+import com.remember.core.assemblers.QuestionAssembler;
+import com.remember.core.assemblers.QuestionListAssembler;
 
-import com.remember.core.responses.question.QuestionResponseDto;
-import com.remember.core.responses.question.QuestionListResponseDto;
+import com.remember.core.responses.question.QuestionResponse;
+import com.remember.core.responses.question.QuestionListResponse;
 import com.remember.core.utils.AuthenticatedFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,14 +40,14 @@ public class UsersMeQuestionsService {
     private final EntityManager entityManager;
 
     private final QuestionFactory domainMapper;
-    private final UsersMeQuestionListAssembler listAssembler;
-    private final UsersMeQuestionAssembler assembler;
+    private final QuestionListAssembler listAssembler;
+    private final QuestionAssembler assembler;
     private final PagedResourcesAssembler<Question> pageAssembler;
 
     private final AuthenticatedFacade authenticatedFacade;
     private final RememberAuthorizer authorizer;
 
-    public PagedModel<QuestionListResponseDto> findAll(Pageable pageable, QuestionParams params) {
+    public PagedModel<QuestionListResponse> findAll(Pageable pageable, QuestionParams params) {
         Page<Question> questions = repository.findAll(
                 pageable,
                 authenticatedFacade.getUserId(),
@@ -57,20 +57,20 @@ public class UsersMeQuestionsService {
         return pageAssembler.toModel(questions, listAssembler);
     }
 
-    public QuestionResponseDto findById(Long id) {
+    public QuestionResponse findById(Long id) {
         Question question = getById(id);
         authorizer.checkCurrentUserIDIsOwner(question.getUser());
         return assembler.toModel(question);
     }
 
     @Transactional
-    public QuestionResponseDto create(QuestionRequest ro) {
+    public QuestionResponse create(QuestionRequest ro) {
         Question question = repository.save(domainMapper.toEntity(authenticatedFacade.getUserId(), ro));
         return assembler.toModel(getById(question.getId()));
     }
 
     @Transactional
-    public QuestionResponseDto update(Long id, QuestionRequest ro) {
+    public QuestionResponse update(Long id, QuestionRequest ro) {
         Question question = getById(id);
 
         authorizer.checkCurrentUserIDIsOwner(question.getUser());
@@ -81,7 +81,7 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public QuestionResponseDto partial_update(Long id, QuestionRequest ro) {
+    public QuestionResponse partial_update(Long id, QuestionRequest ro) {
         Question question = getById(id);
 
         authorizer.checkCurrentUserIDIsOwner(question.getUser());

@@ -9,12 +9,12 @@ import org.springframework.hateoas.server.core.Relation;
 @Getter
 @NoArgsConstructor
 @Relation(collectionRelation = "platforms")
-public class PlatformResponseDto extends RepresentationModel<PlatformResponseDto> {
+public class PlatformResponse extends RepresentationModel<PlatformResponse> {
     private Long id;
     private String name;
     private String link;
 
-    public PlatformResponseDto(Platform platform) {
+    public PlatformResponse(Platform platform) {
         this.id = platform.getId();
         this.name = platform.getName();
         this.link = platform.getLink();
