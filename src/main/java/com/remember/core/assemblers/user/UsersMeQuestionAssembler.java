@@ -1,66 +1,56 @@
 package com.remember.core.assemblers.user;
 
 import com.remember.core.assemblers.AlgorithmsAssembler;
+import com.remember.core.assemblers.PlatformsAssembler;
+import com.remember.core.assemblers.PracticeStatususAssembler;
 import com.remember.core.domains.Algorithm;
 import com.remember.core.domains.Question;
+import com.remember.core.responses.AlgorithmResponseDto;
+import com.remember.core.responses.PlatformResponseDto;
+import com.remember.core.responses.PracticeStatusResponseDto;
 import com.remember.core.utils.ServerContext;
 import com.remember.core.responses.question.QuestionResponseDto;
-import com.remember.core.responses.question.QuestionPlatformResponseDto;
 
 import com.remember.core.utils.linkBuilders.LinkBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class UsersMeQuestionAssembler implements RepresentationModelAssembler<Question, QuestionResponseDto> {
-    @Autowired
-    private ServerContext serverContext;
-
-    @Autowired
-    private AlgorithmsAssembler algorithmsAssembler;
+    private final ServerContext serverContext;
+    private final AlgorithmsAssembler algorithmsAssembler;
+    private final PracticeStatususAssembler practiceStatususAssembler;
+    private final PlatformsAssembler platformsAssembler;
 
     private final String RESOURCES = "users/me/questions";
-    private final String PLATFORM_RESOURCES = "platforms";
 
     @Override
     public QuestionResponseDto toModel(Question question) {
-        QuestionResponseDto vo = new QuestionResponseDto(question);
-        vo = algorithmsAssemble(vo, question);
-        vo = addSelfLink(vo);
-        return platformAssemble(vo);
+        PlatformResponseDto platform = platformsAssembler.toModel(question.getPlatform());
+        PracticeStatusResponseDto practiceStatus = practiceStatususAssembler.toModel(question.getPracticeStatus());
+        List<AlgorithmResponseDto> algorithms = algorithmsAssemble(question.getAlgorithms());
+
+        QuestionResponseDto vo = QuestionResponseDto.of(question, platform, practiceStatus, algorithms);
+        return addSelfLink(vo, question.getId());
     }
 
     /**
      * helpers
      */
-    private QuestionResponseDto addSelfLink(QuestionResponseDto vo) {
-        StringBuilder url = new StringBuilder();
-        String root = serverContext.getRoot();
-
-        url.append(root); url.append("/");
-        url.append(RESOURCES); url.append("/"); url.append(vo.getId());
-
-        vo.add(Link.of(url.toString()).withSelfRel());
-
+    private QuestionResponseDto addSelfLink(QuestionResponseDto vo, Long id) {
+        vo.add(LinkBuilder.getDetailLink(serverContext.getRoot(), RESOURCES, id).withSelfRel());
         return vo;
     }
 
-    private QuestionResponseDto platformAssemble(QuestionResponseDto vo) {
-        String baseUrl = serverContext.getRoot();
-        QuestionPlatformResponseDto p = vo.getPlatform();
-        p.add(LinkBuilder.getDetailLink(baseUrl, PLATFORM_RESOURCES, p.getId()).withSelfRel());
-        return vo;
-    }
-
-    private QuestionResponseDto algorithmsAssemble(QuestionResponseDto vo, Question question) {
-        List<Algorithm> algorithmList = question.getAlgorithms();
-
-        for (Algorithm algorithm : algorithmList)
-            vo.addAlgorithm(algorithmsAssembler.toModel(algorithm));
-        return vo;
+    private List<AlgorithmResponseDto> algorithmsAssemble(List<Algorithm> algorithms) {
+        return algorithms.stream()
+                .map(algorithmsAssembler::toModel)
+                .collect(Collectors.toList());
     }
 }

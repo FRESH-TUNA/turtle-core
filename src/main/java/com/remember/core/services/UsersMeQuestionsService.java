@@ -88,7 +88,7 @@ public class UsersMeQuestionsService {
 
         Question updatedQuestion = domainMapper.toEntity(authenticatedFacade.getUserId(), id, ro);
         question.partial_update(updatedQuestion);
-        return new QuestionResponseDto(question);
+        return assembler.toModel(question);
     }
 
     @Transactional
