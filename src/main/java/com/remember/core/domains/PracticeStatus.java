@@ -9,9 +9,11 @@ public enum PracticeStatus {
     /*
      * datas
      */
-    SOLVED("성공", "#00ff00"),
-    TIMEOUT("연습중", "#ffdb4d"),
-    FAILED("실패", "#ff3333");
+    PERFECT("PERFECT", "#00ff00"),
+    GREAT("GREAT", "#aaff00"),
+    GOOD("GOOD", "#ffdb4d"),
+    FAIL("FAIL", "#ff3333");
+
 
     private static List<PracticeStatus> allList;
 
@@ -37,7 +39,7 @@ public enum PracticeStatus {
     public static List<PracticeStatus> findAll() {
         if (Objects.isNull(allList)) {
             allList = new ArrayList<>(
-                    Arrays.asList(SOLVED, TIMEOUT, FAILED)
+                    Arrays.asList(PERFECT, GREAT, GOOD, FAIL)
             );
         }
         return allList;
