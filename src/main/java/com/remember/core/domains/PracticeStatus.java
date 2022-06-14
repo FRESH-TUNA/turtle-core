@@ -10,7 +10,7 @@ public enum PracticeStatus {
      * datas
      */
     SOLVED("성공", "#00ff00"),
-    TIMEOUT("시간초과", "#ffdb4d"),
+    TIMEOUT("연습중", "#ffdb4d"),
     FAILED("실패", "#ff3333");
 
     private static List<PracticeStatus> allList;

@@ -56,18 +56,20 @@ public class Question extends BaseTimeDomain{
      * contructors
      */
     @Builder
-    public Question(
+    private Question(
             Long id,
             String title,
             String link,
             Platform platform,
             PracticeStatus practiceStatus,
-            Long user) {
+            Long user,
+            List<Algorithm> algorithms) {
         this.id = id;
         this.title = title;
         this.link = link;
         this.platform = platform;
         this.practiceStatus = practiceStatus;
         this.user = user;
+        this.algorithms = algorithms;
     }
 }

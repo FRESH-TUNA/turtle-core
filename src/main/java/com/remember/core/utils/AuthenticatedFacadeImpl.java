@@ -10,11 +10,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
+    @Override
     public Long getUserId() {
+        return getUserDetails().getId();
+    }
+
+    @Override
+    public RememberUserDetails getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth instanceof AnonymousAuthenticationToken)
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이후 이용하세요");
 
-        return ((RememberUserDetails) auth.getPrincipal()).getId();
+        return (RememberUserDetails) auth.getPrincipal();
     }
 }

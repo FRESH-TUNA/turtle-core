@@ -31,11 +31,6 @@ public class RememberUserDetails implements UserDetails, OAuth2User, UserDetails
     }
 
     @Override
-    public Long getId() {
-        return this.id;
-    }
-
-    @Override
     public String getPassword() {
         return this.password;
     }
@@ -76,5 +71,17 @@ public class RememberUserDetails implements UserDetails, OAuth2User, UserDetails
     @Override
     public String getName() {
         return this.username;
+    }
+
+    /*
+     * additional methods
+     */
+    @Override
+    public Long getId() {
+        return this.id;
+    }
+
+    public boolean checkUserisOwnerOfResource(Long id) {
+        return this.id.equals(id);
     }
 }

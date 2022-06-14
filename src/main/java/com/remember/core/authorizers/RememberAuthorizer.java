@@ -1,5 +1,6 @@
 package com.remember.core.authorizers;
 
+import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
 import com.remember.core.exceptions.AuthorizationException;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.utils.AuthenticatedFacade;
@@ -18,8 +19,10 @@ import org.springframework.stereotype.Component;
 public class RememberAuthorizer {
     private final AuthenticatedFacade authenticatedFacade;
 
-    public void checkCurrentUserIDIsOwner(Object userIdOfTarget) {
-        if(!authenticatedFacade.getUserId().equals(userIdOfTarget))
+    public void checkCurrentUserIsOwner(Object userIdOfTarget) {
+        RememberUserDetails userDetails = authenticatedFacade.getUserDetails();
+
+        if(!userDetails.checkUserisOwnerOfResource((Long) userIdOfTarget))
             throw new AuthorizationException(ErrorCode.NOT_AUTHORIZED);
     }
 }

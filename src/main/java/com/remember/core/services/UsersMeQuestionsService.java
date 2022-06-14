@@ -39,7 +39,7 @@ public class UsersMeQuestionsService {
     private final QuestionRepository repository;
     private final EntityManager entityManager;
 
-    private final QuestionFactory domainMapper;
+    private final QuestionFactory factory;
     private final QuestionListAssembler listAssembler;
     private final QuestionAssembler assembler;
     private final PagedResourcesAssembler<Question> pageAssembler;
@@ -59,13 +59,18 @@ public class UsersMeQuestionsService {
 
     public QuestionResponse findById(Long id) {
         Question question = getById(id);
-        authorizer.checkCurrentUserIDIsOwner(question.getUser());
+
+        authorizer.checkCurrentUserIsOwner(question.getUser());
+
         return assembler.toModel(question);
     }
 
     @Transactional
     public QuestionResponse create(QuestionRequest ro) {
-        Question question = repository.save(domainMapper.toEntity(authenticatedFacade.getUserId(), ro));
+        Question question = factory.toEntity(authenticatedFacade.getUserId(), ro);
+
+        question = repository.save(question);
+
         return assembler.toModel(getById(question.getId()));
     }
 
@@ -73,10 +78,10 @@ public class UsersMeQuestionsService {
     public QuestionResponse update(Long id, QuestionRequest ro) {
         Question question = getById(id);
 
-        authorizer.checkCurrentUserIDIsOwner(question.getUser());
-
-        Question updatedQuestion = domainMapper.toEntity(authenticatedFacade.getUserId(), id, ro);
+        authorizer.checkCurrentUserIsOwner(question.getUser());
+        Question updatedQuestion = factory.toEntity(authenticatedFacade.getUserId(), id, ro);
         question = entityManager.merge(updatedQuestion);
+
         return assembler.toModel(question);
     }
 
@@ -84,18 +89,19 @@ public class UsersMeQuestionsService {
     public QuestionResponse partial_update(Long id, QuestionRequest ro) {
         Question question = getById(id);
 
-        authorizer.checkCurrentUserIDIsOwner(question.getUser());
-
-        Question updatedQuestion = domainMapper.toEntity(authenticatedFacade.getUserId(), id, ro);
+        authorizer.checkCurrentUserIsOwner(question.getUser());
+        Question updatedQuestion = factory.toEntity(authenticatedFacade.getUserId(), id, ro);
         question.partial_update(updatedQuestion);
+
         return assembler.toModel(question);
     }
 
     @Transactional
     public void delete(Long id) {
-        authorizer.checkCurrentUserIDIsOwner(
+        authorizer.checkCurrentUserIsOwner(
                 repository.findUserOfQuestionById(id).orElseThrow(() ->
                         new EntityNotFoundException("해당 문제가 없습니다")));
+
         repository.deleteById(id);
     }
 

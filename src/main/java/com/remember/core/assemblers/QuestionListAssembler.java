@@ -1,8 +1,6 @@
 package com.remember.core.assemblers;
 
-import com.remember.core.assemblers.PracticeStatusAssembler;
 import com.remember.core.domains.Question;
-
 import com.remember.core.responses.PracticeStatusResponse;
 import com.remember.core.utils.ServerContext;
 import com.remember.core.responses.question.QuestionListResponse;

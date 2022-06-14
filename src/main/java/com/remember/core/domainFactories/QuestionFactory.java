@@ -10,9 +10,12 @@ import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.requests.QuestionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,46 +24,43 @@ public class QuestionFactory {
     private final AlgorithmsRepository algorithmsRepository;
 
     public Question toEntity(Long userId, QuestionRequest ro) {
-        String status =  ro.getPracticeStatus();
-        PracticeStatus practiceStatus = PracticeStatus.valueOf(status);
-
-        Question question = Question.builder()
+        return Question.builder()
                 .user(userId)
-                .practiceStatus(practiceStatus)
-                .platform(getPlatform(ro.getPlatform()))
+                .practiceStatus(getPracticeStatus(ro))
+                .platform(getPlatform(ro))
                 .link(ro.getLink())
                 .title(ro.getTitle())
+                .algorithms(getAlgorithms(ro))
                 .build();
-
-        return addAlgorithms(question, ro.getAlgorithms());
     }
 
     public Question toEntity(Long userId, Long id, QuestionRequest ro) {
-        String status =  ro.getPracticeStatus();
-        PracticeStatus practiceStatus = PracticeStatus.valueOf(status);
-
-        Question question = Question.builder()
+        return Question.builder()
                 .id(id)
                 .user(userId)
-                .practiceStatus(practiceStatus)
-                .platform(getPlatform(ro.getPlatform()))
+                .practiceStatus(getPracticeStatus(ro))
+                .platform(getPlatform(ro))
                 .link(ro.getLink())
                 .title(ro.getTitle())
+                .algorithms(getAlgorithms(ro))
                 .build();
-
-        return addAlgorithms(question, ro.getAlgorithms());
     }
 
-    private Platform getPlatform(Long platformId) {
+    private PracticeStatus getPracticeStatus(QuestionRequest ro) {
+        String id = ro.getPracticeStatus();
+        return StringUtils.hasText(id) ? PracticeStatus.valueOf(id) : null;
+    }
+
+    private Platform getPlatform(QuestionRequest ro) {
+        Long platformId = ro.getPlatform();
         if (Objects.isNull(platformId)) return null;
         return platformsRepository.getById(platformId);
     }
 
-    private Question addAlgorithms(Question question, List<Long> algorithms) {
-        if(algorithms == null || algorithms.isEmpty()) return question;
-        for (Long algo : algorithms)
-            question.addAlgorithm(getAlgorithm(algo));
-        return question;
+    private List<Algorithm> getAlgorithms(QuestionRequest ro) {
+        List<Long> ids = ro.getAlgorithms();
+        if(Objects.isNull(ids) || ids.isEmpty()) return new ArrayList<>();
+        return ids.stream().map(this::getAlgorithm).collect(Collectors.toList());
     }
 
     private Algorithm getAlgorithm(Long algoId) {
