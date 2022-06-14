@@ -36,9 +36,7 @@ public class UserRequestDto {
 
     public User toEntity(Role role, ProviderType providerType) {
         User user = User.builder()
-                .username(getUsername())
                 .email(getUsername())
-                .password(getPassword())
                 .role(role)
                 .providerType(providerType)
                 .build();

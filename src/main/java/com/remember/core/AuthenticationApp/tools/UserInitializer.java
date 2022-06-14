@@ -18,7 +18,7 @@ public class UserInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         User user = User.builder()
-                .username("")
+                .nickname("")
                 .password(passwordEncoder.encode(""))
                 .build();
 

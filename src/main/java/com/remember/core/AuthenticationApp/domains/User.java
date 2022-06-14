@@ -20,10 +20,10 @@ public class User {
     private Long id;
 
     @Column(unique=true)
-    private String username;
+    private String email;
 
     @Column(unique=true)
-    private String email;
+    private String nickname;
 
     @Column(nullable = false)
     private String password;
@@ -39,30 +39,35 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public boolean isOauth() {
-        return !this.providerType.equals(ProviderType.LOCAL);
-    }
-
-    public void oauthUserUpdate(String username, String picture) {
-        this.username = username;
-        this.picture = picture;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
 
+    /*
+     * oauth
+     */
+
+    @Column(unique=true)
+    private String oauthId;
+
+    public void oauthUserUpdate(String oauthId, String picture) {
+        this.oauthId = oauthId;
+        this.picture = picture;
+    }
+
     @Builder
-    public User(Long id,
+    private User(Long id,
                 String password,
-                String username,
+                String nickname,
                 String email,
                 String picture,
                 Role role,
-                ProviderType providerType) {
+                ProviderType providerType,
+                String oauthId) {
         this.id = id;
+        this.oauthId = oauthId;
         this.password = password;
-        this.username = username;
+        this.nickname = nickname;
         this.email = email;
         this.picture = picture;
         this.role = role;

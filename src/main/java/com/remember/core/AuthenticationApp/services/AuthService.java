@@ -20,12 +20,12 @@ public class AuthService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new RememberAuthenticationException(ErrorCode.BAD_EMAIL_PASSWORD));
 
         return RememberUserDetails.builder()
                 .id(user.getId())
-                .username(user.getUsername()).password(user.getPassword())
+                .username(user.getEmail()).password(user.getPassword())
                 .roles(Collections.singletonList(user.getRole().name()))
                 .build();
     }

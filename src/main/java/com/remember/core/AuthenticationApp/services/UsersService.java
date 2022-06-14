@@ -37,7 +37,7 @@ public class UsersService {
 
         UserDetails userDetails = RememberUserDetails.builder()
                 .id(user.getId())
-                .username(user.getUsername()).password(user.getPassword())
+                .username(user.getEmail()).password(user.getPassword())
                 .roles(Collections.singletonList(user.getRole().name()))
                 .build();
 

@@ -34,8 +34,8 @@ public class GoogleOAuth2UserInfo extends OAuth2UserInfo{
     @Override
     public User toEntity() {
         return User.builder()
-                .username(getId())
                 .email(getEmail())
+                .oauthId(getId())
                 .picture(getImageUrl())
                 .providerType(ProviderType.GOOGLE)
                 .role(Role.ROLE_GUEST)

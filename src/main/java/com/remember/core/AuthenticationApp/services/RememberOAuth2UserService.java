@@ -47,6 +47,7 @@ public class RememberOAuth2UserService extends DefaultOAuth2UserService {
 
         /*
          * 이미 가입했으면 업데이트, 신규유저인 경우 회원가입 진행
+         * 요청 providertype이 같아야 한다.
          */
         if (userWrapper.isPresent()) {
             savedUser = userWrapper.get();
@@ -59,7 +60,7 @@ public class RememberOAuth2UserService extends DefaultOAuth2UserService {
 
         return RememberUserDetails.builder()
                 .id(savedUser.getId())
-                .username(userInfo.getEmail())
+                .username(userInfo.getName())
                 .attributes(userInfo.getAttributes())
                 .roles(Collections.singletonList(savedUser.getRole().name()))
                 .build();
