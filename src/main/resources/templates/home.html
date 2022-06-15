@@ -1,8 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout}">
-<div layout:fragment="content">
+      layout:decorate="~{layout}"
+>
 
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/static/css/home.css}"/>
+</th:block>
+
+<div layout:fragment="content" class="home root container">
+    <div class="home card">
+        <div class="card-body">
+            <h3 class="card-title">리멤버에 오신것을 환영합니다.</h3>
+            <p>
+                리멤버는 신선한참치가 개발한 코딩테스트문제 복습을 도와주는 웹서비스 입니다.
+                <br/>
+                자기가 풀었던 문제에 대한 정보(이름, 링크)를 저장할수 있는 '내가 푼 문제' 기능을 제공하고 있습니다.
+                <br/>
+                또한 문제에 대한 학습 상태(FAIL, GOOD, GREAT, PERFECT)를 같이 저장하여,
+                향후 어려웠던 문제부터 우선순위를 정해 복습을 할수 있도록 돕습니다.
+            </p>
+        </div>
+    </div>
+
+    <div class="home card">
+        <div class="card-body">
+            <h3 class="card-title">업데이트 내역</h3>
+            <h5> 1. '내가 푼 문제' 기능 런칭</h5>
+            <p>
+               리멤버 서비스의 핵심기능인 '내가 푼 문제' 서비스를 런칭합니다.
+                <br/>
+                서비스 사용을 위해 회원가입이 필요하며, 구글 소셜로그인을 통해 빠르게 서비스를 이용하실수 있습니다.
+            </p>
+        </div>
+    </div>
 </div>
 </html>
