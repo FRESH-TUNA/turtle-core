@@ -2,7 +2,7 @@ package com.remember.core.configs;
 
 import com.remember.core.AuthenticationApp.services.AuthService;
 import com.remember.core.AuthenticationApp.services.RememberOAuth2UserService;
-import com.remember.core.exceptionHandler.OAuth2AuthenticationFailureHandler;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -13,11 +13,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -43,6 +46,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .ignoring()
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }// Register HttpSessionEventPublisher
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -93,8 +102,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 // 동시 최대 세션
                 .maximumSessions(1)
-                // 동시 로그인 차단, false인 경우 기존 세션 만료(default)
-                .maxSessionsPreventsLogin(true)
+                // 동시 로그인 차단 true인경우 로그인시도시 에러를 뿜는다., false인 경우 기존 세션 만료시키고 로그인한다.(default)
+                .maxSessionsPreventsLogin(false)
+                .sessionRegistry(sessionRegistry())
+                .expiredUrl("/auth/forms/login?error=SESSION_EXPIRED")
         ;
 
         http

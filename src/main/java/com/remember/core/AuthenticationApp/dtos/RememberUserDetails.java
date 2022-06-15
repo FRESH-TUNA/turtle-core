@@ -60,6 +60,17 @@ public class RememberUserDetails implements UserDetails, OAuth2User, UserDetails
         return true;
     }
 
+    @Override
+    public boolean equals(Object otherUser) {
+        RememberUserDetails other = (RememberUserDetails) otherUser;
+        return other.hashCode() == hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return String.valueOf(id).hashCode();
+    }
+
     /*
      * oauth
      */

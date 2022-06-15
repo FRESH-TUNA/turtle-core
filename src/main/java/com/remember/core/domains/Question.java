@@ -1,5 +1,6 @@
 package com.remember.core.domains;
 
+import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,16 +38,15 @@ public class Question extends BaseTimeDomain{
     @OneToMany(mappedBy = "question")
     private List<PracticeLog> practiceLogs = new ArrayList<>();
 
+    /*
+     * user
+     */
     @Column(nullable = false)
     private Long user;
 
     /*
      * methods
      */
-    public void addAlgorithm(Algorithm a) {
-        this.algorithms.add(a);
-    }
-
     public void partial_update(Question updated) {
         if(updated.practiceStatus != null)
             this.practiceStatus = updated.practiceStatus;

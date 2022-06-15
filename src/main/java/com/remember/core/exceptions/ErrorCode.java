@@ -13,11 +13,12 @@ public enum ErrorCode {
     BAD_EMAIL_PASSWORD(400, "A_003", "이메일이나 패스워드가 잘못되었습니다"),
     OAUTH_PROVIDER_MISMATCH(400, "A_004", "이미 같은 이메일을 가진 계정을 가지고 있습니다. 회원가입했던 계정으로 다시시도해주세요"),
     NOT_LOGINED(400, "A_005", "로그인후 이용해주세요"),
+    SESSION_EXPIRED(400, "A_006", "세션이 만료되었습니다. 다시 로그인해주세요"),
 
     /*
      * authorization
      */
-    NOT_AUTHORIZED(401, "A_005", "권한이 없습니다"),
+    NOT_AUTHORIZED(401, "P_001", "권한이 없습니다"),
 
     /*
      * FROM VALIDATION
