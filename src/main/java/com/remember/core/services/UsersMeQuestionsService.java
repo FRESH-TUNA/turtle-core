@@ -49,7 +49,7 @@ public class UsersMeQuestionsService {
     private final RememberAuthorizer authorizer;
 
     public PagedModel<QuestionListResponse> findAll(Pageable pageable, QuestionParams params) {
-        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
+        UserIdentityField user = authenticatedFacade.generateAndGetUserIdentityField();
 
         Page<Question> questions = repository.findAll(
                 pageable,
@@ -70,7 +70,7 @@ public class UsersMeQuestionsService {
 
     @Transactional
     public QuestionResponse create(QuestionRequest ro) {
-        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
+        UserIdentityField user = authenticatedFacade.generateAndGetUserIdentityField();
 
         Question question = factory.toEntity(user, ro);
 
@@ -82,9 +82,9 @@ public class UsersMeQuestionsService {
     @Transactional
     public QuestionResponse update(Long id, QuestionRequest ro) {
         Question question = getById(id);
-        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
+        UserIdentityField user = question.getUser();
 
-        authorizer.checkCurrentUserIsOwner(question.getUser());
+        authorizer.checkCurrentUserIsOwner(user);
         Question updatedQuestion = factory.toEntity(user, id, ro);
         question = entityManager.merge(updatedQuestion);
 
@@ -94,9 +94,9 @@ public class UsersMeQuestionsService {
     @Transactional
     public QuestionResponse partial_update(Long id, QuestionRequest ro) {
         Question question = getById(id);
-        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
+        UserIdentityField user = question.getUser();
 
-        authorizer.checkCurrentUserIsOwner(question.getUser());
+        authorizer.checkCurrentUserIsOwner(user);
         Question updatedQuestion = factory.toEntity(user, id, ro);
         question.partial_update(updatedQuestion);
 

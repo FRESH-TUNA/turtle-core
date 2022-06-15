@@ -1,6 +1,7 @@
 package com.remember.core.utils;
 
 import com.remember.core.authentication.dtos.RememberUserDetails;
+import com.remember.core.domains.UserIdentityField;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,5 +18,10 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이후 이용하세요");
 
         return (RememberUserDetails) auth.getPrincipal();
+    }
+
+    @Override
+    public UserIdentityField generateAndGetUserIdentityField() {
+        return getUserDetails().toUserIdentityField();
     }
 }

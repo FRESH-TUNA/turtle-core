@@ -43,7 +43,7 @@
                     title="선택"
             >
                 <option
-                        th:selected="${s.getId() eq question.getPracticeStatus()}"
+                        th:selected="${s.getId() eq question.getPracticeStatus().getId()}"
                         th:each="s: ${practiceStatusus}"
                         th:data-content="${
                                             '<span class=''badge'''
