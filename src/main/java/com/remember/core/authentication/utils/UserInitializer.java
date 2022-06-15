@@ -1,4 +1,4 @@
-package com.remember.core.authentication.tools;
+package com.remember.core.authentication.utils;
 
 import com.remember.core.authentication.domains.User;
 import com.remember.core.authentication.repositories.UsersRepository;

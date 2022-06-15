@@ -15,7 +15,7 @@ import com.remember.core.assemblers.QuestionListAssembler;
 
 import com.remember.core.responses.question.QuestionResponse;
 import com.remember.core.responses.question.QuestionListResponse;
-import com.remember.core.utils.AuthenticatedFacade;
+import com.remember.core.authentication.utils.AuthenticatedFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,7 +49,7 @@ public class UsersMeQuestionsService {
     private final RememberAuthorizer authorizer;
 
     public PagedModel<QuestionListResponse> findAll(Pageable pageable, QuestionParams params) {
-        UserIdentityField user = authenticatedFacade.generateAndGetUserIdentityField();
+        UserIdentityField user = currentLoginedUser();
 
         Page<Question> questions = repository.findAll(
                 pageable,
@@ -70,7 +70,7 @@ public class UsersMeQuestionsService {
 
     @Transactional
     public QuestionResponse create(QuestionRequest ro) {
-        UserIdentityField user = authenticatedFacade.generateAndGetUserIdentityField();
+        UserIdentityField user = currentLoginedUser();
 
         Question question = factory.toEntity(user, ro);
 
@@ -105,8 +105,8 @@ public class UsersMeQuestionsService {
 
     @Transactional
     public void delete(Long id) {
-        UserIdentityField user = repository.findUserOfQuestionById(id).orElseThrow(() ->
-                new EntityNotFoundException("해당 문제가 없습니다"));
+        UserIdentityField user = repository.findUserOfQuestionById(id)
+                .orElseThrow(() -> new EntityNotFoundException("해당 문제가 없습니다"));
 
         authorizer.checkCurrentUserIsOwner(user);
 
@@ -119,5 +119,9 @@ public class UsersMeQuestionsService {
     private Question getById(Long id) {
         return repository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("해당 문제가 없습니다"));
+    }
+
+    private UserIdentityField currentLoginedUser() {
+        return authenticatedFacade.getUserDetails().toUserIdentityField();
     }
 }

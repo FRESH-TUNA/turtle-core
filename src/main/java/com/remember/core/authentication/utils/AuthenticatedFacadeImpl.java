@@ -1,4 +1,4 @@
-package com.remember.core.utils;
+package com.remember.core.authentication.utils;
 
 import com.remember.core.authentication.dtos.RememberUserDetails;
 import com.remember.core.domains.UserIdentityField;
@@ -18,10 +18,5 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인이후 이용하세요");
 
         return (RememberUserDetails) auth.getPrincipal();
-    }
-
-    @Override
-    public UserIdentityField generateAndGetUserIdentityField() {
-        return getUserDetails().toUserIdentityField();
     }
 }

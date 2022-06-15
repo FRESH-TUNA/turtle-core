@@ -1,8 +1,5 @@
 package com.remember.core.assemblers;
 
-import com.remember.core.assemblers.AlgorithmAssembler;
-import com.remember.core.assemblers.PlatformAssembler;
-import com.remember.core.assemblers.PracticeStatusAssembler;
 import com.remember.core.domains.Algorithm;
 import com.remember.core.domains.Question;
 import com.remember.core.responses.AlgorithmResponse;

@@ -5,7 +5,7 @@ import com.remember.core.authentication.dtos.UserIdentity;
 import com.remember.core.domains.UserIdentityField;
 import com.remember.core.exceptions.AuthorizationException;
 import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.utils.AuthenticatedFacade;
+import com.remember.core.authentication.utils.AuthenticatedFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -23,9 +23,8 @@ public class RememberAuthorizer {
 
     public void checkCurrentUserIsOwner(UserIdentityField userIdentityField) {
         RememberUserDetails userDetails = authenticatedFacade.getUserDetails();
-        UserIdentity userIdentity = UserIdentity.of(userIdentityField);
 
-        if(!userDetails.checkOwnerOfResource(userIdentity))
+        if(!userDetails.isSameUser(userIdentityField))
             throw new AuthorizationException(ErrorCode.NOT_AUTHORIZED);
     }
 }

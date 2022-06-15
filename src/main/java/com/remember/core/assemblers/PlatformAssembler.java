@@ -17,12 +17,6 @@ public class PlatformAssembler implements RepresentationModelAssembler<Platform,
     private final ServerContext serverContext;
     private final String resources = "platforms";
 
-    public List<PlatformResponse> assemble(String baseUrl, List<PlatformResponse> platforms) {
-        for (PlatformResponse vo :platforms)
-            vo.add(LinkBuilder.getDetailLink(baseUrl, resources, vo.getId()).withSelfRel());
-        return platforms;
-    }
-
     @Override
     public PlatformResponse toModel(Platform entity) {
         PlatformResponse platform = new PlatformResponse(entity);

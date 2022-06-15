@@ -96,7 +96,8 @@ public class RememberUserDetails implements UserDetails, OAuth2User, RememberUse
     }
 
     @Override
-    public boolean checkOwnerOfResource(UserIdentity userIdentity) {
+    public boolean isSameUser(UserIdentityField user) {
+        UserIdentity userIdentity = UserIdentity.of(user);
         return this.userIdentity.equals(userIdentity);
     }
 }
