@@ -1,13 +1,14 @@
-package com.remember.core.AuthenticationApp.services;
+package com.remember.core.authentication.services;
 
-import com.remember.core.AuthenticationApp.domains.ProviderType;
-import com.remember.core.AuthenticationApp.domains.User;
-import com.remember.core.AuthenticationApp.dtos.OAuth2UserInfos.OAuth2UserInfo;
+import com.remember.core.authentication.domains.ProviderType;
+import com.remember.core.authentication.domains.User;
+import com.remember.core.authentication.dtos.OAuth2UserInfos.OAuth2UserInfo;
+import com.remember.core.authentication.dtos.UserIdentity;
 import com.remember.core.exceptions.RememberAuthenticationException;
-import com.remember.core.AuthenticationApp.factories.OAuth2UserInfoFactory;
-import com.remember.core.AuthenticationApp.repositories.UsersRepository;
+import com.remember.core.authentication.factories.OAuth2UserInfoFactory;
+import com.remember.core.authentication.repositories.UsersRepository;
 import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
+import com.remember.core.authentication.dtos.RememberUserDetails;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.AuthenticationException;
@@ -23,7 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class RememberOAuth2UserService extends DefaultOAuth2UserService {
+public class OAuth2Service extends DefaultOAuth2UserService {
 
     private final UsersRepository userRepository;
 
@@ -59,7 +60,7 @@ public class RememberOAuth2UserService extends DefaultOAuth2UserService {
             savedUser = userRepository.save(userInfo.toEntity());
 
         return RememberUserDetails.builder()
-                .id(savedUser.getId())
+                .userIdentity(UserIdentity.of(savedUser))
                 .username(userInfo.getName())
                 .attributes(userInfo.getAttributes())
                 .roles(Collections.singletonList(savedUser.getRole().name()))

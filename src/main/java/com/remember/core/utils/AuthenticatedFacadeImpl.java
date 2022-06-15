@@ -1,6 +1,6 @@
 package com.remember.core.utils;
 
-import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
+import com.remember.core.authentication.dtos.RememberUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,11 +10,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Component
 public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
-    @Override
-    public Long getUserId() {
-        return getUserDetails().getId();
-    }
-
     @Override
     public RememberUserDetails getUserDetails() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

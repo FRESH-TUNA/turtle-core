@@ -1,5 +1,6 @@
-package com.remember.core.AuthenticationApp.dtos;
+package com.remember.core.authentication.dtos;
 
+import com.remember.core.domains.UserIdentityField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,13 +15,16 @@ import java.util.Map;
 
 @Builder
 @AllArgsConstructor
-public class RememberUserDetails implements UserDetails, OAuth2User, UserDetailsSupport<Long> {
-    private Long id;
+public class RememberUserDetails implements UserDetails, OAuth2User, RememberUserDetailsSupport {
+    private UserIdentity userIdentity;
     private String username;
     private String password;
     private List<String> roles;
     private Map<String, Object> attributes;
 
+    /*
+     * UserDetails
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -60,19 +64,15 @@ public class RememberUserDetails implements UserDetails, OAuth2User, UserDetails
         return true;
     }
 
+    //세션 중복로그인을 막기 위해 확인이 필요한대 hashcode, equals 메소드 재정의가 필요하다.
     @Override
     public boolean equals(Object otherUser) {
         RememberUserDetails other = (RememberUserDetails) otherUser;
-        return other.hashCode() == hashCode();
-    }
-
-    @Override
-    public int hashCode() {
-        return String.valueOf(id).hashCode();
+        return other.userIdentity.equals(userIdentity);
     }
 
     /*
-     * oauth
+     * OAuth2User
      */
     @Override
     public Map<String, Object> getAttributes() {
@@ -84,15 +84,19 @@ public class RememberUserDetails implements UserDetails, OAuth2User, UserDetails
         return this.username;
     }
 
+
     /*
-     * additional methods
+     * RememberUserDetailsSupport
      */
     @Override
-    public Long getId() {
-        return this.id;
+    public UserIdentityField toUserIdentityField() {
+        return UserIdentityField.builder().
+                user(userIdentity.getId())
+                .build();
     }
 
-    public boolean checkUserisOwnerOfResource(Long id) {
-        return this.id.equals(id);
+    @Override
+    public boolean checkOwnerOfResource(UserIdentity userIdentity) {
+        return this.userIdentity.equals(userIdentity);
     }
 }

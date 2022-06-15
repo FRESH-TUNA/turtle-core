@@ -1,4 +1,4 @@
-package com.remember.core.AuthenticationApp.domains;
+package com.remember.core.authentication.domains;
 
 public enum Role {
     ROLE_GUEST,

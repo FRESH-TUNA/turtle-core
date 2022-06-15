@@ -1,7 +1,7 @@
-package com.remember.core.AuthenticationApp.controllers;
+package com.remember.core.authentication.controllers;
 
-import com.remember.core.AuthenticationApp.dtos.UserRequestDto;
-import com.remember.core.AuthenticationApp.services.UsersService;
+import com.remember.core.authentication.dtos.UserRequest;
+import com.remember.core.authentication.services.UsersService;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,8 @@ public class AuthController {
     private UsersService service;
 
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String signup(@ModelAttribute @Valid UserRequestDto userRequestDto) {
-        service.registerNewUserAccount(userRequestDto);
+    public String signup(@ModelAttribute @Valid UserRequest userRequest) {
+        service.registerNewUserAccount(userRequest);
         return "redirect:/";
     }
 

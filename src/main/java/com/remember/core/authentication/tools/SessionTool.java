@@ -1,4 +1,4 @@
-package com.remember.core.AuthenticationApp.tools;
+package com.remember.core.authentication.tools;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

@@ -1,6 +1,5 @@
 package com.remember.core.domains;
 
-import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,8 +40,8 @@ public class Question extends BaseTimeDomain{
     /*
      * user
      */
-    @Column(nullable = false)
-    private Long user;
+    @Embedded
+    private UserIdentityField user;
 
     /*
      * methods
@@ -62,7 +61,7 @@ public class Question extends BaseTimeDomain{
             String link,
             Platform platform,
             PracticeStatus practiceStatus,
-            Long user,
+            UserIdentityField user,
             List<Algorithm> algorithms) {
         this.id = id;
         this.title = title;

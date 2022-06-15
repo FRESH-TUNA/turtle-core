@@ -1,10 +1,11 @@
-package com.remember.core.AuthenticationApp.services;
+package com.remember.core.authentication.services;
 
+import com.remember.core.authentication.dtos.UserIdentity;
 import com.remember.core.exceptions.RememberAuthenticationException;
 import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.AuthenticationApp.dtos.RememberUserDetails;
-import com.remember.core.AuthenticationApp.repositories.UsersRepository;
-import com.remember.core.AuthenticationApp.domains.User;
+import com.remember.core.authentication.dtos.RememberUserDetails;
+import com.remember.core.authentication.repositories.UsersRepository;
+import com.remember.core.authentication.domains.User;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +25,7 @@ public class AuthService implements UserDetailsService {
                 .orElseThrow(() -> new RememberAuthenticationException(ErrorCode.BAD_EMAIL_PASSWORD));
 
         return RememberUserDetails.builder()
-                .id(user.getId())
+                .userIdentity(UserIdentity.of(user))
                 .username(user.getEmail()).password(user.getPassword())
                 .roles(Collections.singletonList(user.getRole().name()))
                 .build();

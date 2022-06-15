@@ -5,6 +5,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.remember.core.domains.QQuestion;
 import com.remember.core.domains.Question;
+import com.remember.core.domains.UserIdentityField;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 public class QuestionSearchRepositoryImpl
         extends QuerydslRepositorySupport
-        implements QuestionSearchRepository<Question, Long, Long> {
+        implements QuestionSearchRepository<Question, Long> {
 
     private final JPAQueryFactory queryFactory;
 
@@ -25,7 +26,7 @@ public class QuestionSearchRepositoryImpl
     }
 
     @Override
-    public Page<Question> findAll(Pageable pageable, Long user, Predicate predicate) {
+    public Page<Question> findAll(Pageable pageable, UserIdentityField user, Predicate predicate) {
         JPAQuery<Long> counts_query = counts_base_query(user);
         JPAQuery<Question> query = findAll_base_query(user);
 
@@ -36,7 +37,7 @@ public class QuestionSearchRepositoryImpl
     }
 
     @Override
-    public Page<Question> findAll(Pageable pageable, Long user) {
+    public Page<Question> findAll(Pageable pageable, UserIdentityField user) {
         JPAQuery<Long> counts_query = counts_base_query(user);
         JPAQuery<Question> query = findAll_base_query(user);
 
@@ -61,7 +62,7 @@ public class QuestionSearchRepositoryImpl
     }
 
     @Override
-    public Optional<Long> findUserOfQuestionById(Long id) {
+    public Optional<UserIdentityField> findUserOfQuestionById(Long id) {
         QQuestion question = QQuestion.question;
         return Optional.ofNullable(queryFactory
                 .select(question.user)
@@ -74,7 +75,7 @@ public class QuestionSearchRepositoryImpl
     /*
      * base queries
      */
-    private JPAQuery<Question> findAll_base_query(Long user) {
+    private JPAQuery<Question> findAll_base_query(UserIdentityField user) {
         QQuestion question = QQuestion.question;
         return queryFactory
                 .select(question)
@@ -83,7 +84,7 @@ public class QuestionSearchRepositoryImpl
                 .where(question.user.eq(user));
     }
 
-    private JPAQuery<Long> counts_base_query(Long user) {
+    private JPAQuery<Long> counts_base_query(UserIdentityField user) {
         QQuestion question = QQuestion.question;
         return queryFactory.select(question.count())
                 .from(question)

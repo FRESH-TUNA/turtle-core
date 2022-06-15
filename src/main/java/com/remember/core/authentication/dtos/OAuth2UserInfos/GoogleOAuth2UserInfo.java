@@ -1,8 +1,8 @@
-package com.remember.core.AuthenticationApp.dtos.OAuth2UserInfos;
+package com.remember.core.authentication.dtos.OAuth2UserInfos;
 
-import com.remember.core.AuthenticationApp.domains.ProviderType;
-import com.remember.core.AuthenticationApp.domains.Role;
-import com.remember.core.AuthenticationApp.domains.User;
+import com.remember.core.authentication.domains.ProviderType;
+import com.remember.core.authentication.domains.Role;
+import com.remember.core.authentication.domains.User;
 
 import java.util.Map;
 

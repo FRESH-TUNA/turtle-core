@@ -1,6 +1,6 @@
 package com.remember.core.validatiors;
 
-import com.remember.core.AuthenticationApp.dtos.UserRequestDto;
+import com.remember.core.authentication.dtos.UserRequest;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
@@ -8,14 +8,14 @@ import javax.validation.ConstraintValidatorContext;
 
 @Component
 public class PasswordsEqualConstraintValidator implements
-        ConstraintValidator<PasswordsEqualConstraint, UserRequestDto> {
+        ConstraintValidator<PasswordsEqualConstraint, UserRequest> {
 
     @Override
     public void initialize(PasswordsEqualConstraint arg0) {
     }
 
     @Override
-    public boolean isValid(UserRequestDto user, ConstraintValidatorContext context) {
+    public boolean isValid(UserRequest user, ConstraintValidatorContext context) {
         if(user.getPassword().equals(user.getMatchingPassword()))
             return true;
         context.disableDefaultConstraintViolation();

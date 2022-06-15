@@ -1,9 +1,6 @@
 package com.remember.core.domainFactories;
 
-import com.remember.core.domains.Algorithm;
-import com.remember.core.domains.Platform;
-import com.remember.core.domains.PracticeStatus;
-import com.remember.core.domains.Question;
+import com.remember.core.domains.*;
 import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 
@@ -23,9 +20,9 @@ public class QuestionFactory {
     private final PlatformsRepository platformsRepository;
     private final AlgorithmsRepository algorithmsRepository;
 
-    public Question toEntity(Long userId, QuestionRequest ro) {
+    public Question toEntity(UserIdentityField user, QuestionRequest ro) {
         return Question.builder()
-                .user(userId)
+                .user(user)
                 .practiceStatus(getPracticeStatus(ro))
                 .platform(getPlatform(ro))
                 .link(ro.getLink())
@@ -34,10 +31,10 @@ public class QuestionFactory {
                 .build();
     }
 
-    public Question toEntity(Long userId, Long id, QuestionRequest ro) {
+    public Question toEntity(UserIdentityField user, Long id, QuestionRequest ro) {
         return Question.builder()
                 .id(id)
-                .user(userId)
+                .user(user)
                 .practiceStatus(getPracticeStatus(ro))
                 .platform(getPlatform(ro))
                 .link(ro.getLink())

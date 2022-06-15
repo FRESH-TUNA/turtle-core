@@ -1,6 +1,5 @@
-package com.remember.core.AuthenticationApp.dtos;
+package com.remember.core.authentication.dtos;
 
-import com.remember.core.AuthenticationApp.domains.User;
 import lombok.Builder;
 import lombok.Getter;
 

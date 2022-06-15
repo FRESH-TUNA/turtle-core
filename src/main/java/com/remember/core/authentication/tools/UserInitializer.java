@@ -1,7 +1,7 @@
-package com.remember.core.AuthenticationApp.tools;
+package com.remember.core.authentication.tools;
 
-import com.remember.core.AuthenticationApp.domains.User;
-import com.remember.core.AuthenticationApp.repositories.UsersRepository;
+import com.remember.core.authentication.domains.User;
+import com.remember.core.authentication.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;

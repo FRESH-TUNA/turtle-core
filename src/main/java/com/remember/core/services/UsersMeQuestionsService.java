@@ -1,9 +1,10 @@
 package com.remember.core.services;
 
-import com.remember.core.authorizers.RememberAuthorizer;
+import com.remember.core.authorization.RememberAuthorizer;
 import com.remember.core.domainFactories.QuestionFactory;
 
 import com.remember.core.domains.Question;
+import com.remember.core.domains.UserIdentityField;
 import com.remember.core.predicateFactories.QuestionPredicateFactory;
 
 import com.remember.core.repositories.question.QuestionRepository;
@@ -48,9 +49,11 @@ public class UsersMeQuestionsService {
     private final RememberAuthorizer authorizer;
 
     public PagedModel<QuestionListResponse> findAll(Pageable pageable, QuestionParams params) {
+        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
+
         Page<Question> questions = repository.findAll(
                 pageable,
-                authenticatedFacade.getUserId(),
+                user,
                 QuestionPredicateFactory.generate(params)
         );
 
@@ -67,7 +70,9 @@ public class UsersMeQuestionsService {
 
     @Transactional
     public QuestionResponse create(QuestionRequest ro) {
-        Question question = factory.toEntity(authenticatedFacade.getUserId(), ro);
+        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
+
+        Question question = factory.toEntity(user, ro);
 
         question = repository.save(question);
 
@@ -77,9 +82,10 @@ public class UsersMeQuestionsService {
     @Transactional
     public QuestionResponse update(Long id, QuestionRequest ro) {
         Question question = getById(id);
+        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
 
         authorizer.checkCurrentUserIsOwner(question.getUser());
-        Question updatedQuestion = factory.toEntity(authenticatedFacade.getUserId(), id, ro);
+        Question updatedQuestion = factory.toEntity(user, id, ro);
         question = entityManager.merge(updatedQuestion);
 
         return assembler.toModel(question);
@@ -88,9 +94,10 @@ public class UsersMeQuestionsService {
     @Transactional
     public QuestionResponse partial_update(Long id, QuestionRequest ro) {
         Question question = getById(id);
+        UserIdentityField user = authenticatedFacade.getUserDetails().toUserIdentityField();
 
         authorizer.checkCurrentUserIsOwner(question.getUser());
-        Question updatedQuestion = factory.toEntity(authenticatedFacade.getUserId(), id, ro);
+        Question updatedQuestion = factory.toEntity(user, id, ro);
         question.partial_update(updatedQuestion);
 
         return assembler.toModel(question);
@@ -98,9 +105,10 @@ public class UsersMeQuestionsService {
 
     @Transactional
     public void delete(Long id) {
-        authorizer.checkCurrentUserIsOwner(
-                repository.findUserOfQuestionById(id).orElseThrow(() ->
-                        new EntityNotFoundException("해당 문제가 없습니다")));
+        UserIdentityField user = repository.findUserOfQuestionById(id).orElseThrow(() ->
+                new EntityNotFoundException("해당 문제가 없습니다"));
+
+        authorizer.checkCurrentUserIsOwner(user);
 
         repository.deleteById(id);
     }

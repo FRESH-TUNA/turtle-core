@@ -1,8 +1,8 @@
-package com.remember.core.AuthenticationApp.dtos;
+package com.remember.core.authentication.dtos;
 
-import com.remember.core.AuthenticationApp.domains.ProviderType;
-import com.remember.core.AuthenticationApp.domains.Role;
-import com.remember.core.AuthenticationApp.domains.User;
+import com.remember.core.authentication.domains.ProviderType;
+import com.remember.core.authentication.domains.Role;
+import com.remember.core.authentication.domains.User;
 import com.remember.core.validatiors.PasswordSafe;
 import com.remember.core.validatiors.PasswordsEqualConstraint;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,7 @@ import javax.validation.constraints.NotBlank;
 //@NoArgsConstructor // for requestbody processing jackson
 @Getter
 @PasswordsEqualConstraint(message = "패스워드가 일치하지 않습니다.")
-public class UserRequestDto {
+public class UserRequest {
     @PasswordSafe(message = "패스워드가 약합니다")
     @NotBlank(message="패스워드를 입력해주세요")
     private String password;
