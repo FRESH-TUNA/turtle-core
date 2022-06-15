@@ -105,12 +105,11 @@
  * table
  */
 td {
-    min-width: 100px;
+    min-width: 150px;
     max-width: 200px;
-    overflow: hidden;
-    text-overflow:ellipsis;
 }
 
-td.title {
-    min-width: 150px;
+td.link, td.title {
+    overflow: hidden;
+    text-overflow:ellipsis;
 }
