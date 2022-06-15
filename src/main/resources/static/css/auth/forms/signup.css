@@ -11,7 +11,8 @@
 }
 
 .signup form, .signup .social, hr{
-    width: 400px;
+    width: 100%;
+    max-width: 400px;
 }
 
 hr.remember-signup-separator {
