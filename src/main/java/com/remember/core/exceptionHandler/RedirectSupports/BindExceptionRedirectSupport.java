@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class BindExceptionRedirectSupport {
     private static String USERS_ME_QUESTIONS_ID = "/users/me/questions/([^\\/?\\s]+)$";
+    private static String FORMS_UPDATE = "/forms/update";
 
     public static RedirectView process(HttpServletRequest request,
                                        BindException e,
@@ -31,7 +32,7 @@ public class BindExceptionRedirectSupport {
         }
 
         if (checkUsersMeQuestionsIdUpdateRequest(request))
-            return pathInfo + "/forms/update";
+            return pathInfo + FORMS_UPDATE;
 
         //리다이렉션이 동일한 경우 동일하게 처리한다.
         return pathInfo;

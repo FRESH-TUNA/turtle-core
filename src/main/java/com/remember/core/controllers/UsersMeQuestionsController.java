@@ -2,7 +2,6 @@ package com.remember.core.controllers;
 
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.ErrorResponse;
-import com.remember.core.exceptions.RememberAuthorizationException;
 import com.remember.core.requests.QuestionRequest;
 import com.remember.core.responses.PracticeStatusResponse;
 import com.remember.core.responses.RequestSuccessModelAttribute;
@@ -29,12 +28,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.persistence.EntityNotFoundException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
