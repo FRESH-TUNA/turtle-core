@@ -10,6 +10,7 @@ spring:
   data:
     rest:
       detection-strategy: annotated
+      default-page-size: 20
   jpa:
     hibernate:
       ddl-auto: validate
