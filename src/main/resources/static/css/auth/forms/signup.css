@@ -10,9 +10,13 @@
     margin-top: 30px;
 }
 
-.signup form, .signup .social, hr{
+.signup > *{
     width: 100%;
     max-width: 400px;
+}
+
+.signup > h2, .signup > p {
+    text-align: center;
 }
 
 hr.remember-signup-separator {

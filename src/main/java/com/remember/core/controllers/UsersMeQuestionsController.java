@@ -1,8 +1,11 @@
 package com.remember.core.controllers;
 
-import com.remember.core.exceptions.AuthorizationException;
+import com.remember.core.exceptions.ErrorCode;
+import com.remember.core.exceptions.ErrorResponse;
+import com.remember.core.exceptions.RememberAuthorizationException;
 import com.remember.core.requests.QuestionRequest;
 import com.remember.core.responses.PracticeStatusResponse;
+import com.remember.core.responses.RequestSuccessModelAttribute;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
@@ -21,11 +24,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.MediaType;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
@@ -55,9 +61,9 @@ public class UsersMeQuestionsController {
 
     @GetMapping
     public String findAll(Pageable pageable,
-                          HttpServletRequest request,
                           @ModelAttribute QuestionParams params,
-                          Model model) {
+                          Model model,
+                          @Nullable String error) {
         PagedModel<QuestionListResponse> questions = service.findAll(pageable, params);
 
         /*
@@ -69,17 +75,18 @@ public class UsersMeQuestionsController {
 
         model.addAttribute("search_status",
                 Objects.isNull(params.getPracticeStatus()) ? 0L : params.getPracticeStatus());
-        model.addAttribute("search_input", Objects.isNull(params.getTitle()) ? "" : params.getTitle());
+        model.addAttribute("search_input",
+                Objects.isNull(params.getTitle()) ? "" : params.getTitle());
+        model.addAttribute("algorithms_url",
+                LinkBuilder.getListLink(context.getRoot(), ALGORITHMS).getHref());
 
-        model.addAttribute("questions_url", request.getRequestURL());
-        model.addAttribute("algorithms_url", LinkBuilder
-                .getListLink(context.getRoot(), ALGORITHMS).getHref());
+        addErrorToModel(model, error);
         return "users/questions/list";
     }
 
     @GetMapping("/{id}")
-    public String findById(
-            Model model, @PathVariable Long id) {
+    public String findById(Model model,
+                           @PathVariable Long id) {
         QuestionResponse question = service.findById(id);
 
         /*
@@ -91,15 +98,31 @@ public class UsersMeQuestionsController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String create(@ModelAttribute @Validated QuestionRequest ro) {
-        service.create(ro);
-        return "redirect:questions";
+    public RedirectView create(@ModelAttribute @Validated QuestionRequest ro,
+                               RedirectAttributes attributes) {
+        QuestionResponse question = service.create(ro);
+
+        /*
+         * redirects
+         */
+        RedirectView response = new RedirectView("/users/me/questions", true);
+        RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute(
+                "문제 생성에 성공했습니다.",
+                question.getLink("self").get().getHref());
+        attributes.addFlashAttribute("success", attribute);
+        return response;
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String update(@PathVariable Long id, @ModelAttribute @Validated QuestionRequest ro) {
-        service.update(id, ro);
-        return "redirect:/users/me/questions/" + id;
+    public RedirectView update(@PathVariable Long id,
+                               @ModelAttribute @Validated QuestionRequest ro,
+                               RedirectAttributes attributes) {
+        QuestionResponse question = service.update(id, ro);
+
+        RedirectView response = new RedirectView(question.getLink("self").get().getHref(), true);
+        RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute("문제 업데이트에 성공했습니다.");
+        attributes.addFlashAttribute("success", attribute);
+        return response;
     }
 
     @ResponseBody
@@ -113,10 +136,13 @@ public class UsersMeQuestionsController {
     }
 
     @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String delete(@PathVariable Long id) {
+    public RedirectView delete(@PathVariable Long id, RedirectAttributes attributes) {
         service.delete(id);
 
-        return "redirect:";
+        RedirectView response = new RedirectView("/users/me/questions", true);
+        RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute("문제를 삭제했습니다.");
+        attributes.addFlashAttribute("success", attribute);
+        return response;
     }
 
     /*
@@ -142,15 +168,10 @@ public class UsersMeQuestionsController {
     }
 
     /*
-     * exception handlers
+     * helpers
      */
-    @ExceptionHandler
-    public ModelAndView entityNotFound(EntityNotFoundException e) {
-        return new ModelAndView("redirect:");
-    }
-
-    @ExceptionHandler
-    public ModelAndView unAuthorized(AuthorizationException e) {
-        return new ModelAndView("redirect:");
+    private void addErrorToModel(Model model, String error) {
+        if(!Objects.isNull(error))
+            model.addAttribute("error", ErrorResponse.of(ErrorCode.valueOf(error)));
     }
 }

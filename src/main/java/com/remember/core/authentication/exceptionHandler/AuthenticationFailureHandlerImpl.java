@@ -1,4 +1,4 @@
-package com.remember.core.exceptionHandler;
+package com.remember.core.authentication.exceptionHandler;
 
 import com.remember.core.exceptions.ErrorCode;
 import org.springframework.security.authentication.BadCredentialsException;

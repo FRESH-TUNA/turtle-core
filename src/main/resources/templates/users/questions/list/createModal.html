@@ -5,7 +5,7 @@
      id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
 >
     <div class="modal-dialog">
-        <form th:action="${questions_url}" method="post">
+        <form th:action="${#httpServletRequest.getRequestURL()}" method="post">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">문제 추가하기</h5>
