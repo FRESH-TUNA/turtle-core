@@ -3,7 +3,6 @@
 
 <nav th:fragment="search" class="container">
   <div class="users questions search">
-    <th:block th:replace="users/questions/list/searchBar :: searchBar"></th:block>
     <div class="options">
         <select class="selectpicker practiceStatus"
                 data-width="130px"
@@ -39,6 +38,7 @@
           </option>
         </select>
     </div>
+      <th:block th:replace="users/questions/list/searchBar :: searchBar"></th:block>
   </div>
 </nav>
 
