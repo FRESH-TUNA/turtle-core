@@ -81,7 +81,7 @@ function search_bar_state_load() {
     }
 
     function set_search_bar_practiceStatus(practiceStatus) {
-        selectpicker = $(".users.questions.search .practiceStatusus.selectpicker");
+        selectpicker = $(".users.questions.search .practiceStatus.selectpicker");
         selectpicker.selectpicker("val", practiceStatus);
     }
 
@@ -131,12 +131,12 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
     $('.users.questions.search .practiceStatus.selectpicker').on('changed.bs.select', async function (e, clickedIndex, isSelected, oldValue) {
         // selectpicker 메소드를 통해 조작시 clickedIndex와 isSelected는 null 이 된다.
         if (clickedIndex != null) {
-            document.querySelector(".users.questions.search > .searchBar > button").click();
+            document.querySelector(".users.questions.search > .searchBar button").click();
         }
     })
 
     // 검색 버튼을 클릭했을때
-    $('.users.questions.search > .searchBar > button').on('click', function () {
+    $('.users.questions.search > .searchBar button').on('click', function () {
         const status = $(".users.questions.search .practiceStatus.selectpicker").val(); // selectpicker
         const questions_url = document
             .getElementsByClassName("users questions root")[0]
@@ -144,17 +144,17 @@ document.addEventListener("DOMContentLoaded", function() {    // Handler when th
         const algorithms = $(".users.questions.search .algorithms.selectpicker").val(); // selectpicker
 
         const title = document
-            .querySelector(".users.questions.search > .searchBar > input").value;
+            .querySelector(".users.questions.search > .searchBar input").value;
 
         console.log(algorithms)
         reload_questions(questions_url, status, algorithms, title);
     });
 
     // 검색어를 입력한후 엔터를 쳣을때
-    $('.users.questions.search > .searchBar > input').on('keypress', function (event) {
+    $('.users.questions.search > .searchBar input').on('keypress', function (event) {
         if (event.key === "Enter") {
             event.preventDefault();
-            document.querySelector(".users.questions.search > .searchBar > button").click();
+            document.querySelector(".users.questions.search > .searchBar button").click();
         }
     });
 });
