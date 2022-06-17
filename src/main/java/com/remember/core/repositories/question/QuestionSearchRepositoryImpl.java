@@ -78,9 +78,10 @@ public class QuestionSearchRepositoryImpl
     private JPAQuery<Question> findAll_base_query(UserIdentityField user) {
         QQuestion question = QQuestion.question;
         return queryFactory
-                .select(question)
+                .selectDistinct(question)
                 .from(question)
                 .innerJoin(question.platform).fetchJoin()
+                .leftJoin(question.algorithms)
                 .where(question.user.eq(user));
     }
 

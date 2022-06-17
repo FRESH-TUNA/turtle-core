@@ -68,14 +68,7 @@ public class UsersMeQuestionsController {
         model.addAttribute("questions", questions);
         model.addAttribute("platforms", platformsService.findAll().getContent());
         model.addAttribute("practiceStatusus", practiceStatususService.findAll().getContent());
-
-        model.addAttribute("search_status",
-                Objects.isNull(params.getPracticeStatus()) ? 0L : params.getPracticeStatus());
-        model.addAttribute("search_input",
-                Objects.isNull(params.getTitle()) ? "" : params.getTitle());
-        model.addAttribute("algorithms_url",
-                LinkBuilder.getListLink(context.getRoot(), ALGORITHMS).getHref());
-
+        model.addAttribute("algorithms", algorithmsService.findAll().getContent());
         addErrorToModel(model, error);
         return "users/questions/list";
     }

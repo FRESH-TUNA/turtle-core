@@ -5,8 +5,7 @@
   <div class="users questions search">
     <th:block th:replace="users/questions/list/searchBar :: searchBar"></th:block>
     <div class="options">
-      <div class="practiceStatus">
-        <select class="selectpicker"
+        <select class="selectpicker practiceStatus"
                 data-width="130px"
         >
           <option th:data-content="${
@@ -14,7 +13,7 @@
                                             + 'style=''background-color: black;''''>'
                                             + '모든 상태' + '</span>'}"
                   value="0"
-                  th:selected="${search_status eq 0}"
+                  selected
           >
           </option>
           <option
@@ -23,11 +22,22 @@
                                             + 'style=''background-color: ' + s.getColor() + ''';''>'
                                             + s.getStatus() + '</span>'}"
                   th:each="s: ${practiceStatusus}"
-                  th:selected="${search_status eq s.getId()}"
                   th:value="${s.getId()}">
           </option>
         </select>
-      </div>
+
+        <select class="selectpicker algorithms"
+                data-width="200px"
+                name="algorithms"
+                data-none-selected-text="알고리즘 선택(OR)"
+                multiple
+        >
+          <option
+                  th:each="a: ${algorithms}"
+                  th:text="${a.getName()}"
+                  th:value="${a.getId()}">
+          </option>
+        </select>
     </div>
   </div>
 </nav>

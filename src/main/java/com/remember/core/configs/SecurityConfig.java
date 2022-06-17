@@ -3,6 +3,7 @@ package com.remember.core.configs;
 import com.remember.core.authentication.services.AuthService;
 import com.remember.core.authentication.services.OAuth2Service;
 
+import com.remember.core.exceptionHandler.RememberAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
@@ -60,7 +62,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          */
         http
                 .csrf().csrfTokenRepository(sessionCsrfRepository()).and()
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+                .exceptionHandling()
+                    .authenticationEntryPoint(authenticationEntryPoint)
+                    .accessDeniedHandler(accessDeniedHandler())
+
         ;
 
         /*
@@ -125,6 +130,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /*
      * beans
      */
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return new RememberAccessDeniedHandler();
+    }
+
     @Bean
     public HttpSessionCsrfTokenRepository sessionCsrfRepository() {
         HttpSessionCsrfTokenRepository csrfRepository = new HttpSessionCsrfTokenRepository();

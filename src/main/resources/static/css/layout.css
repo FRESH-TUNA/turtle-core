@@ -6,6 +6,10 @@
     font-style: normal;
 }
 
+* {
+    font-family: 'HallymGothic-Regular';
+}
+
 html, body {
     min-height: 100vh;
 }
@@ -39,6 +43,10 @@ a {
 
 .alert {
     margin-top: 1rem;
+}
+
+.alert > div {
+    word-break: break-all;
 }
 
 button.logout-button {

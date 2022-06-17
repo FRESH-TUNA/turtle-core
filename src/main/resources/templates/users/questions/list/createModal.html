@@ -60,6 +60,11 @@
                                 data-none-selected-text="선택"
                                 multiple
                         >
+                            <option
+                                    th:each="a: ${algorithms}"
+                                    th:text="${a.getName()}"
+                                    th:value="${a.getId()}">
+                            </option>
                         </select>
                     </div>
                 </form>

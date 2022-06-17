@@ -33,9 +33,23 @@
 .users.questions.root table a.title:hover {
     text-decoration: underline;
 }
+
 /*
  * searchBar
  */
+.users.questions.search > * {
+    margin-top: 1rem;
+}
+
+.users.questions.search .options {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.users.questions.search .options > * {
+    padding: 0.3rem 1rem 0.3rem 0;
+}
+
 .searchBar {
     width: 200px;
     display: flex;
@@ -56,7 +70,6 @@
 .searchBar:focus {
     border-color: black;
 }
-
 
 .searchBar .label {
     font-size: .625rem;
