@@ -37,6 +37,14 @@ footer p {
     margin-bottom: 0;
 }
 
+footer p a {
+    color: #ccc;
+}
+
+footer p a:hover {
+    color: #ccc;
+}
+
 a {
     text-decoration: none;
 }
