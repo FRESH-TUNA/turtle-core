@@ -1,0 +1,10 @@
+.users.question.header {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+    flex-flow: wrap;
+}
+
+.users.question > .body > h4 {
+    padding-top: 50px;
+}

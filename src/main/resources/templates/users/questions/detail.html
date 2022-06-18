@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/static/js/users/questions/detail.js}"></script>
+</th:block>
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/static/css/users/questions/detail.css}"/>
+</th:block>
+
+<div layout:fragment="content" class="users question root">
+    <th:block th:replace="users/questions/detail/header :: header"></th:block>
+
+    <div class="container body">
+      <h4>링크</h4>
+      <a th:href="${question.getLink}"><p th:text="${question.getLink}"
+         th:data-question_link="${question.getLink}"
+         class="link"
+      /></a>
+
+      <h4>수록 플랫폼</h4>
+      <p th:text="${question.getPlatform.getName}"
+         th:data-question_name="${question.getPlatform.getName}"
+         class="name"
+      />
+
+      <h4>풀이상태</h4>
+      <select class="selectpicker practiceStatus"
+              data-width="130px"
+              th:data-question_url="${question.getLink('self').get().getHref()}"
+              th:data-question_status="${question.getPracticeStatus}"
+      >
+        <option
+                th:data-content="${
+                                            '<span class=''badge'''
+                                            + 'style=''background-color: ' + s.getColor() + ''';''>'
+                                            + s.getStatus() + '</span>'}"
+                th:each="s: ${practiceStatusus}"
+                th:value="${s.getId()}"
+                th:selected="${s.getId() eq question.getPracticeStatus.getId()}">
+        </option>
+      </select>
+
+      <h4>알고리즘</h4>
+      <p th:each="algo: ${question.algorithms}"
+         th:text="${algo.name}"
+         th:data-question_algorithm="${algo.getLink('self').get().getHref()}"
+         class="algorithms"
+      />
+    </div>
+
+</div>
+</html>

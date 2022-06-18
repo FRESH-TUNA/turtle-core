@@ -1,0 +1,25 @@
+.users.question.update {
+    display: flex;
+    flex-flow: column;
+}
+
+.users.question.update form {
+    width: 100%;
+    max-width: 500px;
+    align-self: center;
+    padding-top: 30px;
+}
+
+.users.question.update > h3 {
+    padding-top: 30px;
+}
+
+.users.question.update > form .form-group {
+    padding-bottom: 20px;
+    width: 100%;
+}
+
+.users.question.update button.update-submit, .users.question.update a.back {
+    width: 100%;
+    margin-top: 10px;
+}

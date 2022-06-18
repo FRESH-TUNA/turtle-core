@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<th:block layout:fragment="css">
+    <link th:href="@{/static/css/auth/forms/login.css}" rel="stylesheet">
+</th:block>
+
+<div layout:fragment="content" class="login container">
+    <h2>로그인</h2>
+    <div class="social">
+        <a th:href="@{/oauth2/authorization/google}"
+           class="btn btn-success active"
+           role="button">
+            구글 계정으로 로그인
+        </a>
+    </div>
+    <hr class="my-12 remember-login-separator"/>
+    <p class="remember-login-title">리멤버 계정으로 로그인</p>
+    <form th:action="@{/auth/login}" method="post">
+        <div class="form-group">
+            <label th:for="username">이메일</label>
+            <input type="text" name="username" class="form-control" placeholder="이메일 입력해주세요">
+        </div>
+        <div class="form-group">
+            <label th:for="password">비밀번호</label>
+            <input type="password" class="form-control" name="password" placeholder="비밀번호">
+        </div>
+        <button type="submit" class="btn btn-primary">로그인</button>
+    </form>
+</div>
+</html>

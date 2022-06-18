@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/static/css/users/questions/forms/update.css}"/>
+</th:block>
+
+<div layout:fragment="content" class="users question update container">
+    <h3 th:text="${question.getTitle()} + ' / 수정'"></h3>
+
+    <form th:action="${question.getLink('self').get().getHref()}" method="post">
+        <input type="hidden" name="_method" value="PUT"/>
+        <div class="form-group">
+            <label th:for="title">문제 이름</label>
+            <input type="text" name="title" class="form-control" placeholder="예: N-Queen" th:value="${question.getTitle}">
+        </div>
+        <div class="form-group">
+            <label th:for="link">문제 링크</label>
+            <input type="text" name="link" class="form-control" placeholder="문제 링크 입력" th:value="${question.getLink}">
+        </div>
+        <div class="form-group">
+            <label th:for="platform">플랫폼</label>
+
+            <select class="selectpicker platforms"
+                    data-width="100%"
+                    name="platform"
+                    title="선택 (필수)"
+            >
+                <option th:each="platform : ${platforms}"
+                        th:value="${platform.getId()}"
+                        th:utext="${platform.getName}"
+                        th:selected="${platform.id eq question.getPlatform.id}"
+                />
+            </select>
+        </div>
+        <div class="form-group">
+            <label th:for="practiceStatus">풀이여부</label>
+            <select class="selectpicker"
+                    data-width="100%"
+                    name="practiceStatus"
+                    title="선택"
+            >
+                <option
+                        th:selected="${s.getId() eq question.getPracticeStatus().getId()}"
+                        th:each="s: ${practiceStatusus}"
+                        th:data-content="${
+                                            '<span class=''badge'''
+                                            + 'style=''background-color: ' + s.getColor() + ''';''>'
+                                            + s.getStatus() + '</span>'}"
+                        th:value="${s.getId()}">
+                </option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label th:for="algorithms">알고리즘</label>
+            <select class="selectpicker algorithms"
+                    data-width="100%"
+                    name="algorithms"
+                    title="선택"
+                    multiple
+            >
+                <option th:each="algorithm : ${algorithms}"
+                        th:value="${algorithm.getId()}"
+                        th:utext="${algorithm.getName}"
+                        th:selected="${curAlgorithms.contains(algorithm.getId())}"
+                >
+                </option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary update-submit">수정</button>
+        <a th:href="${question.getLink('self').get().getHref()}" class="back">
+            <button type="button" class="btn btn-secondary update-submit">취소</button>
+        </a>
+    </form>
+</div>
+</html>

@@ -1,0 +1,30 @@
+.login {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    height: 70vh;
+    justify-content: center;
+}
+
+.login .form-group {
+    margin-top: 30px;
+}
+
+.login form, .login .social, hr{
+    width: 100%;
+    max-width: 400px;
+}
+
+hr.remember-login-separator {
+    margin: 30px;
+}
+
+.login button, .login a {
+    width: 100%;
+    margin-top: 30px;
+}
+
+p.remember-login-title {
+    opacity: 0.6;
+    margin-bottom: 0;
+}

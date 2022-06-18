@@ -1,0 +1,14 @@
+.home.root {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+}
+
+.home.card {
+    margin-top: 3rem;
+    width: 90%;
+}
+
+.home.card h3 {
+    font-weight: 700;
+}

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="error" class="container">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" th:if="${error}">
+        <div>
+            <div th:text="${error.getMessage()}">
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <hr th:if="${!error.getErrors().isEmpty()}">
+        <p class="mb-0" th:each="e: ${error.getErrors()}" th:text="${e.getReason()}"></p>
+    </div>
+</div>
+</html>
