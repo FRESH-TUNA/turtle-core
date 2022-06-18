@@ -48,6 +48,9 @@ dependencies {
 	//flyway
 	implementation 'org.flywaydb:flyway-core'
 
+	// https://mvnrepository.com/artifact/com.google.code.findbugs/jsr305 issue
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
 	// thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
