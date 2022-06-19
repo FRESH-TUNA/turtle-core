@@ -2,9 +2,9 @@ package com.remember.core.authentication.utils;
 
 import com.remember.core.authentication.dtos.RememberUserDetails;
 import com.remember.core.domains.UserIdentityField;
-import com.remember.core.exceptions.RememberAuthorizationException;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.RememberAuthenticationException;
+import com.remember.core.exceptions.RememberException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -62,6 +62,6 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
 
     private void checkResourceOwnerHelper(RememberUserDetails userDetails, UserIdentityField resourceUser) {
         if(!userDetails.isSameUser(resourceUser))
-            throw new RememberAuthorizationException(ErrorCode.NOT_AUTHORIZED);
+            throw new RememberException(ErrorCode.NOT_AUTHORIZED);
     }
 }

@@ -9,23 +9,15 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 
 public class RememberAuthenticatedExceptionRedirectSupport {
+    private static final String AUTH_FORMS_SIGNIN = "/auth/forms/login";
+
     public static RedirectView process(HttpServletRequest request,
                                        RememberAuthenticationException e,
                                        RedirectAttributes attributes) {
 
         ErrorResponse error = ErrorResponse.of(e.getErrorCode());
-        String viewName = viewName(request.getServletPath());
-        RedirectView response = new RedirectView(viewName, true);
+        RedirectView response = new RedirectView(AUTH_FORMS_SIGNIN, true);
         attributes.addFlashAttribute("error", error);
         return response;
-    }
-
-    private static String viewName(String pathInfo) {
-        switch (pathInfo) {
-            case "/auth/signup":
-                return "/auth/forms/signup";
-            default:
-                return "/";
-        }
     }
 }

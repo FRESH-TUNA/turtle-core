@@ -4,7 +4,7 @@ import com.remember.core.domainFactories.QuestionFactory;
 import com.remember.core.domains.Question;
 import com.remember.core.domains.UserIdentityField;
 import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.exceptions.RememberBusinessException;
+import com.remember.core.exceptions.RememberException;
 import com.remember.core.predicateFactories.QuestionPredicateFactory;
 
 import com.remember.core.repositories.question.QuestionRepository;
@@ -104,7 +104,7 @@ public class UsersMeQuestionsService {
     @Transactional
     public void delete(Long id) {
         UserIdentityField user = repository.findUserOfQuestionById(id)
-                .orElseThrow(() -> new RememberBusinessException(ErrorCode.NOT_FOUND, "해당 문제를 찾을수 없습니다."));
+                .orElseThrow(() -> new RememberException(ErrorCode.NOT_FOUND, "해당 문제를 찾을수 없습니다."));
 
         authenticatedFacade.checkResourceOwner(user);
 
@@ -116,7 +116,7 @@ public class UsersMeQuestionsService {
      */
     private Question getById(Long id) {
         return repository.findById(id).orElseThrow(
-                () -> new RememberBusinessException(ErrorCode.NOT_FOUND, "해당 문제를 찾을수 없습니다."));
+                () -> new RememberException(ErrorCode.NOT_FOUND, "해당 문제를 찾을수 없습니다."));
     }
 
     private UserIdentityField getUserOfQuestion(Question question) {

@@ -10,6 +10,7 @@ import com.remember.core.authentication.repositories.UsersRepository;
 import com.remember.core.authentication.utils.SessionTool;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.RememberAuthenticationException;
+import com.remember.core.exceptions.RememberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,7 +31,7 @@ public class UsersService {
         User user = userRequest.toEntity(Role.ROLE_GUEST, ProviderType.LOCAL);
 
         if(userRepository.findByEmail(userRequest.getUsername()).isPresent())
-            throw new RememberAuthenticationException(ErrorCode.SAME_EMAIL_EXSITED);
+            throw new RememberException(ErrorCode.SAME_EMAIL_EXSITED);
 
         user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
 
