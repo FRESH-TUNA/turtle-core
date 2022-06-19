@@ -7,7 +7,6 @@ import com.remember.core.exceptions.RememberAuthenticationException;
 import com.remember.core.exceptions.RememberException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +18,7 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
 
     @Override
     public RememberUserDetails getUserDetails() {
-        Authentication authentication = getAuthentication(getSecrityContext());
+        Authentication authentication = getAuthentication();
 
         checkIsAuthenticated(authentication);
 
@@ -39,12 +38,8 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
     /*
      * helpers
      */
-    private SecurityContext getSecrityContext() {
-        return SecurityContextHolder.getContext();
-    }
-
-    private Authentication getAuthentication(SecurityContext context) {
-        return context.getAuthentication();
+    private Authentication getAuthentication() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
     private RememberUserDetails userDetailsExtract(Authentication authentication) {
