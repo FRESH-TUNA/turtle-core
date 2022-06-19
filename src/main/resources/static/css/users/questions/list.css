@@ -26,6 +26,10 @@
     justify-content: flex-end;
 }
 
+.users.questions.root .table-responsive-xl {
+    overflow: inherit;
+}
+
 .users.questions.root table a.title {
     font-weight: 400;
 }
