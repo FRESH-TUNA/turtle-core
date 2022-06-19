@@ -23,7 +23,7 @@ public class AuthController {
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String signup(@ModelAttribute @Valid UserRequest userRequest) {
         service.registerNewUserAccount(userRequest);
-        return "redirect:/";
+        return "redirect:/users/me/questions";
     }
 
     /*

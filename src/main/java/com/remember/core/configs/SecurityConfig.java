@@ -90,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage("/auth/forms/login")
                 .loginProcessingUrl("/auth/login")
-                .defaultSuccessUrl("/")
+                .defaultSuccessUrl("/users/me/questions")
                 .failureHandler(authenticationFailureHandler)
                 .usernameParameter("username")
                 .passwordParameter("password")
@@ -115,6 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http
                 .oauth2Login()
+                .defaultSuccessUrl("/users/me/questions")
                 .failureHandler(authenticationFailureHandler)
                 .userInfoEndpoint() // oauth2 로그인 성공 후 가져올 때의 설정들
                 // 소셜로그인 성공 시 후속 조치를 진행할 UserService 인터페이스 구현체 등록
