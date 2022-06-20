@@ -53,13 +53,57 @@ Spring data jpa(편리하게 리파지토리 생성), Spring data rest(restful�
 프레임워크들을 추가해주었고, 편리하게 생성자를 생성해주는 롬복, JPQL 쿼리를 도와주는 Querydsl을 의존성에 추가했습니다.
 
 ## 2. 역활을 명확히 나누어서 설계해보자
-<계층분리 사진 삽입 위치><br>
 스프링를 공부하기 위해 이동욱님이 저술한 '스프링부트와 AWS 혼자 구현하는 웹서비스' 라는 책을 읽게 되었습니다. 책을 읽다보니
 객체의 책임을 Controller, Service, Repository, Domain, DTO 로 나누는모습을 볼수 있었고, 
 저도 책에서 권장하는 설계를 해보기로 마음먹었습니다.
+```java
+/*
+ * 컨트롤러 예제
+ */
+@GetMapping("/{id}")
+public String findById(Model model, @PathVariable Long id) {
+    QuestionResponse question = service.findById(id);
 
-그래서 Controller는 요청 uri과 서비스연결 및 타임리프 랜더링을 위한 모델 셋팅, 
-Service는 Domain들에 요청을 보낸후 결과 조합, Domain은 서비스에서 필요로하는 로직을 실행,
+    /*
+     * modeling
+     */
+     model.addAttribute("question", question);
+     model.addAttribute("practiceStatusus", practiceStatususService.findAll());
+     return "users/questions/detail";
+     
+}
+
+// 프론트엔드 분리시 이렇게 리펙토링도 가능합니다.
+@GetMapping("/{id}")
+public QuestionResponse findById(@PathVariable Long id) {
+    return service.findById(id);
+}
+```
+Controller는 특정 uri로 요청을 받아 처리를 서비스에 위임하고, 타임리프 랜더링을 위한 모델 셋팅에만 집중하도록 설계했습니다.
+제가 향후에 백엔드와 프론트엔드를 분리하여 설계하게 되면, 프론트에서 JSON 응답을 받아 렌더링하기때문에 모델이 필요없어집니다.
+
+```java
+/*
+ * 서비스 예제
+ */
+public QuestionResponse findById(Long id) {
+    Question question = getById(id);
+
+    authenticatedFacade.checkResourceOwner(getUserOfQuestion(question));
+
+    return assembler.toModel(question);
+}
+```
+
+Service는 Domain들에 요청을 보낸후 그 결과들을 조합하는데 집중합니다. 사용자가 원하는 서비스를 위해 처리하는 코드는 되도록 service에 기술하지 않고
+다른 보조 서비스나 도메인에 위임하도록 설계했습니다.
+
+
+Domain은 서비스에서 필요로하는 로직을 실행합니다.
+
+
+
+
 Repository는 데이터베이스 접근, DTO는 각계층에서 사용되는 객체들의 변환, 
 Security는 사용자 인증 및 접근 제한으로 역활을 나누어 설계히려 노력했습니다.
 
