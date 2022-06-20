@@ -55,7 +55,10 @@ Spring data jpa(편리하게 리파지토리 생성), Spring data rest(restful�
 ## 2. 역활을 명확히 나누어서 설계해보자
 스프링를 공부하기 위해 이동욱님이 저술한 '스프링부트와 AWS 혼자 구현하는 웹서비스' 라는 책을 읽게 되었습니다. 책을 읽다보니
 객체의 책임을 Controller, Service, Repository, Domain, DTO 로 나누는모습을 볼수 있었고, 
-저도 책에서 권장하는 설계를 해보기로 마음먹었습니다.
+동욱님이 권장하는 설계를 해보기로 마음을 먹었습니다.
+
+아래의 예시들은 제가 역활을 나누어서 설계해본 '내가 푼 문제들' 서비스의 상세페이지 기능을 담당하는 코드들입니다.
+
 ```java
 /*
  * 컨트롤러 예제
@@ -86,6 +89,10 @@ Controller는 특정 uri로 요청을 받아 처리를 서비스에 위임하고
 /*
  * 서비스 예제
  */
+private final QuestionAssembler assembler;
+private final AuthenticatedFacade authenticatedFacade;
+private final QuestionRepository repository;
+
 public QuestionResponse findById(Long id) {
     Question question = getById(id);
 
@@ -93,19 +100,48 @@ public QuestionResponse findById(Long id) {
 
     return assembler.toModel(question);
 }
-```
 
-Service는 Domain들에 요청을 보낸후 그 결과들을 조합하는데 집중합니다. 사용자가 원하는 서비스를 위해 처리하는 코드는 되도록 service에 기술하지 않고
+private Question getById(Long id) {
+    return repository.findById(id).orElseThrow(
+        () -> new RememberException(ErrorCode.NOT_FOUND, "해당 문제를 찾을수 없습니다."));
+}
+```
+사용자의 문제를 읽어오기 위해 리파지토리에 findbyid 요청을 해서 Question을 가져옵니다.
+그리고 Question의 유저가 현재로그인된 유저인지 검사한후 QuestionResponse로 변환하여 컨트롤러에 던져주게 됩니다.
+
+이처럼 Service는 Domain들에 요청을 보낸후 그 결과들을 조합하는데 집중합니다. 사용자가 원하는 서비스를 위해 처리하는 코드는 되도록 service에 기술하지 않고
 다른 보조 서비스나 도메인에 위임하도록 설계했습니다.
 
+```java
+/*
+ * QuestionResponse DTO
+ */
+public class QuestionResponse extends RepresentationModel<QuestionResponse> {
+  private Long id;
+  private String title;
+  private String link;
+  private PracticeStatusResponse practiceStatus;
+  private PlatformResponse platform;
+  private List<AlgorithmResponse> algorithms;
 
-Domain은 서비스에서 필요로하는 로직을 실행합니다.
+  public static QuestionResponse of(Question question,
+                                    PlatformResponse platform,
+                                    PracticeStatusResponse practiceStatus,
+                                    List<AlgorithmResponse> algorithms) {
+    return new QuestionResponse(
+            question.getId(), question.getTitle(), question.getLink(),
+            practiceStatus, platform, algorithms
+    );
+  }
 
-
-
-
-Repository는 데이터베이스 접근, DTO는 각계층에서 사용되는 객체들의 변환, 
-Security는 사용자 인증 및 접근 제한으로 역활을 나누어 설계히려 노력했습니다.
+  public QuestionResponse setSelfLink(String path, Object id) {
+    this.add(LinkBuilder.getDetailLink(ServerContext.getRoot(), path, id).withSelfRel());
+    return this;
+  }
+}
+```
+DTO는 각계층에서 사용되는 객체들의 변환을 담당합니다. 서비스에서 Question 객체를 그대로 던져주지 않고 QuestionResponse로 변환하여
+반환해줌으로써 컨트롤러와 서비스의 결합도를 낮출수 있습니다.
 
 ## 3. 데이터베이스 스키마 설계
 제가 세웠던 유저스토리의 첫번째는 '사용자는 자신이 풀었던 알고리즘 문제들에 대한 정보(링크, 문제이름등...)를 저장할수 있다' 입니다.

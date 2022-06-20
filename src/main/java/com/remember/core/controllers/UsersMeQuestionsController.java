@@ -15,8 +15,6 @@ import com.remember.core.responses.AlgorithmResponse;
 import com.remember.core.responses.PlatformResponse;
 import com.remember.core.responses.question.QuestionResponse;
 import com.remember.core.responses.question.QuestionListResponse;
-import com.remember.core.utils.ServerContext;
-import com.remember.core.utils.linkBuilders.LinkBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 
