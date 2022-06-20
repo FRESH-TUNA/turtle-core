@@ -2,6 +2,8 @@ package com.remember.core.responses.question;
 
 import com.remember.core.domains.Question;
 import com.remember.core.responses.PracticeStatusResponse;
+import com.remember.core.utils.ServerContext;
+import com.remember.core.utils.linkBuilders.LinkBuilder;
 import lombok.Getter;
 
 import lombok.NoArgsConstructor;
@@ -23,6 +25,12 @@ public class QuestionListResponse extends RepresentationModel<QuestionListRespon
                 practiceStatus
         );
     }
+
+    public QuestionListResponse setSelfLink(String path, Object id) {
+        this.add(LinkBuilder.getDetailLink(ServerContext.getRoot(), path, id).withSelfRel());
+        return this;
+    }
+
     private QuestionListResponse(Long id,
                                  String title,
                                  String link,

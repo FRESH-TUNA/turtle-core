@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class AlgorithmAssembler implements RepresentationModelAssembler<Algorithm, AlgorithmResponse> {
-    private final ServerContext serverContext;
     private final String resources = "algorithms";
 
     @Override
@@ -22,7 +21,7 @@ public class AlgorithmAssembler implements RepresentationModelAssembler<Algorith
     }
 
     public AlgorithmResponse addSelfLink(AlgorithmResponse dto, Long id) {
-        dto.add(LinkBuilder.getDetailLink(serverContext.getRoot(), resources, id).withSelfRel());
+        dto.add(LinkBuilder.getDetailLink(ServerContext.getRoot(), resources, id).withSelfRel());
         return dto;
     }
 }

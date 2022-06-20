@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class QuestionListAssembler implements RepresentationModelAssembler<Question, QuestionListResponse> {
-    private final ServerContext serverContext;
     private final PracticeStatusAssembler practiceStatusAssembler;
     private final String RESOURCES = "users/me/questions";
 
@@ -22,12 +21,6 @@ public class QuestionListAssembler implements RepresentationModelAssembler<Quest
                 = practiceStatusAssembler.toModel(question.getPracticeStatus());
 
         QuestionListResponse vo = QuestionListResponse.of(question, practiceStatus);
-        vo = addSelfLink(vo, question.getId());
-        return vo;
-    }
-
-    private QuestionListResponse addSelfLink(QuestionListResponse vo, Long id) {
-        vo.add(LinkBuilder.getDetailLink(serverContext.getRoot(), RESOURCES, id).withSelfRel());
-        return vo;
+        return vo.setSelfLink(RESOURCES, question.getId());
     }
 }

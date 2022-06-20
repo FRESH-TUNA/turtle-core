@@ -14,13 +14,12 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class PlatformAssembler implements RepresentationModelAssembler<Platform, PlatformResponse> {
-    private final ServerContext serverContext;
     private final String resources = "platforms";
 
     @Override
     public PlatformResponse toModel(Platform entity) {
         PlatformResponse platform = new PlatformResponse(entity);
-        String base = serverContext.getRoot();
+        String base = ServerContext.getRoot();
         platform.add(LinkBuilder.getDetailLink(base, resources, platform.getId()).withSelfRel());
         return platform;
     }

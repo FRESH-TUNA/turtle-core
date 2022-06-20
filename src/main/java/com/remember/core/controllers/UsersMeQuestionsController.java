@@ -52,8 +52,6 @@ public class UsersMeQuestionsController {
     private final PracticeStatususService practiceStatususService;
     private final PlatformsService platformsService;
     private final AlgorithmsService algorithmsService;
-    private final ServerContext context;
-    private final String ALGORITHMS = "algorithms";
 
     @GetMapping
     public String findAll(Pageable pageable,

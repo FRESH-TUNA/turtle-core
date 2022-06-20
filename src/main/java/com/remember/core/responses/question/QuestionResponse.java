@@ -5,6 +5,8 @@ import com.remember.core.responses.AlgorithmResponse;
 import com.remember.core.responses.PlatformResponse;
 import com.remember.core.responses.PracticeStatusResponse;
 
+import com.remember.core.utils.ServerContext;
+import com.remember.core.utils.linkBuilders.LinkBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.RepresentationModel;
@@ -31,6 +33,14 @@ public class QuestionResponse extends RepresentationModel<QuestionResponse> {
         );
     }
 
+    public QuestionResponse setSelfLink(String path, Object id) {
+        this.add(LinkBuilder.getDetailLink(ServerContext.getRoot(), path, id).withSelfRel());
+        return this;
+    }
+
+    /*
+     * contructor
+     */
     private QuestionResponse(Long id,
                              String title,
                              String link,

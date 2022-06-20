@@ -8,7 +8,6 @@ import com.remember.core.responses.PracticeStatusResponse;
 import com.remember.core.utils.ServerContext;
 import com.remember.core.responses.question.QuestionResponse;
 
-import com.remember.core.utils.linkBuilders.LinkBuilder;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -20,7 +19,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class QuestionAssembler implements RepresentationModelAssembler<Question, QuestionResponse> {
-    private final ServerContext serverContext;
     private final AlgorithmAssembler algorithmAssembler;
     private final PracticeStatusAssembler practiceStatusAssembler;
     private final PlatformAssembler platformAssembler;
@@ -34,16 +32,12 @@ public class QuestionAssembler implements RepresentationModelAssembler<Question,
         List<AlgorithmResponse> algorithms = algorithmsAssemble(question.getAlgorithms());
 
         QuestionResponse vo = QuestionResponse.of(question, platform, practiceStatus, algorithms);
-        return addSelfLink(vo, question.getId());
+        return vo.setSelfLink(RESOURCES, question.getId());
     }
 
     /**
      * helpers
      */
-    private QuestionResponse addSelfLink(QuestionResponse vo, Long id) {
-        vo.add(LinkBuilder.getDetailLink(serverContext.getRoot(), RESOURCES, id).withSelfRel());
-        return vo;
-    }
 
     private List<AlgorithmResponse> algorithmsAssemble(List<Algorithm> algorithms) {
         return algorithms.stream()

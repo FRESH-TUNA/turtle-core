@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class PracticeStatusAssembler implements RepresentationModelAssembler<PracticeStatus, PracticeStatusResponse> {
-    private final ServerContext serverContext;
     private final String resources = "practiceStatusus";
 
     @Override
     public PracticeStatusResponse toModel(PracticeStatus entity) {
         PracticeStatusResponse dto = new PracticeStatusResponse(entity);
-        dto.add(LinkBuilder.getDetailLink(serverContext.getRoot(), resources, entity.name()).withSelfRel());
+        dto.add(LinkBuilder.getDetailLink(ServerContext.getRoot(), resources, entity.name()).withSelfRel());
         return dto;
     }
 }
