@@ -63,7 +63,7 @@ Service는 Domain들에 요청을 보낸후 결과 조합, Domain은 서비스�
 Repository는 데이터베이스 접근, DTO는 각계층에서 사용되는 객체들의 변환, 
 Security는 사용자 인증 및 접근 제한으로 역활을 나누어 설계히려 노력했습니다.
 
-## 2. 데이터베이스 스키마 설계
+## 3. 데이터베이스 스키마 설계
 제가 세웠던 유저스토리의 첫번째는 '사용자는 자신이 풀었던 알고리즘 문제들에 대한 정보(링크, 문제이름등...)를 저장할수 있다' 입니다.
 이 유저스토리를 만족하기 위해서는 문제, 알고리즘, 트래이닝 플랫폼, 풀이상태 등의 테이블이 필요했고, 
 자신이 등록한 문제들을 관리할수 있어야 하기 때문에 회원정보를 가지고 있는 유저 테이블등이 필요했습니다.
@@ -73,9 +73,9 @@ Security는 사용자 인증 및 접근 제한으로 역활을 나누어 설계�
 
 ![](./erd.png)
 
-## 3. 풀이상태를 표현하기 위해 ENUM 사용
-기존에는 풀이상태를 표현하기 위해서 데이터베이스 테이블을 생성하여 관리했습니다. 그리고 유저가 생성했던 문제들을 fetch조인을 통해 함께 
-가져오는식으로 구현했습니다. 아래와 같이 말이죠
+## 4. 풀이상태를 표현하기 위해 ENUM 사용
+기존에는 풀이상태를 표현하기 위해서 데이터베이스 테이블을 생성하여 관리했습니다. 그리고 유저가 생성했던 문제와 함께 풀이상태를 같이 읽어올수 있도록 
+fetch join 기법을 사용했었습니다. 아래와 같이 말이죠
 
 ```java
  @Override
@@ -92,7 +92,7 @@ public Optional<Question> findById(Long id) {
 ```
 
 Querydsl을 사용해서 fetch 조인을 쉽게 사용하여 쿼리횟수를 줄일수 있었지만 좋은 설계로 보이지는 않았습니다. 왜냐하면 풀이상태에 저장될 컬럼은
-'PERFECT', 'GREAT', 'GOOD', 'FAIL'의 총4개에 풀과하고 추가될 컬럼들도 적기 때문입니다. 그러던중 
+'PERFECT', 'GREAT', 'GOOD', 'FAIL'의 총4개에 풀과하기 때문입니다. 그러던중 
 우아한형제들에서 운영하는 기술블로그의 [Java Enum 활용기](https://techblog.woowahan.com/2527/) 읽게 되었습니다. 이 포스팅에선
 제가 생각한 문제를 정확하게 지적하고 있었고 이를 ENUM을 통해 해결하는모습을 보여줘서 그대로 따라해보기로 했습니다.
 
@@ -146,5 +146,61 @@ public enum PracticeStatus {
 
 이와 마찬가지로 Platform(백준, 프로그래머스 ...) 역시 Enum으로 리펙토링할 계획을 가지고 있습니다.
 
+## 5. 엔티티의 공통된 컬럼을 분리하여 추상클래스로 분리하기
+중요하지는 않지만 테이블의 튜플들이 생성될때 생성날짜와 업데이트날짜를 집어넣고 싶었습니다. 기존에는 아래와 같이 클래스에 직접
+createdDate, modifiedDate 필드를 직접 선언해주었습니다. 이때 @EntityListeners(AuditingEntityListener.class) 
+어노테이션을 이용하면 자동으로 시간을 매핑하여 튜플에 넣어줍니다.
 
-<script src="https://gist.github.com/FRESH-TUNA/b4a7b0bc3ce8a07ae7dc257334281d29.js"></script>
+```java
+@Entity
+@EntityListeners(AuditingEntityListener.class)
+public class Platform {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(length = 100, nullable = false)
+  private String name;
+
+  @Column(length = 255, nullable = false)
+  private String link;
+
+  @CreatedDate
+  private LocalDateTime createdDate;
+
+  @LastModifiedDate
+  private LocalDateTime modifiedDate;
+}
+```
+
+하지만 이코드들을 모든 entity에 일일히 집어넣어주는것은 귀찮은일입니다. 그래서 audit 기능을 가지고 있는 추상클래스를 만들고, 이를
+다른 entity 클래스에서 상속해서 사용하도록 구현했습니다. @MappedSuperclass 어노테이션은 
+상속한 필드들을 컬럼으로 인식시키는 기능을 합니다. 또한 @Entity 어노테이션의 기능도 같이 제공하는것으로 보여집니다.
+
+```java
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+public abstract class BaseTimeDomain {
+    @CreatedDate
+    private LocalDateTime createdDate;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
+}
+
+// 이렇게 바꿔줍시다
+@Getter
+@NoArgsConstructor
+public class Platform extends BaseTimeDomain {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(length = 100, nullable = false)
+  private String name;
+
+  @Column(length = 255, nullable = false)
+  private String link;
+
+```
+

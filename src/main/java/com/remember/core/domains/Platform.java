@@ -9,7 +9,6 @@ import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
-@Entity
 public class Platform extends BaseTimeDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
