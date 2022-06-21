@@ -21,9 +21,7 @@
 ## 1. 스프링부트로 개발시작
 리멤버 개발을 위해 기존에 공부했던 Django 프레임워크를 사용할까 잠깐 고민을 했습니다.
 하지만 많은 기업에서 백엔드 프레임워크로 스프링을 사용하고 있음이 느껴져서, 스프링을 공부해보면 좋을것 같다는 판단이 섰습니다.
-
-스프링부트는 기존 스프링에 톰캣서버를 내장하고 있고 의존성을 어느정도 자동으로 관리해주는 기능을 갖추고 있어서 
-스프링에 입문하는데 큰도움이 되었습니다.
+스프링부트는 스프링 생태계의 모듈들의 의존성 관리를 도와줘서 스프링에 입문하는데 큰도움이 되었습니다.
 
 ```shell
 plugins {
@@ -40,12 +38,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
 ```
-위와 같이 특정버전의 'org.springframework.boot' 플러그인과 'io.spring.dependency-management' 플러그인을
-설치하면 스프링부트 버전의 spring-boot-dependencies bom을 받아온다. 그래서 스프링 생태계의 프레임워크나 같이 자주쓰이는 라이브러리들에 한해서는 
-버전의 명시를 따로 해줄필요가 없어집니다.
+위와 같이 특정버전의 'org.springframework.boot' 플러그인을 설치하면 하면 스프링부트 버전의 spring-boot-dependencies bom을 받아옵니다. 
+그래서 스프링 생태계의 프레임워크나 같이 자주쓰이는 라이브러리들에 한해서는 버전의 명시를 따로 해줄필요가 없어집니다. 
+
+구글링을 해보니 
+'io.spring.dependency-management' 플러그인도 추가하면 'org.springframework.boot' 플러그인이 감지해서 더 좋은 의존성 관리기능을 제공한다고 
+합니다. 자바 플러그인은 src/main/java 아래에 있는 파일을 Source로 하여 빌드할수 있도록 돕는것 같습니다.
 
 스프링을 공부하면서 놀랐던것은 django의 경우 거의 모든 기능이 하나의 프레임워크에 포함되어있었지만, 
-Spring은 서로 다른 프레임워크로 기능들이 쪼개져 있었습이다. 따라서 필요한 기능을 제공하는 스프링의 프레임워크들을 찾아서
+Spring은 기능들이 서로 다른 프레임워크로 쪼개져 있었습이다. 따라서 필요한 기능을 제공하는 스프링의 프레임워크들을 찾아서
 gradle 의존성에 추가해주는 작업이 필요했습니다.
 
 그래서 Spring web (MVC + tomcat), Spring 시큐리티(보안), Spring oauth2 client(소셜로그인), 
@@ -283,4 +284,3 @@ public class Platform extends BaseTimeDomain {
   private String link;
 
 ```
-
