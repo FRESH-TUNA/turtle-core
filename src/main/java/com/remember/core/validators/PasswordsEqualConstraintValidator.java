@@ -1,4 +1,4 @@
-package com.remember.core.validatiors;
+package com.remember.core.validators;
 
 import com.remember.core.authentication.dtos.UserRequest;
 import org.springframework.stereotype.Component;

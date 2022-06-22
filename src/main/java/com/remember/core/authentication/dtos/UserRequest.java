@@ -3,8 +3,8 @@ package com.remember.core.authentication.dtos;
 import com.remember.core.authentication.domains.ProviderType;
 import com.remember.core.authentication.domains.Role;
 import com.remember.core.authentication.domains.User;
-import com.remember.core.validatiors.PasswordSafe;
-import com.remember.core.validatiors.PasswordsEqualConstraint;
+import com.remember.core.validators.PasswordSafe;
+import com.remember.core.validators.PasswordsEqualConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

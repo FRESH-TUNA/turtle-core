@@ -1,4 +1,4 @@
-package com.remember.core.validatiors;
+package com.remember.core.validators;
 
 import org.springframework.stereotype.Component;
 
@@ -32,9 +32,5 @@ public class PasswordSafeValidator implements ConstraintValidator<PasswordSafe, 
                     .addConstraintViolation();
         }
         return isValidPassword;
-    }
-
-    public boolean isValid(String password) {
-        return password.matches(regexPassword);
     }
 }
