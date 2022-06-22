@@ -228,10 +228,6 @@ public enum PracticeStatus {
 이와 마찬가지로 Platform(백준, 프로그래머스 ...) 역시 Enum으로 리펙토링할 계획을 가지고 있습니다.
 
 ## 5. 엔티티의 공통된 컬럼을 분리하여 추상클래스로 분리하기
-중요하지는 않지만 테이블의 튜플들이 생성될때 생성날짜와 업데이트날짜를 집어넣고 싶었습니다. 기존에는 아래와 같이 클래스에 직접
-createdDate, modifiedDate 필드를 직접 선언해주었습니다. 이때 @EntityListeners(AuditingEntityListener.class) 
-어노테이션을 이용하면 자동으로 시간을 매핑하여 튜플에 넣어줍니다.
-
 ```java
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -253,10 +249,13 @@ public class Platform {
   private LocalDateTime modifiedDate;
 }
 ```
+중요하지는 않지만 테이블의 튜플들이 생성될때 생성날짜와 업데이트날짜를 집어넣고 싶었습니다. 기존에는 위와 같이 클래스에 직접
+createdDate, modifiedDate 필드를 직접 선언해주었습니다. 이때 @EntityListeners(AuditingEntityListener.class) 
+어노테이션을 이용하면 자동으로 시간을 매핑하여 튜플에 넣어줍니다. 
 
-하지만 이코드들을 모든 entity에 일일히 집어넣어주는것은 귀찮은일입니다. 그래서 audit 기능을 가지고 있는 추상클래스를 만들고, 이를
-다른 entity 클래스에서 상속해서 사용하도록 구현했습니다. @MappedSuperclass 어노테이션은 
-상속한 필드들을 컬럼으로 인식시키는 기능을 합니다. 또한 @Entity 어노테이션의 기능도 같이 제공하는것으로 보여집니다.
+하지만 이코드들을 모든 entity에 일일히 집어넣어주는것은 귀찮은일입니다. 
+그래서 audit 기능을 가지고 있는 추상클래스를 만들고, 이를 다른 entity 클래스에서 상속해서 사용하도록 구현했습니다. @MappedSuperclass 어노테이션은 
+상속한 필드들을 컬럼으로 인식시키는 기능을 합니다.
 
 ```java
 @MappedSuperclass
@@ -282,5 +281,85 @@ public class Platform extends BaseTimeDomain {
 
   @Column(length = 255, nullable = false)
   private String link;
-
 ```
+
+마지막으로, 스프링 부트의 main 메소드가 있는 클래스에 @EnableJpaAuditing 어노테이션을 적용하여 
+JPA Auditing을 활성화 헤주면 됩니다.
+
+```java
+@EnableJpaAuditing
+@SpringBootApplication
+public class CoreApplication {
+	public static void main(String[] args) {
+		SpringApplication.run(CoreApplication.class, args);
+	}
+}
+```
+
+## 6. DB에 접근하기 위한 레파지토리 만들기
+```java
+public interface AlgorithmsRepository extends JpaRepository<Algorithm, Long> {}
+```
+'Spring data jpa' 는 JpaRepository를 통해 crud, 페이징등의 편리한 기능을 제공합니다. 데이터베이스에 대한 접근을 담당하는
+구현체는 어플리케이션이 시작되면서 자동으로 만들어줍니다. 스프링부트는 configuration에 @EnableJpaRepositories 이 자동으로 등록되어
+@Repository 어노테이션을 달아줄 필요가 없습니다. 하지만 약간의 문제점이 있었습니다.
+
+```java
+public interface QuestionsRepository extends JpaRepository<Question, Long> {}
+```
+위와 같이 문제들에 대한 CRUD와 페이징 기능등을 제공하는 리파지토리를 만들었지만, Question은 알고리즘과 플랫폼에 대한 정보를
+외래키로 가지고  있습니다. JPA의 로딩방식은, 외래키로 설정된 엔티디들을 필요할때 불러오게 됩니다. 
+
+따라서 문제하나를 읽어오면 그와 연관된 알고리즘과 플랫폼을 가지고 오는 2번의 쿼리가 추가로 발생하여, 총 3번의 쿼리가 필요합니다. 이는 collection을 읽어올때 더큰문제인데
+문제들을 읽어오는 쿼리 + 문제와 연관된 다른필드 * 문제수 만큼의 쿼리 횟수가 발생하기 때문입니다. 이문제를 N+1 이라고 부르며, 해결을 위해
+findbyid, findall 메소드들에 대해 fetch join등의 커스텀한 로직이 필요하게 되었습니다. 
+
+![](./questionSearchRepository.png)
+
+[동욱님의 블로그](https://jojoldu.tistory.com/372) 를 읽어보면 커스텀 Repository를 
+JpaRepository 상속 클래스에서 사용할 수 있도록 기능을 지원합니다.
+그래서 위구조를 본따 검색기능을 제공할 QuestionSearchRepository 인터페이스와 
+QuestionSearchRepositoryImpl 구현체를 만들었습니다. 
+QuestionRepository는 JpaRepository와 QuestionSearchRepository 인터페이스를 상속합니다. 그리고 어플리케이션 실행시
+Jpa 에서 제공되는 구현체와 QuestionSearchRepository에 해당하는 기본구현체(.impl)를 로딩하게 됩니다.
+
+```java
+public Optional<Question> findById(Long id){
+    QQuestion question=QQuestion.question;
+
+    JPAQuery<Question> query = queryFactory
+        .selectDistinct(question)
+        .from(question)
+        .innerJoin(question.platform).fetchJoin()
+        .leftJoin(question.algorithms).fetchJoin()
+        .where(question.id.eq(id));
+
+    return Optional.ofNullable(query.fetchOne());
+}
+```
+위의 코드는 QuestionSearchRepositoryImpl 구현체의 findbyid를 새로구현한 예제 입니다. 문제하나는 무조건 하나의 플랫폼과 
+대응되므로 플랫폼을 내부 조인한후 패치조인 합니다. 문제는 알고리즘들을 가지고 있을수도, 없을수도 있어서 left 외부조인후 패치조인
+해주었습니다. left 조인 사용하면 결과가 여러개일수 있으므로 selectdistinct를 사용했습니다. 다음은 findbyId 호출시 발생하는 쿼리입니다.
+```java
+Hibernate:
+    select
+        distinct question0_.id as id1_3_0_,
+        platform1_.id as id1_1_1_,
+        algorithm3_.id as id1_0_2_,
+        ......
+    from
+        question question0_
+    inner join
+        platform platform1_
+        on question0_.platform_id=platform1_.id
+    left outer join
+        question_algorithm algorithms2_
+        on question0_.id=algorithms2_.algorithm_id
+    left outer join
+        algorithm algorithm3_
+        on algorithms2_.question_id=algorithm3_.id
+    where
+        question0_.id=?
+```
+하지만 dictinct 를 사용해도 일단 조인된 모든 튜플들을 가지고 오는것으로 추정됩니다. 튜플들을 가져오면 클라이언트(JPA)
+단에서 question_id를 이용해 dictinct를 처리해줍니다.
