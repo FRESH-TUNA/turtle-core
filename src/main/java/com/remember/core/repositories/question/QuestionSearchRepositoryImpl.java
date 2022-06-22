@@ -52,7 +52,7 @@ public class QuestionSearchRepositoryImpl
         QQuestion question = QQuestion.question;
 
         JPAQuery<Question> query = queryFactory
-                .select(question)
+                .selectDistinct(question)
                 .from(question)
                 .innerJoin(question.platform).fetchJoin()
                 .leftJoin(question.algorithms).fetchJoin()
