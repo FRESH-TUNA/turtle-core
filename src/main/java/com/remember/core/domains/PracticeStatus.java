@@ -1,10 +1,11 @@
 package com.remember.core.domains;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+/*
+ * https://stackoverflow.com/questions/32799282/does-the-enumvalues-allocate-memory-on-each-call
+ */
 public enum PracticeStatus {
     /*
      * datas
@@ -15,7 +16,7 @@ public enum PracticeStatus {
     FAIL("FAIL", "#ff3333");
 
 
-    private static List<PracticeStatus> allList;
+    private static List<PracticeStatus> allList = List.of(PracticeStatus.values());
 
     private final String STATUS;
     private final String COLOR;
@@ -36,12 +37,7 @@ public enum PracticeStatus {
         return COLOR;
     }
 
-    public static List<PracticeStatus> findAll() {
-        if (Objects.isNull(allList)) {
-            allList = new ArrayList<>(
-                    Arrays.asList(PERFECT, GREAT, GOOD, FAIL)
-            );
-        }
+    public static synchronized List<PracticeStatus> findAll() {
         return allList;
     }
 }

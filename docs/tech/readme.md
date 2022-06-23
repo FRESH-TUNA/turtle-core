@@ -208,24 +208,70 @@ public enum PracticeStatus {
     public String getColor() {
         return COLOR;
     }
-
-    public static List<PracticeStatus> findAll() {
-        if (Objects.isNull(allList)) {
-            allList = new ArrayList<>(
-                    Arrays.asList(PERFECT, GREAT, GOOD, FAIL)
-            );
-        }
-        return allList;
-    }
 }
 ```
 기존의 @Entity 어노테이팅이 되었던 PracticeStatus 를 Enum으로 리펙토링 했습니다. 이제
 쿼리를 날릴때 fetchjoin을 해줄 필요가 없어졌고, 새로운 속성이 추가될경우엔 ENUM값을 추가해주기만 하면 됩니다.
-
-유저가 풀이상태를 업데이트하려면 어떤 상태들이 있는지 알아야 하기 때문에 모든 상태들을 불러올 경우가 많습니다. 그래서 싱글톤 패턴을 사용하여 
-풀이상태 리스트를 한번 생성해놓고, 서비스에서 필요할때 불러쓰는 방식으로 최적화했습니다.
-
 이와 마찬가지로 Platform(백준, 프로그래머스 ...) 역시 Enum으로 리펙토링할 계획을 가지고 있습니다.
+
+```java
+private static List<PracticeStatus> allList;
+
+public static List<PracticeStatus> findAll() {
+    if (Objects.isNull(allList)) {
+        allList = List.of(PracticeStatus.values());
+    }
+    return allList;
+}
+```
+유저가 풀이상태를 업데이트하려면 어떤 상태들이 있는지 알아야 하기 때문에 모든 상태들을 불러올 경우가 많습니다. enum이 제공하는 
+values() 메소드는 호출시마다 새로운 배열을 생성합니다. 그래서 싱글톤 패턴을 사용하여 
+풀이상태 리스트를 한번 생성해놓고, 서비스에서 필요할 불러쓰는 방식으로 최적화했습니다. 
+
+하지만 이패턴엔 문제가 있는데, 멀티쓰레드 환경이라 가정했을때, 싱글톤임에도 불구하고 리스트 객체가 2번이상 생성될 위험이 있습니다.
+그래서 다음과 같은 형태로 리펙토링 했습니다.
+
+```java
+private static List<PracticeStatus> allList;
+
+public static synchronized List<PracticeStatus> findAll() {
+    if (Objects.isNull(allList)) {
+        allList = List.of(PracticeStatus.values());
+    }
+    return allList;
+}
+```
+
+```java
+private volatile static List<PracticeStatus> allList;
+
+public static List<PracticeStatus> findAll() {
+    if (Objects.isNull(allList)) {
+        synchronized (PracticeStatus.class) {
+            allList = List.of(PracticeStatus.values());
+        }
+    }
+    return allList;
+}
+```
+이방식들은 차례대로 싱글톤객체를 만들때 'synchronized', 'Double Checked Locking' 기법을 활용한것입니다. 
+DCL 기법의 경우, 리스트가 생성되어있는지 확인한다음, 생성이 안되어있으면 동기화를 설정해줍니다.
+PracticeStatus 클래스의 메소드들에 대해서 synchronized가 설정되면
+다른 병행되는 쓰레드가 같은 클래스의 메소드접근시 대기하도록 만들어줍니다.
+따라서 항상 동기화를 거는 첫번째 방법보다 효율적입니다.
+
+volatile 키워드를 추가하게 되면, CPU캐시를 사용하는 non-volatile과 반대로
+항상 메인메모리에 저장(Write는 바로 flush)하고 읽어오기 때문에 변수 값 불일치 문제를 해결 할 수 있습니다.
+하지만 결국 상태리스트를 불러오는경우는 반드시 발생하기때문에, 초기화 여부를 확인후 구현체를 만드는것 보다
+프로그램 시작시 아래와 같이 초기화 시켜버리기로 했습니다.
+
+```java
+private static List<PracticeStatus> allList = List.of(PracticeStatus.values());
+
+public static synchronized List<PracticeStatus> findAll() {
+    return allList;
+}
+```
 
 ## 5. 엔티티의 공통된 컬럼을 분리하여 추상클래스로 분리하기
 ```java
@@ -281,6 +327,7 @@ public class Platform extends BaseTimeDomain {
 
   @Column(length = 255, nullable = false)
   private String link;
+}
 ```
 
 마지막으로, 스프링 부트의 main 메소드가 있는 클래스에 @EnableJpaAuditing 어노테이션을 적용하여 
