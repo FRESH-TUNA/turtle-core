@@ -1,5 +1,6 @@
-package com.remember.core.exceptions;
+package com.remember.core.authentication.exceptions;
 
+import com.remember.core.exceptions.ErrorCode;
 import org.springframework.security.core.AuthenticationException;
 
 public class RememberAuthenticationException extends AuthenticationException  {

@@ -1,9 +1,9 @@
-package com.remember.core.authentication.utils;
+package com.remember.core.utils;
 
 import com.remember.core.authentication.dtos.RememberUserDetails;
 import com.remember.core.domains.UserIdentityField;
 import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.exceptions.RememberAuthenticationException;
+
 import com.remember.core.exceptions.RememberException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -52,7 +52,7 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
 
     private void checkIsAuthenticated(Authentication authentication) {
         if (authentication instanceof AnonymousAuthenticationToken)
-            throw new RememberAuthenticationException(ErrorCode.NOT_LOGINED);
+            throw new RememberException(ErrorCode.NOT_LOGINED);
     }
 
     private void checkResourceOwnerHelper(RememberUserDetails userDetails, UserIdentityField resourceUser) {

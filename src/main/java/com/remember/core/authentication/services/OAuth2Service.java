@@ -4,7 +4,7 @@ import com.remember.core.authentication.domains.ProviderType;
 import com.remember.core.authentication.domains.User;
 import com.remember.core.authentication.dtos.OAuth2UserInfos.OAuth2UserInfo;
 import com.remember.core.authentication.dtos.UserIdentity;
-import com.remember.core.exceptions.RememberAuthenticationException;
+import com.remember.core.authentication.exceptions.RememberAuthenticationException;
 import com.remember.core.authentication.factories.OAuth2UserInfoFactory;
 import com.remember.core.authentication.repositories.UsersRepository;
 import com.remember.core.exceptions.ErrorCode;

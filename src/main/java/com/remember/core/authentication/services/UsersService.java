@@ -9,7 +9,6 @@ import com.remember.core.authentication.dtos.UserRequest;
 import com.remember.core.authentication.repositories.UsersRepository;
 import com.remember.core.authentication.utils.SessionTool;
 import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.exceptions.RememberAuthenticationException;
 import com.remember.core.exceptions.RememberException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

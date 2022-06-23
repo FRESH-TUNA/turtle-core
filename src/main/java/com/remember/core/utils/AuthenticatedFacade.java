@@ -1,4 +1,4 @@
-package com.remember.core.authentication.utils;
+package com.remember.core.utils;
 
 import com.remember.core.authentication.dtos.RememberUserDetails;
 import com.remember.core.domains.UserIdentityField;

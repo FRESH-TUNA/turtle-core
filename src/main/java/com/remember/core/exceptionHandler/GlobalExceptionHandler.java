@@ -1,8 +1,8 @@
 package com.remember.core.exceptionHandler;
 
 import com.remember.core.exceptionHandler.RedirectSupports.*;
-import com.remember.core.exceptions.RememberAuthenticationException;
 import com.remember.core.exceptions.RememberException;
+
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,14 +19,6 @@ public class GlobalExceptionHandler {
             BindException e,
             RedirectAttributes attributes) {
         return BindExceptionRedirectSupport.process(request, e, attributes);
-    }
-
-    @ExceptionHandler(RememberAuthenticationException.class)
-    protected RedirectView handleRememberAuthenticationException(
-            HttpServletRequest request,
-            RememberAuthenticationException e,
-            RedirectAttributes attributes) {
-        return RememberAuthenticatedExceptionRedirectSupport.process(request, e, attributes);
     }
 
     @ExceptionHandler(RememberException.class)

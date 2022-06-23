@@ -15,7 +15,7 @@ import com.remember.core.assemblers.QuestionListAssembler;
 
 import com.remember.core.responses.question.QuestionResponse;
 import com.remember.core.responses.question.QuestionListResponse;
-import com.remember.core.authentication.utils.AuthenticatedFacade;
+import com.remember.core.utils.AuthenticatedFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

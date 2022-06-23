@@ -1,7 +1,7 @@
 package com.remember.core.authentication.services;
 
 import com.remember.core.authentication.dtos.UserIdentity;
-import com.remember.core.exceptions.RememberAuthenticationException;
+import com.remember.core.authentication.exceptions.RememberAuthenticationException;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.authentication.dtos.RememberUserDetails;
 import com.remember.core.authentication.repositories.UsersRepository;
