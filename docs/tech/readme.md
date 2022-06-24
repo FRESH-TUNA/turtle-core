@@ -410,3 +410,81 @@ Hibernate:
 ```
 하지만 dictinct 를 사용해도 일단 조인된 모든 튜플들을 가지고 오는것으로 추정됩니다. 튜플들을 가져오면 클라이언트(JPA)
 단에서 question_id를 이용해 dictinct를 처리해줍니다.
+
+## 7. 스프링 webMVC, 스프링 Data Rest가 제공하는 컨트롤러 사용기
+'내가 푼문제들' 를 통해 코딩테스트 문제를 저장할때, 연관된 알고리즘들을 함께 저장할수 있습니다. 이를 위해 같이 저장할 알고리즘들을
+새로 만들고 관리할수 있는 기능을 아래와 같이 서블릿을 사용하여 구현해봤습니다.
+
+```java
+@WebServlet(name = "algorithmsServlet", urlPatterns = "/algorithms-servlet")
+@RequiredArgsConstructor
+public class AlgorithmsServlet extends HttpServlet {
+  private final AlgorithmsService algorithmsService;
+
+  @Override
+  protected void doPost(HttpServletRequest request, HttpServletResponse response)
+          throws ServletException, IOException {
+    ObjectMapper objectMapper = new ObjectMapper();
+    AlgorithmRequest algorithmRequest = objectMapper.readValue(request.getInputStream(), AlgorithmRequest.class);
+
+    AlgorithmResponse algorithmResponse = algorithmsService.create(algorithmRequest);
+    objectMapper.writeValue(response.getOutputStream(), algorithmResponse);
+
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+  }
+}
+
+@SpringBootApplication
+@ServletComponentScan
+public class CoreApplication {
+  public static void main(String[] args) {
+    SpringApplication.run(CoreApplication.class, args);
+  }
+}
+```
+위 서블렛은 알고리즘 생성정보를 http body(json)으로 받아서, 알고리즘을 생성후 생성된 알고리즘에 대한 정보(json)를 반환합니다.
+서블렛은 네트워크 요청을 받아 응답을 보내는것을 돕는 자바클래스라고 보시면 됩니다. @WebServlet 을 통해 tomcat이 관장하는
+서블렛 콘테이너에 서블렛을 등록할수 있습니다. (@WebServlet이 포함된 클래스를 로딩하기 위해 @ServletComponentScan이 필요합니다.)
+
+하지만 http body를 직접 역직렬화(byte[] -> object) 해야하고, 알고리즘 생성이 끝나면 결과를 다시 byte[]의 형태로 
+직렬화해야 합니다. 응답 ContentType 도 json형태로 지정해줘야 하는것도 덤입니다. 스프링 WebMVC는 @Controller 를 통해
+이런 불편함을 상당부분 해소해 줍니다.
+
+```java
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/users/me/questions")
+public class UsersMeQuestionsController {
+  @ResponseBody
+  @PatchMapping(
+          value = "/{id}",
+          consumes = MediaType.APPLICATION_JSON_VALUE,
+          produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public QuestionResponse partial_update(@PathVariable Long id, @RequestBody QuestionRequest ro) {
+      return service.partial_update(id, ro);
+  }
+}
+```
+위의 코드는 문제에 대한 부분 업데이트(PATCH) 기능을 제공하는 컨트롤러 입니다. 이제 요청이 들어오면 DispatcherServlet에서
+먼저 받은후 "/users/me/questions" 경로의 요청인 경우 UsersMeQuestionsController 로 보내어 처리하게 됩니다.
+@PatchMapping을 통해 request, response 데이터타입을 지정할수 있고, @RequestBody 를 통해 request 데이터타입 정보를 
+바탕으로 역직렬화까지 자동으로 해줍니다. @ResponseBody를 통해 리턴값이 뷰의이름이 아닌 Serializable 한 객체임을 알려주고, 
+응답 type에 맞춰서 직렬화를 해줘서 불편함을 덜수 있었습니다.
+
+```java
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/algorithms")
+public class AlgorithmsController {
+    private final AlgorithmsService algorithmsService;
+    
+    @PostMapping
+    public AlgorithmResponse create(@RequestBody AlgorithmRequest request) {
+        return algorithmsService.create(request);
+    }
+}
+```
+Spring data rest 가 제공하는 @RestController 는 @Controller 보다 더 강력한 추상화 기능을 제공합니다.
+요청/응답 타입을 직접정의 하지않으면 기본타입은 JSON으로 간주하여 역직렬화/직렬화를 진행합니다. 그래서 알고리즘을 생성하는
+기능은 최종적으로 위와 같이 구현을 했습니다.
