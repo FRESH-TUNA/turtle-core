@@ -6,6 +6,8 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.remember.core.domains.QQuestion;
 import com.remember.core.domains.Question;
 import com.remember.core.domains.UserIdentityField;
+import com.remember.core.predicateFactories.QuestionPredicateFactory;
+import com.remember.core.searchParams.QuestionParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,9 +28,10 @@ public class QuestionSearchRepositoryImpl
     }
 
     @Override
-    public Page<Question> findAll(Pageable pageable, UserIdentityField user, Predicate predicate) {
+    public Page<Question> findAll(Pageable pageable, UserIdentityField user, QuestionParams params) {
         JPAQuery<Long> counts_query = counts_base_query(user);
         JPAQuery<Question> query = findAll_base_query(user);
+        Predicate predicate = QuestionPredicateFactory.generate(params);
 
         // count query all
         Long counts = counts_query.where(predicate).fetchOne();

@@ -49,11 +49,7 @@ public class UsersMeQuestionsService {
     public PagedModel<QuestionListResponse> findAll(Pageable pageable, QuestionParams params) {
         UserIdentityField user = authenticatedFacade.toUserIdentityField();
 
-        Page<Question> questions = repository.findAll(
-                pageable,
-                user,
-                QuestionPredicateFactory.generate(params)
-        );
+        Page<Question> questions = repository.findAll(pageable, user, params);
 
         return pageAssembler.toModel(questions, listAssembler);
     }

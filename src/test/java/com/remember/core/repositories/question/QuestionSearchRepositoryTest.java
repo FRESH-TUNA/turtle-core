@@ -2,7 +2,6 @@ package com.remember.core.repositories.question;
 
 import com.remember.core.configs.BeanConfig;
 import com.remember.core.domains.*;
-import com.remember.core.predicateFactories.QuestionPredicateFactory;
 import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 import com.remember.core.searchParams.QuestionParams;
@@ -107,7 +106,7 @@ class QuestionSearchRepositoryTest {
          */
         QuestionParams params = new QuestionParams("title", null, null);
         Pageable pageable1 = PageRequest.of(0, 1);
-        Page<Question> res1 =  questionRepository.findAll(pageable1, user1, QuestionPredicateFactory.generate(params));
+        Page<Question> res1 =  questionRepository.findAll(pageable1, user1, params);
 
         /**
          * when
@@ -135,7 +134,7 @@ class QuestionSearchRepositoryTest {
          */
         QuestionParams params = new QuestionParams(null, PracticeStatus.PERFECT.name(), null);
         Pageable pageable1 = PageRequest.of(0, 1);
-        Page<Question> res1 =  questionRepository.findAll(pageable1, user1, QuestionPredicateFactory.generate(params));
+        Page<Question> res1 =  questionRepository.findAll(pageable1, user1, params);
 
         /**
          * when
@@ -176,7 +175,7 @@ class QuestionSearchRepositoryTest {
                 Collections.singletonList(algorithms.get(0).getId()
         ));
         Pageable pageable1 = PageRequest.of(0, 1);
-        Page<Question> res1 =  questionRepository.findAll(pageable1, user1, QuestionPredicateFactory.generate(params));
+        Page<Question> res1 =  questionRepository.findAll(pageable1, user1, params);
 
         /**
          * when
