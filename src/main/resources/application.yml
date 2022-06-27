@@ -1,25 +1,35 @@
-server:
-  servlet:
-    context-path: /api/v1
----
 spring:
-  config:
-    activate:
-      on-profile: dev
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+    static-path-pattern: /static/**
+  data:
+    rest:
+      detection-strategy: annotated
+      default-page-size: 20
   jpa:
     hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true #To beautify or pretty print the SQL
-        show_sql: true #show sql
+      ddl-auto: validate
+    generate-ddl: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    url: jdbc:mariadb://${REMEMBER_MAIN_DB_HOST}:${REMEMBER_MAIN_DB_PORT}/${REMEMBER_MAIN_DB_NAME}?characterEncoding=UTF-8&serverTimezone=UTC
+    user: ${REMEMBER_MAIN_DB_USER}
+    password: ${REMEMBER_MAIN_DB_PASSWORD}
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://${REMEMBER_MAIN_DEV_DB_HOST}:${REMEMBER_MAIN_DEV_DB_PORT}/${REMEMBER_MAIN_DEV_DB_NAME}?characterEncoding=UTF-8&serverTimezone=UTC
-    username: ${REMEMBER_MAIN_DEV_DB_USER}
-    password: ${REMEMBER_MAIN_DEV_DB_PASSWORD}
----
-spring:
-  config:
-    activate:
-      on-profile: prod
+    url: jdbc:mariadb://${REMEMBER_MAIN_DB_HOST}:${REMEMBER_MAIN_DB_PORT}/${REMEMBER_MAIN_DB_NAME}?characterEncoding=UTF-8&serverTimezone=UTC
+    username: ${REMEMBER_MAIN_DB_USER}
+    password: ${REMEMBER_MAIN_DB_PASSWORD}
+  # Security OAuth
+  security:
+    oauth2.client:
+      registration:
+        google:
+          clientId: ${OAUTH2_GOOGLE_CLIENTID}
+          clientSecret: ${OAUTH2_GOOGLE_CLIENTSECRET}
+          scope:
+            - email
+            - profile

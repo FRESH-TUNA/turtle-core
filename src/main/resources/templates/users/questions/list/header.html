@@ -1,0 +1,12 @@
+<html lagn="ko"
+      xmlns:th="http://www.thymeleaf.org">
+
+<header th:fragment="header" class="container">
+  <div class="users questions header">
+    <h3>내가 푼 문제들</h3>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">문제 추가하기</button>
+  </div>
+  <th:block th:replace="users/questions/list/createModal :: createModal"></th:block>
+</header>
+
+</html>
