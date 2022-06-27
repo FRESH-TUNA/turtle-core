@@ -3,7 +3,7 @@
 ## 0. 기술스택
 #### 백엔드
 - SpringBoot 
-  - Spring web (MVC + tomcat)
+  - Spring web (webmvc + tomcat)
   - Spring security
   - Spring oauth2 client (소셜로그인)
   - Spring data jpa
