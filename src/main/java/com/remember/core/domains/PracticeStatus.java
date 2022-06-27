@@ -37,7 +37,7 @@ public enum PracticeStatus {
         return COLOR;
     }
 
-    public static synchronized List<PracticeStatus> findAll() {
+    public static List<PracticeStatus> findAll() {
         return allList;
     }
 }
