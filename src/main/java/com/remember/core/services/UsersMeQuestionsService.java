@@ -5,7 +5,6 @@ import com.remember.core.domains.Question;
 import com.remember.core.domains.UserIdentityField;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.RememberException;
-import com.remember.core.predicateFactories.QuestionPredicateFactory;
 
 import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.requests.QuestionRequest;
