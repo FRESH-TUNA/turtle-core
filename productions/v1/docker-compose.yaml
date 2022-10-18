@@ -1,0 +1,57 @@
+version: "3"
+
+services:
+  db:
+    env_file:
+      - .remember.core.db.env
+    image: mariadb:10.6.4
+    container_name: db.core.remember
+    networks:
+      - remember
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "100m"
+
+  was:
+    env_file:
+      - .remember.core.env
+    image: lunacircle4/remember:1.0.1
+    container_name: was.core.remember
+    networks:
+      - remember
+    depends_on:
+      - db
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "100m"
+
+  web:
+    image: nginx
+    container_name: web.core.remember
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt/live/freshtuna.site/fullchain.pem:/etc/letsencrypt/live/freshtuna.site/fullchain.pem
+      - /etc/letsencrypt/live/freshtuna.site/privkey.pem:/etc/letsencrypt/live/freshtuna.site/privkey.pem
+    networks:
+      - remember
+    ports:
+      - "443:443"
+      - "80:80"
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "5"
+        max-size: "100m"
+
+networks:
+  remember:
+    external: true
