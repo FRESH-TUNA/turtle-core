@@ -8,16 +8,18 @@ services:
     container_name: db.core.remember
     networks:
       - remember
+    volumes:
+      - db.core.remember:/var/lib/mysql
     logging:
       driver: "json-file"
       options:
         max-file: "5"
         max-size: "100m"
-
+    command: --character-set-client-handshake=FALSE
   was:
     env_file:
       - .remember.core.env
-    image: lunacircle4/remember:1.0.1
+    image: lunacircle4/remember:1.0.2
     container_name: was.core.remember
     networks:
       - remember
@@ -54,4 +56,6 @@ services:
 
 networks:
   remember:
-    external: true
+
+volumes:
+  db.core.remember:

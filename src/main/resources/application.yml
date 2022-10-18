@@ -33,3 +33,6 @@ spring:
           scope:
             - email
             - profile
+
+server:
+  forward-headers-strategy: framework

@@ -17,14 +17,20 @@
 ## db
 # docker run --detach --network remember --name remember-core-db --env-file .remember.core.db.env mariadb:10.6.4
 
-## create docker network
-# docker network create remember
+### run db container first
+#docker-compose up db -d
 
-## in db container, create database and set privilage to user
+### in db container, create database and set privilage to user
 # mariadb -uroot -ppassword
 # create database `core.remember`
 # grant all privileges on `core.remember`.* to remember1004@'%' identified by 'USER_PASSWORD';
 # flush privileges;
 
-# run containers
-docker-compose up -d
+# run other containers
+#docker-compose up -d
+
+### init seeds (algorithms, platform)
+# docker cp algorithms.sql db.core.remember:/
+# docker cp platforms.sql db.core.remember:/
+# mariadb -uroot -pROOT_PASSWORD core.remember < platforms.sql
+# mariadb -uroot -pROOT_PASSWORD core.remember < platforms.sql
