@@ -1,10 +1,8 @@
-package com.remember.core.assemblers;
+package com.remember.core.controllers.hateoasProcessors;
 
 import com.remember.core.domains.Question;
-import com.remember.core.responses.PracticeStatusResponse;
-import com.remember.core.utils.ServerContext;
-import com.remember.core.responses.question.QuestionListResponse;
-import com.remember.core.utils.linkBuilders.LinkBuilder;
+import com.remember.core.dtos.responses.PracticeStatusResponse;
+import com.remember.core.dtos.responses.question.QuestionListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 

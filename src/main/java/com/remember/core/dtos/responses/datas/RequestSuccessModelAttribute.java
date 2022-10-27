@@ -1,4 +1,4 @@
-package com.remember.core.responses;
+package com.remember.core.dtos.responses.datas;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

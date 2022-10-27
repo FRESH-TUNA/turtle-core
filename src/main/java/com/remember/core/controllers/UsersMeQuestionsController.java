@@ -1,24 +1,29 @@
 package com.remember.core.controllers;
 
+
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.ErrorResponse;
-import com.remember.core.requests.QuestionRequest;
-import com.remember.core.responses.PracticeStatusResponse;
-import com.remember.core.responses.RequestSuccessModelAttribute;
+import com.remember.core.dtos.requests.QuestionRequest;
+import com.remember.core.dtos.responses.PracticeStatusResponse;
+import com.remember.core.dtos.responses.datas.RequestSuccessModelAttribute;
 import com.remember.core.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;
 import com.remember.core.services.UsersMeQuestionsService;
 
-import com.remember.core.responses.AlgorithmResponse;
-import com.remember.core.responses.PlatformResponse;
-import com.remember.core.responses.question.QuestionResponse;
-import com.remember.core.responses.question.QuestionListResponse;
+import com.remember.core.dtos.responses.AlgorithmResponse;
+import com.remember.core.dtos.responses.PlatformResponse;
+import com.remember.core.dtos.responses.question.QuestionResponse;
+import com.remember.core.dtos.responses.question.QuestionListResponse;
+
+import com.remember.core.utils.UrlFacade;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.lang.Nullable;
@@ -29,8 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -43,7 +47,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/users/me/questions")
-public class UsersMeQuestionsController {
+public class UsersMeQuestionsController extends AbstractController {
     private final UsersMeQuestionsService service;
 
     // for models
@@ -56,15 +60,18 @@ public class UsersMeQuestionsController {
                           @ModelAttribute QuestionParams params,
                           Model model,
                           @Nullable String error) {
-        PagedModel<QuestionListResponse> questions = service.findAll(pageable, params);
+        Page<QuestionListResponse> questions = service.findAll(pageable, params);
+
+        PagedModel<QuestionListResponse> page = findAllPageResponseHelper(questions);
+
 
         /*
          * modeling
          */
-        model.addAttribute("questions", questions);
-        model.addAttribute("platforms", platformsService.findAll().getContent());
+        model.addAttribute("questions", page);
+        model.addAttribute("platforms", platformsService.findAll());
         model.addAttribute("practiceStatusus", practiceStatususService.findAll().getContent());
-        model.addAttribute("algorithms", algorithmsService.findAll().getContent());
+        model.addAttribute("algorithms", algorithmsService.findAll());
         addErrorToModel(model, error);
         return "users/questions/list";
     }
@@ -73,6 +80,7 @@ public class UsersMeQuestionsController {
     public String findById(Model model,
                            @PathVariable Long id) {
         QuestionResponse question = service.findById(id);
+        question.add(Link.of(currentRequest()).withSelfRel());
 
         /*
          * modeling
@@ -86,6 +94,9 @@ public class UsersMeQuestionsController {
     public RedirectView create(@ModelAttribute @Validated QuestionRequest ro,
                                RedirectAttributes attributes) {
         QuestionResponse question = service.create(ro);
+        question.add(
+                Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), question.getId())).withSelfRel()
+        );
 
         /*
          * redirects
@@ -103,6 +114,7 @@ public class UsersMeQuestionsController {
                                @ModelAttribute @Validated QuestionRequest ro,
                                RedirectAttributes attributes) {
         QuestionResponse question = service.update(id, ro);
+        question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
 
         RedirectView response = new RedirectView(question.getLink("self").get().getHref(), true);
         RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute("문제 업데이트에 성공했습니다.");
@@ -117,6 +129,9 @@ public class UsersMeQuestionsController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public QuestionResponse partial_update(@PathVariable Long id, @RequestBody QuestionRequest ro) {
+        QuestionResponse question = service.partial_update(id, ro);
+        question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
+
         return service.partial_update(id, ro);
     }
 
@@ -136,16 +151,18 @@ public class UsersMeQuestionsController {
     @GetMapping("/{id}/forms/update")
     public String updateView(@PathVariable Long id, Model model) {
         QuestionResponse question = service.findById(id);
-        CollectionModel<PlatformResponse> platforms = platformsService.findAll();
+        List<PlatformResponse> platforms = platformsService.findAll();
         CollectionModel<PracticeStatusResponse> practiceStatusus = practiceStatususService.findAll();
-        CollectionModel<AlgorithmResponse> algorithms = algorithmsService.findAll();
+        List<AlgorithmResponse> algorithms = algorithmsService.findAll();
+
+        question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
 
         /*
          * modeling
          */
         Set<Long> curAlgorithms = question.getAlgorithms().stream().map(a -> a.getId()).collect(Collectors.toSet());
         model.addAttribute("curAlgorithms", curAlgorithms);
-        model.addAttribute("algorithms", algorithms.getContent());
+        model.addAttribute("algorithms", algorithms);
         model.addAttribute("platforms", platforms);
         model.addAttribute("practiceStatusus", practiceStatusus.getContent());
         model.addAttribute("question", question);
@@ -158,5 +175,25 @@ public class UsersMeQuestionsController {
     private void addErrorToModel(Model model, String error) {
         if(!Objects.isNull(error))
             model.addAttribute("error", ErrorResponse.of(ErrorCode.valueOf(error)));
+    }
+
+    private PagedModel<QuestionListResponse> findAllPageResponseHelper(Page<QuestionListResponse> questions) {
+        questions.forEach(q -> {
+            q.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), q.getId())).withSelfRel());
+            PracticeStatusResponse p = q.getPracticeStatus();
+            p.add(Link.of(UrlFacade.PRACTICESTATUSUS_NAME(currentRoot(), p.getId())).withSelfRel());
+        });
+
+        PagedModel.PageMetadata pageMetadata = new PagedModel.PageMetadata(
+                questions.getSize(),
+                questions.getNumber(),
+                questions.getTotalElements(),
+                questions.getTotalPages()
+        );
+
+        PagedModel page = PagedModel.of(questions.getContent(), pageMetadata);
+        page.add(Link.of(currentRequest()).withSelfRel());
+
+        return page;
     }
 }

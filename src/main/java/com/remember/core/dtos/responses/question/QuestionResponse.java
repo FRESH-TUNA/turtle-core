@@ -1,9 +1,9 @@
-package com.remember.core.responses.question;
+package com.remember.core.dtos.responses.question;
 
 import com.remember.core.domains.Question;
-import com.remember.core.responses.AlgorithmResponse;
-import com.remember.core.responses.PlatformResponse;
-import com.remember.core.responses.PracticeStatusResponse;
+import com.remember.core.dtos.responses.PlatformResponse;
+import com.remember.core.dtos.responses.AlgorithmResponse;
+import com.remember.core.dtos.responses.PracticeStatusResponse;
 
 import com.remember.core.utils.ServerContext;
 import com.remember.core.utils.linkBuilders.LinkBuilder;

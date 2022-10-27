@@ -1,27 +1,27 @@
 package com.remember.core.services;
 
-import com.remember.core.assemblers.AlgorithmAssembler;
 import com.remember.core.repositories.AlgorithmsRepository;
-import com.remember.core.requests.AlgorithmRequest;
-import com.remember.core.responses.AlgorithmResponse;
+import com.remember.core.dtos.requests.AlgorithmRequest;
+import com.remember.core.dtos.responses.AlgorithmResponse;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class AlgorithmsService {
     private final AlgorithmsRepository repository;
-    private final AlgorithmAssembler assembler;
 
-    public CollectionModel<AlgorithmResponse> findAll() {
-        return assembler.toCollectionModel(repository.findAll());
+    public List<AlgorithmResponse> findAll() {
+        return repository.findAll().stream().map(AlgorithmResponse::of).collect(Collectors.toList());
     }
 
     @Transactional
     public AlgorithmResponse create(AlgorithmRequest request) {
-        return assembler.toModel(repository.save(request.toEntity()));
+        return AlgorithmResponse.of(repository.save(request.toEntity()));
     }
 }

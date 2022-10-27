@@ -4,7 +4,7 @@ import com.remember.core.domains.*;
 import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
 
-import com.remember.core.requests.QuestionRequest;
+import com.remember.core.dtos.requests.QuestionRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

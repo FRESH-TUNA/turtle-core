@@ -1,4 +1,4 @@
-package com.remember.core.responses;
+package com.remember.core.dtos.responses;
 
 import com.remember.core.domains.PracticeStatus;
 import lombok.Getter;
@@ -12,9 +12,13 @@ public class PracticeStatusResponse extends RepresentationModel<PracticeStatusRe
     private String status;
     private String color;
 
-    public PracticeStatusResponse(PracticeStatus p) {
-        this.id = p.name();
-        this.status = p.getStatus();
-        this.color = p.getColor();
+    private PracticeStatusResponse(String id, String status, String color) {
+        this.id = id;
+        this.status = status;
+        this.color = color;
+    }
+
+    public static PracticeStatusResponse of(PracticeStatus p) {
+        return new PracticeStatusResponse(p.name(), p.getStatus(), p.getColor());
     }
 }

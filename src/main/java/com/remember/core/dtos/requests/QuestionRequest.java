@@ -1,4 +1,4 @@
-package com.remember.core.requests;
+package com.remember.core.dtos.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

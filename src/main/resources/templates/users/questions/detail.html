@@ -47,7 +47,6 @@
       <h4>알고리즘</h4>
       <p th:each="algo: ${question.algorithms}"
          th:text="${algo.name}"
-         th:data-question_algorithm="${algo.getLink('self').get().getHref()}"
          class="algorithms"
       />
     </div>
