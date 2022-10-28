@@ -12,8 +12,6 @@ import com.remember.core.exceptions.RememberException;
 import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.dtos.requests.QuestionRequest;
 import com.remember.core.searchParams.QuestionParams;
-import com.remember.core.controllers.hateoasProcessors.QuestionHateoasProcessor;
-import com.remember.core.controllers.hateoasProcessors.QuestionListAssembler;
 
 import com.remember.core.dtos.responses.question.QuestionResponse;
 import com.remember.core.dtos.responses.question.QuestionListResponse;
@@ -21,8 +19,6 @@ import com.remember.core.utils.AuthenticatedFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,7 +31,6 @@ import java.util.stream.Collectors;
  * https://stackoverflow.com/questions/35719797/is-using-magic-me-self-resource-identifiers-going-against-rest-principles
  * https://stackoverflow.com/questions/36520372/designing-uri-for-current-logged-in-user-in-rest-applications
  */
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -44,9 +39,6 @@ public class UsersMeQuestionsService {
     private final EntityManager entityManager;
 
     private final QuestionFactory factory;
-    private final QuestionListAssembler listAssembler;
-    private final QuestionHateoasProcessor assembler;
-    private final PagedResourcesAssembler<Question> pageAssembler;
 
     private final AuthenticatedFacade authenticatedFacade;
 
@@ -97,7 +89,7 @@ public class UsersMeQuestionsService {
         Question updatedQuestion = factory.toEntity(user, id, ro);
         question.partial_update(updatedQuestion);
 
-        return assembler.toModel(question);
+        return toQuestionResponse(question);
     }
 
     @Transactional

@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
 import org.springframework.http.MediaType;
 import org.springframework.hateoas.PagedModel;
@@ -70,7 +69,7 @@ public class UsersMeQuestionsController extends AbstractController {
          */
         model.addAttribute("questions", page);
         model.addAttribute("platforms", platformsService.findAll());
-        model.addAttribute("practiceStatusus", practiceStatususService.findAll().getContent());
+        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
         model.addAttribute("algorithms", algorithmsService.findAll());
         addErrorToModel(model, error);
         return "users/questions/list";
@@ -152,7 +151,6 @@ public class UsersMeQuestionsController extends AbstractController {
     public String updateView(@PathVariable Long id, Model model) {
         QuestionResponse question = service.findById(id);
         List<PlatformResponse> platforms = platformsService.findAll();
-        CollectionModel<PracticeStatusResponse> practiceStatusus = practiceStatususService.findAll();
         List<AlgorithmResponse> algorithms = algorithmsService.findAll();
 
         question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
@@ -164,7 +162,7 @@ public class UsersMeQuestionsController extends AbstractController {
         model.addAttribute("curAlgorithms", curAlgorithms);
         model.addAttribute("algorithms", algorithms);
         model.addAttribute("platforms", platforms);
-        model.addAttribute("practiceStatusus", practiceStatusus.getContent());
+        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
         model.addAttribute("question", question);
         return "users/questions/forms/update";
     }
