@@ -6,7 +6,7 @@ import com.remember.core.exceptions.ErrorResponse;
 import com.remember.core.dtos.requests.QuestionRequest;
 import com.remember.core.dtos.responses.PracticeStatusResponse;
 import com.remember.core.dtos.responses.datas.RequestSuccessModelAttribute;
-import com.remember.core.searchParams.QuestionParams;
+import com.remember.core.dtos.searchParams.QuestionParams;
 import com.remember.core.services.AlgorithmsService;
 import com.remember.core.services.PlatformsService;
 import com.remember.core.services.PracticeStatususService;

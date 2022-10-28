@@ -2,7 +2,7 @@ package com.remember.core.repositories.question;
 
 import com.remember.core.domains.Question;
 import com.remember.core.domains.UserIdentityField;
-import com.remember.core.searchParams.QuestionParams;
+import com.remember.core.dtos.searchParams.QuestionParams;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

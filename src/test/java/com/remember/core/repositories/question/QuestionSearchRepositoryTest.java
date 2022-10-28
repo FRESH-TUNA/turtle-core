@@ -4,7 +4,7 @@ import com.remember.core.configs.BeanConfig;
 import com.remember.core.domains.*;
 import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
-import com.remember.core.searchParams.QuestionParams;
+import com.remember.core.dtos.searchParams.QuestionParams;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -11,7 +11,7 @@ import com.remember.core.exceptions.RememberException;
 
 import com.remember.core.repositories.question.QuestionRepository;
 import com.remember.core.dtos.requests.QuestionRequest;
-import com.remember.core.searchParams.QuestionParams;
+import com.remember.core.dtos.searchParams.QuestionParams;
 
 import com.remember.core.dtos.responses.question.QuestionResponse;
 import com.remember.core.dtos.responses.question.QuestionListResponse;

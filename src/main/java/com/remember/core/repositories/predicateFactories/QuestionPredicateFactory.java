@@ -1,11 +1,11 @@
-package com.remember.core.predicateFactories;
+package com.remember.core.repositories.predicateFactories;
 
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.remember.core.domains.PracticeStatus;
 import com.remember.core.domains.QQuestion;
-import com.remember.core.searchParams.QuestionParams;
+import com.remember.core.dtos.searchParams.QuestionParams;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package com.remember.core.searchParams;
+package com.remember.core.dtos.searchParams;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
