@@ -1,6 +1,7 @@
 package com.remember.core.utils;
 
 import com.remember.core.authentication.dtos.RememberUserDetails;
+import com.remember.core.authentication.dtos.UserIdentity;
 import com.remember.core.domains.UserIdentityField;
 import com.remember.core.exceptions.ErrorCode;
 
@@ -33,6 +34,12 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
     @Override
     public void checkResourceOwner(UserIdentityField resourceUser) {
         checkResourceOwnerHelper(getUserDetails(), resourceUser);
+    }
+
+    @Override
+    public void checkUserIsOwner(UserIdentity owner, UserIdentity user) {
+        if(!owner.isSameUser(user))
+            throw new RememberException(ErrorCode.NOT_AUTHORIZED);
     }
 
     /*

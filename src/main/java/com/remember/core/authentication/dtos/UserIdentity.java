@@ -30,4 +30,14 @@ public class UserIdentity {
     public static UserIdentity of(UserIdentityField user) {
         return new UserIdentity(user.getUser());
     }
+
+    public UserIdentityField toUserIdentityField() {
+        return UserIdentityField.builder()
+                .user(id)
+                .build();
+    }
+
+    public boolean isSameUser(UserIdentity userIdentity) {
+        return this.id.equals(userIdentity.id);
+    }
 }

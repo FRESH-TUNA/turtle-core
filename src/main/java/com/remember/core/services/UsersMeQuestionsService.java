@@ -1,5 +1,6 @@
 package com.remember.core.services;
 
+import com.remember.core.authentication.dtos.UserIdentity;
 import com.remember.core.domainFactories.QuestionFactory;
 import com.remember.core.domains.Question;
 import com.remember.core.domains.UserIdentityField;
@@ -42,8 +43,8 @@ public class UsersMeQuestionsService {
 
     private final AuthenticatedFacade authenticatedFacade;
 
-    public Page<QuestionListResponse> findAll(Pageable pageable, QuestionParams params) {
-        UserIdentityField user = authenticatedFacade.toUserIdentityField();
+    public Page<QuestionListResponse> findAll(Pageable pageable, QuestionParams params, UserIdentity userIdentity) {
+        UserIdentityField user = userIdentity.toUserIdentityField();
 
         return repository.findAll(pageable, user, params).map(q -> {
             PracticeStatusResponse practiceStatus = PracticeStatusResponse.of(q.getPracticeStatus());
@@ -51,17 +52,17 @@ public class UsersMeQuestionsService {
         });
     }
 
-    public QuestionResponse findById(Long id) {
+    public QuestionResponse findById(Long id, UserIdentity userIdentity) {
         Question question = getById(id);
 
-        authenticatedFacade.checkResourceOwner(getUserOfQuestion(question));
+        authenticatedFacade.checkUserIsOwner(UserIdentity.of(getUserOfQuestion(question)), userIdentity);
 
         return toQuestionResponse(question);
     }
 
     @Transactional
-    public QuestionResponse create(QuestionRequest ro) {
-        UserIdentityField user = authenticatedFacade.toUserIdentityField();
+    public QuestionResponse create(QuestionRequest ro, UserIdentity userIdentity) {
+        UserIdentityField user = userIdentity.toUserIdentityField();
 
         Question question = factory.toEntity(user, ro);
 
@@ -69,11 +70,11 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public QuestionResponse update(Long id, QuestionRequest ro) {
+    public QuestionResponse update(Long id, QuestionRequest ro, UserIdentity userIdentity) {
         Question question = getById(id);
         UserIdentityField user = getUserOfQuestion(question);
 
-        authenticatedFacade.checkResourceOwner(user);
+        authenticatedFacade.checkUserIsOwner(UserIdentity.of(getUserOfQuestion(question)), userIdentity);
         Question updatedQuestion = factory.toEntity(user, id, ro);
         question = entityManager.merge(updatedQuestion);
 
@@ -81,11 +82,11 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public QuestionResponse partial_update(Long id, QuestionRequest ro) {
+    public QuestionResponse partial_update(Long id, QuestionRequest ro, UserIdentity userIdentity) {
         Question question = getById(id);
         UserIdentityField user = getUserOfQuestion(question);
 
-        authenticatedFacade.checkResourceOwner(user);
+        authenticatedFacade.checkUserIsOwner(UserIdentity.of(getUserOfQuestion(question)), userIdentity);
         Question updatedQuestion = factory.toEntity(user, id, ro);
         question.partial_update(updatedQuestion);
 
@@ -93,11 +94,11 @@ public class UsersMeQuestionsService {
     }
 
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id, UserIdentity userIdentity) {
         UserIdentityField user = repository.findUserOfQuestionById(id)
                 .orElseThrow(() -> new RememberException(ErrorCode.NOT_FOUND, "해당 문제를 찾을수 없습니다."));
 
-        authenticatedFacade.checkResourceOwner(user);
+        authenticatedFacade.checkUserIsOwner(UserIdentity.of(user), userIdentity);
 
         repository.deleteById(id);
     }

@@ -100,4 +100,8 @@ public class RememberUserDetails implements UserDetails, OAuth2User, RememberUse
         UserIdentity userIdentity = UserIdentity.of(user);
         return this.userIdentity.equals(userIdentity);
     }
+
+    public UserIdentity getUserIdentity() {
+        return userIdentity;
+    }
 }
