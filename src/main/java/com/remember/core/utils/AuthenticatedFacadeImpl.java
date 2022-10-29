@@ -1,7 +1,6 @@
 package com.remember.core.utils;
 
-import com.remember.core.authentication.dtos.RememberUserDetails;
-import com.remember.core.authentication.dtos.UserIdentity;
+import com.remember.core.authentication.dtos.CentralAuthenticatedUser;
 import com.remember.core.domains.UserIdentityField;
 import com.remember.core.exceptions.ErrorCode;
 
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
 
     @Override
-    public RememberUserDetails getUserDetails() {
+    public CentralAuthenticatedUser getUserDetails() {
         Authentication authentication = getAuthentication();
 
         checkIsAuthenticated(authentication);
@@ -27,19 +26,9 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
     }
 
     @Override
-    public UserIdentityField toUserIdentityField() {
-        return generateUserIdentityField(getUserDetails());
-    }
-
-    @Override
-    public void checkResourceOwner(UserIdentityField resourceUser) {
-        checkResourceOwnerHelper(getUserDetails(), resourceUser);
-    }
-
-    @Override
-    public void checkUserIsOwner(UserIdentity owner, UserIdentity user) {
-        if(!owner.isSameUser(user))
-            throw new RememberException(ErrorCode.NOT_AUTHORIZED);
+    public void checkIsAuthenticated(Authentication authentication) {
+        if (authentication instanceof AnonymousAuthenticationToken)
+            throw new RememberException(ErrorCode.NOT_LOGINED);
     }
 
     /*
@@ -49,21 +38,7 @@ public class AuthenticatedFacadeImpl implements AuthenticatedFacade {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-    private RememberUserDetails userDetailsExtract(Authentication authentication) {
-        return (RememberUserDetails) authentication.getPrincipal();
-    }
-
-    private UserIdentityField generateUserIdentityField(RememberUserDetails userDetails) {
-        return userDetails.toUserIdentityField();
-    }
-
-    private void checkIsAuthenticated(Authentication authentication) {
-        if (authentication instanceof AnonymousAuthenticationToken)
-            throw new RememberException(ErrorCode.NOT_LOGINED);
-    }
-
-    private void checkResourceOwnerHelper(RememberUserDetails userDetails, UserIdentityField resourceUser) {
-        if(!userDetails.isSameUser(resourceUser))
-            throw new RememberException(ErrorCode.NOT_AUTHORIZED);
+    private CentralAuthenticatedUser userDetailsExtract(Authentication authentication) {
+        return (CentralAuthenticatedUser) authentication.getPrincipal();
     }
 }

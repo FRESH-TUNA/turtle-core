@@ -1,7 +1,7 @@
 package com.remember.core.controllers;
 
 
-import com.remember.core.authentication.dtos.RememberUserDetails;
+import com.remember.core.authentication.dtos.CentralAuthenticatedUser;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.exceptions.ErrorResponse;
 import com.remember.core.dtos.requests.QuestionRequest;
@@ -59,10 +59,10 @@ public class UsersMeQuestionsController extends AbstractController {
     @GetMapping
     public String findAll(Pageable pageable,
                           @ModelAttribute QuestionParams params,
-                          @AuthenticationPrincipal RememberUserDetails userDetails,
+                          @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
                           Model model,
                           @Nullable String error) {
-        Page<QuestionListResponse> questions = service.findAll(pageable, params, userDetails.getUserIdentity());
+        Page<QuestionListResponse> questions = service.findAll(pageable, params, userDetails);
 
         PagedModel<QuestionListResponse> page = findAllPageResponseHelper(questions);
 
@@ -80,9 +80,9 @@ public class UsersMeQuestionsController extends AbstractController {
 
     @GetMapping("/{id}")
     public String findById(Model model,
-                           @AuthenticationPrincipal RememberUserDetails userDetails,
+                           @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
                            @PathVariable Long id) {
-        QuestionResponse question = service.findById(id, userDetails.getUserIdentity());
+        QuestionResponse question = service.findById(id, userDetails);
         question.add(Link.of(currentRequest()).withSelfRel());
 
         /*
@@ -95,9 +95,9 @@ public class UsersMeQuestionsController extends AbstractController {
 
     @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView create(@ModelAttribute @Validated QuestionRequest ro,
-                               @AuthenticationPrincipal RememberUserDetails userDetails,
+                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
                                RedirectAttributes attributes) {
-        QuestionResponse question = service.create(ro, userDetails.getUserIdentity());
+        QuestionResponse question = service.create(ro, userDetails);
         question.add(
                 Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), question.getId())).withSelfRel()
         );
@@ -116,9 +116,9 @@ public class UsersMeQuestionsController extends AbstractController {
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView update(@PathVariable Long id,
                                @ModelAttribute @Validated QuestionRequest ro,
-                               @AuthenticationPrincipal RememberUserDetails userDetails,
+                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
                                RedirectAttributes attributes) {
-        QuestionResponse question = service.update(id, ro, userDetails.getUserIdentity());
+        QuestionResponse question = service.update(id, ro, userDetails);
         question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
 
         RedirectView response = new RedirectView(question.getLink("self").get().getHref(), true);
@@ -135,8 +135,8 @@ public class UsersMeQuestionsController extends AbstractController {
     )
     public QuestionResponse partial_update(@PathVariable Long id,
                                            @RequestBody QuestionRequest ro,
-                                           @AuthenticationPrincipal RememberUserDetails userDetails) {
-        QuestionResponse question = service.partial_update(id, ro, userDetails.getUserIdentity());
+                                           @AuthenticationPrincipal CentralAuthenticatedUser userDetails) {
+        QuestionResponse question = service.partial_update(id, ro, userDetails);
         question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
 
         return question;
@@ -144,9 +144,9 @@ public class UsersMeQuestionsController extends AbstractController {
 
     @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public RedirectView delete(@PathVariable Long id,
-                               @AuthenticationPrincipal RememberUserDetails userDetails,
+                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
                                RedirectAttributes attributes) {
-        service.delete(id, userDetails.getUserIdentity());
+        service.delete(id, userDetails);
 
         RedirectView response = new RedirectView("/users/me/questions", true);
         RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute("문제를 삭제했습니다.");
@@ -159,9 +159,9 @@ public class UsersMeQuestionsController extends AbstractController {
      */
     @GetMapping("/{id}/forms/update")
     public String updateView(@PathVariable Long id,
-                             @AuthenticationPrincipal RememberUserDetails userDetails,
+                             @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
                              Model model) {
-        QuestionResponse question = service.findById(id, userDetails.getUserIdentity());
+        QuestionResponse question = service.findById(id, userDetails);
         List<PlatformResponse> platforms = platformsService.findAll();
         List<AlgorithmResponse> algorithms = algorithmsService.findAll();
 

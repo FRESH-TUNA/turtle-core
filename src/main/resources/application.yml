@@ -36,3 +36,18 @@ spring:
 
 server:
   forward-headers-strategy: framework
+
+# cors 설정
+cors:
+  allowed-origins: 'http://localhost:8080'
+  allowed-methods: '*'
+  allowed-headers: '*'
+  exposed-headers: 'Authorization'
+  max-age: 3600
+
+# jwt
+jwt:
+  secret: 'lldldififkdkeoriamxmclffdgsdgsdfgsdgsdfgdgsdfgdfgsdfgsdfgsdfgwertwertwertywerywerysdfgsdldfgdsfgsdfgdsfg'
+  refresh-token-secret: 'wertwertwertegdfgsdfghwreyrhfsghfghweryeryeryteryerfgidfgijeriu34590reiudf89hdfgh9ererthij'
+  token-validity-in-seconds: 1800
+  refresh-token-validity-in-seconds: 604800

@@ -1,15 +1,10 @@
 package com.remember.core.utils;
 
-import com.remember.core.authentication.dtos.RememberUserDetails;
-import com.remember.core.authentication.dtos.UserIdentity;
-import com.remember.core.domains.UserIdentityField;
+import com.remember.core.authentication.dtos.CentralAuthenticatedUser;
+import org.springframework.security.core.Authentication;
 
 public interface AuthenticatedFacade {
-    RememberUserDetails getUserDetails();
+    CentralAuthenticatedUser getUserDetails();
 
-    UserIdentityField toUserIdentityField();
-
-    void checkResourceOwner(UserIdentityField resourceUser);
-
-    void checkUserIsOwner(UserIdentity owner, UserIdentity user);
+    void checkIsAuthenticated(Authentication authentication);
 }

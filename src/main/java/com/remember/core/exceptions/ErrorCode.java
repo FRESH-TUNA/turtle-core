@@ -26,7 +26,10 @@ public enum ErrorCode {
     REQUEST_VALIDATION_FAIL(400, "B_001", "요청 데이터 검증에 실패했습니다"),
 
     // users/me/questions
-    NOT_FOUND(404, "UMQ_001", "해당 문제를 찾을수 없습니다!");
+    NOT_FOUND(404, "UMQ_001", "해당 문제를 찾을수 없습니다!"),
+
+    //
+    BAD_REQUEST(400, "W_01", "잘못된 요청입니다");
 
 
     private final String code;

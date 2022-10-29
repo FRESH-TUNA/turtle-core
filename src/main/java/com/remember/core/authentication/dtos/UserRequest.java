@@ -7,6 +7,7 @@ import com.remember.core.validators.PasswordSafe;
 import com.remember.core.validators.PasswordsEqualConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -18,7 +19,7 @@ import javax.validation.constraints.NotBlank;
 
 
 @AllArgsConstructor // for ModelAttribute
-//@NoArgsConstructor // for requestbody processing jackson
+@NoArgsConstructor // for requestbody processing jackson
 @Getter
 @PasswordsEqualConstraint(message = "패스워드가 일치하지 않습니다.")
 public class UserRequest {
@@ -32,15 +33,22 @@ public class UserRequest {
 
     @NotBlank(message = "원하시는 이메일을 입력해주세요")
     @Email(regexp = ".+[@].+[\\.].+", message="mail의 형식을 지켜주세요")
-    private String username;
+    private String email;
 
-    public User toEntity(Role role, ProviderType providerType) {
+    public User toLocalGuestUser() {
         User user = User.builder()
-                .email(getUsername())
-                .role(role)
-                .providerType(providerType)
+                .email(this.getEmail())
+                .role(Role.ROLE_GUEST)
+                .username(this.getEmail())
+                .providerType(ProviderType.LOCAL)
                 .build();
         return user;
     }
-}
 
+    public LoginRequest toLoginRequest() {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setEmail(email);
+        loginRequest.setPassword(password);
+        return loginRequest;
+    }
+}

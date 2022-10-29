@@ -3,12 +3,11 @@ package com.remember.core.authentication.services;
 import com.remember.core.authentication.domains.ProviderType;
 import com.remember.core.authentication.domains.User;
 import com.remember.core.authentication.dtos.OAuth2UserInfos.OAuth2UserInfo;
-import com.remember.core.authentication.dtos.UserIdentity;
 import com.remember.core.authentication.exceptions.RememberAuthenticationException;
 import com.remember.core.authentication.factories.OAuth2UserInfoFactory;
-import com.remember.core.authentication.repositories.UsersRepository;
+import com.remember.core.authentication.repositories.UserRepository;
 import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.authentication.dtos.RememberUserDetails;
+import com.remember.core.authentication.dtos.CentralAuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.AuthenticationException;
@@ -19,14 +18,13 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class OAuth2Service extends DefaultOAuth2UserService {
 
-    private final UsersRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
@@ -59,11 +57,8 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         } else
             savedUser = userRepository.save(userInfo.toEntity());
 
-        return RememberUserDetails.builder()
-                .userIdentity(UserIdentity.of(savedUser))
-                .username(userInfo.getName())
+        return CentralAuthenticatedUser.builder()
                 .attributes(userInfo.getAttributes())
-                .roles(Collections.singletonList(savedUser.getRole().name()))
                 .build();
     }
 }

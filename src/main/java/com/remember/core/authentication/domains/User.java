@@ -1,5 +1,6 @@
 package com.remember.core.authentication.domains;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +14,12 @@ import javax.persistence.*;
  */
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique=true)
@@ -34,6 +37,9 @@ public class User {
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
+
+    @Column
+    private String username;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -55,22 +61,8 @@ public class User {
         this.picture = picture;
     }
 
-    @Builder
-    private User(Long id,
-                String password,
-                String nickname,
-                String email,
-                String picture,
-                Role role,
-                ProviderType providerType,
-                String oauthId) {
-        this.id = id;
-        this.oauthId = oauthId;
-        this.password = password;
-        this.nickname = nickname;
-        this.email = email;
-        this.picture = picture;
-        this.role = role;
-        this.providerType = providerType;
+    public void checkPassword(String password) {
+        if(!this.password.equals(password))
+            throw new RuntimeException("not password equal");
     }
 }
