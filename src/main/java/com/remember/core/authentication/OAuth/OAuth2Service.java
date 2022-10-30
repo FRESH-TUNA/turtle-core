@@ -1,10 +1,10 @@
-package com.remember.core.authentication.services;
+package com.remember.core.authentication.OAuth;
 
 import com.remember.core.authentication.domains.ProviderType;
 import com.remember.core.authentication.domains.User;
-import com.remember.core.authentication.dtos.OAuth2UserInfos.OAuth2UserInfo;
+import com.remember.core.authentication.OAuth.OAuth2UserInfo;
 import com.remember.core.authentication.exceptions.RememberAuthenticationException;
-import com.remember.core.authentication.factories.OAuth2UserInfoFactory;
+import com.remember.core.authentication.OAuth.OAuth2UserInfoFactory;
 import com.remember.core.authentication.repositories.UserRepository;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.authentication.dtos.CentralAuthenticatedUser;

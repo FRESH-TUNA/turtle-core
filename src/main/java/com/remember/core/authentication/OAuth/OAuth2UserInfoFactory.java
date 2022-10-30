@@ -1,7 +1,6 @@
-package com.remember.core.authentication.factories;
-import com.remember.core.authentication.dtos.OAuth2UserInfos.GoogleOAuth2UserInfo;
+package com.remember.core.authentication.OAuth;
 import com.remember.core.authentication.domains.ProviderType;
-import com.remember.core.authentication.dtos.OAuth2UserInfos.OAuth2UserInfo;
+
 import java.util.Map;
 
 

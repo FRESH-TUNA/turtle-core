@@ -1,4 +1,4 @@
-package com.remember.core.authentication.dtos.OAuth2UserInfos;
+package com.remember.core.authentication.OAuth;
 
 import com.remember.core.authentication.domains.User;
 

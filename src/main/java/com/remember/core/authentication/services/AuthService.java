@@ -49,10 +49,10 @@ public class AuthService {
         );
 
         authenticatedFacade.checkIsAuthenticated(authenticate);
-        CentralAuthenticatedUser identity = ((CentralAuthenticatedUser) authenticate.getPrincipal());
+        RememberUser identity = ((RememberUser) authenticate.getPrincipal());
 
         String accessToken = authTokenProvider.generateToken(identity);
-        String refreshToken = authTokenProvider.generateRefreshToken(identity.getUsername());
+        String refreshToken = authTokenProvider.generateRefreshToken(String.valueOf(identity.getId()));
 
         User user = userRepository.getById(identity.getId());
         Optional<RefreshToken> refreshTokenEntity = refreshTokenRepository.findByUser(user);
