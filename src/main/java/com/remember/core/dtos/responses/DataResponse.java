@@ -1,9 +1,11 @@
 package com.remember.core.dtos.responses;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.remember.core.dtos.responses.datas.ResponseStatusData;
 import org.springframework.lang.Nullable;
 
+@JsonPropertyOrder({ "content", "status" })
 public class DataResponse<T> extends BaseResponse {
     private T content;
 

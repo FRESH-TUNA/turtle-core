@@ -2,41 +2,35 @@ package com.remember.core.controllers;
 
 
 import com.remember.core.authentication.dtos.CentralAuthenticatedUser;
-import com.remember.core.exceptions.ErrorCode;
-import com.remember.core.exceptions.ErrorResponse;
+import com.remember.core.consts.Urls;
+import com.remember.core.dtos.responses.DataResponse;
 import com.remember.core.dtos.requests.QuestionRequest;
 import com.remember.core.dtos.responses.PracticeStatusResponse;
 import com.remember.core.dtos.responses.datas.RequestSuccessModelAttribute;
 import com.remember.core.dtos.searchParams.QuestionParams;
-import com.remember.core.services.AlgorithmsService;
-import com.remember.core.services.PlatformsService;
-import com.remember.core.services.PracticeStatususService;
 import com.remember.core.services.UsersMeQuestionsService;
 
-import com.remember.core.dtos.responses.AlgorithmResponse;
-import com.remember.core.dtos.responses.PlatformResponse;
 import com.remember.core.dtos.responses.question.QuestionResponse;
 import com.remember.core.dtos.responses.question.QuestionListResponse;
 
 import com.remember.core.utils.UrlFacade;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.hateoas.Link;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.lang.Nullable;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.*;
-import java.util.stream.Collectors;
 
 
 /**
@@ -44,149 +38,74 @@ import java.util.stream.Collectors;
  * https://bulnabang99.tistory.com/59
  * https://stackoverflow.com/questions/16394296/in-which-layer-should-validation-be-performed
  */
-
-@Controller
+@RestController
 @RequiredArgsConstructor
-@RequestMapping("/users/me/questions")
+@Slf4j
 public class UsersMeQuestionsController extends AbstractController {
     private final UsersMeQuestionsService service;
 
-    // for models
-    private final PracticeStatususService practiceStatususService;
-    private final PlatformsService platformsService;
-    private final AlgorithmsService algorithmsService;
-
-    @GetMapping
-    public String findAll(Pageable pageable,
-                          @ModelAttribute QuestionParams params,
-                          @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
-                          Model model,
-                          @Nullable String error) {
+    @GetMapping(Urls.USERS.ME.QUESTIONS.ROOT)
+    public ResponseEntity<?> findAll(Pageable pageable,
+                                  @ModelAttribute QuestionParams params,
+                                  @AuthenticationPrincipal CentralAuthenticatedUser userDetails) {
         Page<QuestionListResponse> questions = service.findAll(pageable, params, userDetails);
 
         PagedModel<QuestionListResponse> page = findAllPageResponseHelper(questions);
 
-
-        /*
-         * modeling
-         */
-        model.addAttribute("questions", page);
-        model.addAttribute("platforms", platformsService.findAll());
-        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
-        model.addAttribute("algorithms", algorithmsService.findAll());
-        addErrorToModel(model, error);
-        return "users/questions/list";
+        return ResponseEntity.ok(DataResponse.of(page));
     }
 
-    @GetMapping("/{id}")
-    public String findById(Model model,
-                           @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
-                           @PathVariable Long id) {
+    @GetMapping(Urls.USERS.ME.QUESTIONS.ID)
+    public ResponseEntity<?> findById(@AuthenticationPrincipal CentralAuthenticatedUser userDetails,
+                                      @PathVariable Long id) {
         QuestionResponse question = service.findById(id, userDetails);
         question.add(Link.of(currentRequest()).withSelfRel());
-
-        /*
-         * modeling
-         */
-        model.addAttribute("question", question);
-        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
-        return "users/questions/detail";
+        return ResponseEntity.ok(DataResponse.of(question));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RedirectView create(@ModelAttribute @Validated QuestionRequest ro,
-                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
-                               RedirectAttributes attributes) {
+    @PostMapping(Urls.USERS.ME.QUESTIONS.ROOT)
+    @ResponseStatus(HttpStatus.CREATED)
+    public DataResponse<?> create(@RequestBody @Validated QuestionRequest ro,
+                                    @AuthenticationPrincipal CentralAuthenticatedUser userDetails) {
         QuestionResponse question = service.create(ro, userDetails);
         question.add(
                 Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), question.getId())).withSelfRel()
         );
-
-        /*
-         * redirects
-         */
-        RedirectView response = new RedirectView("/users/me/questions", true);
-        RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute(
-                "문제 생성에 성공했습니다.",
-                question.getLink("self").get().getHref());
-        attributes.addFlashAttribute("success", attribute);
-        return response;
+        return DataResponse.of(question);
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RedirectView update(@PathVariable Long id,
-                               @ModelAttribute @Validated QuestionRequest ro,
-                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
-                               RedirectAttributes attributes) {
+    @PutMapping(Urls.USERS.ME.QUESTIONS.ID)
+    public ResponseEntity<?> update(@PathVariable Long id,
+                               @RequestBody @Validated QuestionRequest ro,
+                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails) {
         QuestionResponse question = service.update(id, ro, userDetails);
         question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
 
-        RedirectView response = new RedirectView(question.getLink("self").get().getHref(), true);
-        RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute("문제 업데이트에 성공했습니다.");
-        attributes.addFlashAttribute("success", attribute);
-        return response;
+        return ResponseEntity.ok(DataResponse.of(question));
     }
 
     @ResponseBody
-    @PatchMapping(
-            value = "/{id}",
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE
-    )
-    public QuestionResponse partial_update(@PathVariable Long id,
+    @PatchMapping(Urls.USERS.ME.QUESTIONS.ID)
+    public ResponseEntity<?> partial_update(@PathVariable Long id,
                                            @RequestBody QuestionRequest ro,
                                            @AuthenticationPrincipal CentralAuthenticatedUser userDetails) {
         QuestionResponse question = service.partial_update(id, ro, userDetails);
         question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
 
-        return question;
+        return ResponseEntity.ok(DataResponse.of(question));
     }
 
-    @DeleteMapping(value = "/{id}", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RedirectView delete(@PathVariable Long id,
-                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
-                               RedirectAttributes attributes) {
+    @DeleteMapping(Urls.USERS.ME.QUESTIONS.ID)
+    public ResponseEntity<?> delete(@PathVariable Long id,
+                               @AuthenticationPrincipal CentralAuthenticatedUser userDetails) {
         service.delete(id, userDetails);
 
-        RedirectView response = new RedirectView("/users/me/questions", true);
-        RequestSuccessModelAttribute attribute = new RequestSuccessModelAttribute("문제를 삭제했습니다.");
-        attributes.addFlashAttribute("success", attribute);
-        return response;
-    }
-
-    /*
-     * update form
-     */
-    @GetMapping("/{id}/forms/update")
-    public String updateView(@PathVariable Long id,
-                             @AuthenticationPrincipal CentralAuthenticatedUser userDetails,
-                             Model model) {
-        QuestionResponse question = service.findById(id, userDetails);
-        List<PlatformResponse> platforms = platformsService.findAll();
-        List<AlgorithmResponse> algorithms = algorithmsService.findAll();
-
-        question.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), id)).withSelfRel());
-
-        /*
-         * modeling
-         */
-        Set<Long> curAlgorithms = question.getAlgorithms().stream().map(a -> a.getId()).collect(Collectors.toSet());
-        model.addAttribute("curAlgorithms", curAlgorithms);
-        model.addAttribute("algorithms", algorithms);
-        model.addAttribute("platforms", platforms);
-        model.addAttribute("practiceStatusus", practiceStatususService.findAll());
-        model.addAttribute("question", question);
-        return "users/questions/forms/update";
+        return ResponseEntity.ok(DataResponse.OK);
     }
 
     /*
      * helpers
      */
-    private void addErrorToModel(Model model, String error) {
-        if(!Objects.isNull(error))
-            model.addAttribute("error", ErrorResponse.of(ErrorCode.valueOf(error)));
-    }
-
     private PagedModel<QuestionListResponse> findAllPageResponseHelper(Page<QuestionListResponse> questions) {
         questions.forEach(q -> {
             q.add(Link.of(UrlFacade.USERS_ME_QUESTIONS_ID(currentRoot(), q.getId())).withSelfRel());

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
+import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +23,9 @@ public class QuestionSearchRepositoryImpl
 
     private final JPAQueryFactory queryFactory;
 
-    public QuestionSearchRepositoryImpl(JPAQueryFactory queryFactory) {
+    public QuestionSearchRepositoryImpl(EntityManager em) {
         super(Question.class);
-        this.queryFactory = queryFactory;
+        this.queryFactory = new JPAQueryFactory(em);
     }
 
     @Override

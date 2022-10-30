@@ -20,7 +20,7 @@ public class UserIdentityField {
     private Long user;
 
     public void checkIsOwner(UserIdentityField user) {
-        if(!this.user.equals(user))
+        if(!this.user.equals(user.getUser()))
             throw new RememberException(ErrorCode.NOT_AUTHORIZED);
     }
 }

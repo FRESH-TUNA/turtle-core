@@ -1,6 +1,5 @@
 package com.remember.core.repositories.question;
 
-import com.remember.core.configs.BeanConfig;
 import com.remember.core.domains.*;
 import com.remember.core.repositories.AlgorithmsRepository;
 import com.remember.core.repositories.PlatformsRepository;
