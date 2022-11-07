@@ -1,8 +1,10 @@
 package com.remember.core.authentication;
 
+import com.remember.core.authentication.OAuth.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.remember.core.authentication.authToken.AuthTokenFilter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,10 +16,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -25,14 +28,19 @@ import java.util.Arrays;
 
 @Configuration
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfig {
     private final AuthTokenFilter authTokenFilter;
+    private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+    private final DefaultOAuth2UserService oAuth2UserService;
+    private final SimpleUrlAuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     //private final AuthenticationEntryPoint authenticationEntryPoint;
     //private final AuthenticationFailureHandler authenticationFailureHandler;
     //private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-    @Value("${cors.allowed-origins}")
+
+    @Value("${cors.allowed-headers}")
     private String corsAllowedHeaders;
 
     @Value("${cors.allowed-methods}")
@@ -50,11 +58,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         /*
-         * session, csrf settings
+         * session, csrf, cors settings
          */
         http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .csrf().disable();
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().csrf().disable()
+            .cors().configurationSource(corsConfigurationSource()); //To make Spring Security bypass preflight requests
 
         /*
          * formlogin, httpbasic, logout settings
@@ -71,12 +80,23 @@ public class SecurityConfig {
 
 
         /*
+         * oauth settings
+         */
+        http.oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .authorizationRequestRepository(httpCookieOAuth2AuthorizationRequestRepository)
+            .and().userInfoEndpoint()
+                .userService(oAuth2UserService)
+                .and().redirectionEndpoint().baseUri("/*/oauth2/code/*")
+            .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler);
+
+        /*
          * authorization filter
          */
         http
                 .authorizeRequests()
-                // cors preflight permit
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 // users/me/questions
                 .antMatchers("/users/me/questions/**").authenticated()
                 // algorithms

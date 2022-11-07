@@ -1,4 +1,4 @@
-package com.remember.core.authentication.OAuth;
+package com.remember.core.authentication.OAuth.UserInfo;
 
 import com.remember.core.authentication.domains.User;
 

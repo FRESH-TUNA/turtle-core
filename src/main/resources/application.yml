@@ -39,15 +39,21 @@ server:
 
 # cors 설정
 cors:
-  allowed-origins: 'http://localhost:8080'
+  allowed-origins: 'http://localhost:8080,http://localhost:5173'
   allowed-methods: '*'
   allowed-headers: '*'
   exposed-headers: 'Authorization'
   max-age: 3600
 
 # jwt
-jwt:
+remember-jwt-auth:
+  token-prefix: 'Bearer '
   secret: 'lldldififkdkeoriamxmclffdgsdgsdfgsdgsdfgdgsdfgdfgsdfgsdfgsdfgwertwertwertywerywerysdfgsdldfgdsfgsdfgdsfg'
-  refresh-token-secret: 'wertwertwertegdfgsdfghwreyrhfsghfghweryeryeryteryerfgidfgijeriu34590reiudf89hdfgh9ererthij'
-  token-validity-in-seconds: 1800
-  refresh-token-validity-in-seconds: 604800
+  refresh-secret: 'wertwertwertegdfgsdfghwreyrhfsghfghweryeryeryteryerfgidfgijeriu34590reiudf89hdfgh9ererthij'
+  refresh-token-cookie-key: 'REFRESH_TOKEN'
+  validity-in-seconds: 1800
+  refresh-validity-in-seconds: 604800
+
+remember-oauth:
+  oAuth2AuthorizedRedirectUris:
+    - "http://localhost:5173"

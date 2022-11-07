@@ -29,7 +29,11 @@ public enum ErrorCode {
     NOT_FOUND(404, "UMQ_001", "해당 문제를 찾을수 없습니다!"),
 
     //
-    BAD_REQUEST(400, "W_01", "잘못된 요청입니다");
+    BAD_REQUEST(400, "W_01", "잘못된 요청입니다"),
+
+    // INTERNAL SERVER ERROR
+    INTERNAL_SERVER_ERROR(500, "ERROR", "알수 없는 에러입니다");
+
 
 
     private final String code;

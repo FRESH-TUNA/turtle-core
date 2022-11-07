@@ -1,9 +1,10 @@
 package com.remember.core.authentication;
 
-import com.remember.core.authentication.authToken.AuthTokenProvider;
+import com.remember.core.authentication.authToken.JWTAuthTokenProvider;
 import com.remember.core.authentication.authToken.AuthTokenResponseDto;
 import com.remember.core.authentication.dtos.LoginRequest;
 import com.remember.core.authentication.dtos.UserRequest;
+import com.remember.core.authentication.properties.RememberJwtAuthProperties;
 import com.remember.core.authentication.services.AuthService;
 import com.remember.core.controllers.AbstractController;
 import com.remember.core.dtos.responses.BaseResponse;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 public class AuthController extends AbstractController {
     private final AuthService authService;
-    private final AuthTokenProvider authTokenProvider;
+    private final RememberJwtAuthProperties jwtAuthProperties;
 
     @PostMapping(value = "/signup")
     public ResponseEntity<?> signup(HttpServletRequest request,
@@ -34,9 +35,9 @@ public class AuthController extends AbstractController {
 
         this.addCookie(
                 response,
-                authTokenProvider.REFRESH_TOKEN_COOKIE_KEY,
+                jwtAuthProperties.getRefreshTokenCookieKey(),
                 authTokenResponseDto.getRefreshToken(),
-                (int) authTokenProvider.REFRESH_TOKEN_VALIDITY_IN_MILLISECONDS);
+                Math.toIntExact(jwtAuthProperties.getRefreshValidityInSeconds()));
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, authTokenResponseDto.getAccessToken())
@@ -54,9 +55,9 @@ public class AuthController extends AbstractController {
 
         this.addCookie(
                 response,
-                authTokenProvider.REFRESH_TOKEN_COOKIE_KEY,
+                jwtAuthProperties.getRefreshTokenCookieKey(),
                 authTokenResponseDto.getRefreshToken(),
-                (int) authTokenProvider.REFRESH_TOKEN_VALIDITY_IN_MILLISECONDS);
+                Math.toIntExact(jwtAuthProperties.getRefreshValidityInSeconds()));
 
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, authTokenResponseDto.getAccessToken())
@@ -68,7 +69,7 @@ public class AuthController extends AbstractController {
     public ResponseEntity<?> refresh(HttpServletRequest request) {
 
         String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
-        String refreshToken = this.getValueFromCokkie(request, authTokenProvider.REFRESH_TOKEN_COOKIE_KEY);
+        String refreshToken = this.getValueFromCokkie(request, jwtAuthProperties.getRefreshTokenCookieKey());
         AuthTokenResponseDto dto = authService.refreshAccessToken(accessToken, refreshToken);
 
         return ResponseEntity.ok()

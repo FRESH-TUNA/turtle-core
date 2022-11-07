@@ -4,7 +4,7 @@ import com.remember.core.authentication.authToken.AuthTokenResponseDto;
 import com.remember.core.authentication.domains.ProviderType;
 import com.remember.core.authentication.domains.RefreshToken;
 import com.remember.core.authentication.dtos.*;
-import com.remember.core.authentication.authToken.AuthTokenProvider;
+import com.remember.core.authentication.authToken.JWTAuthTokenProvider;
 import com.remember.core.authentication.repositories.RefreshTokenRepository;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.authentication.repositories.UserRepository;
@@ -19,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    private final AuthTokenProvider authTokenProvider;
+    private final JWTAuthTokenProvider JWTAuthTokenProvider;
     private final PasswordEncoder passwordEncoder;
 
     private final AuthenticationManager authenticationManager;
@@ -41,18 +42,24 @@ public class AuthService {
 
     @Transactional
     public AuthTokenResponseDto login(LoginRequest request)  {
-        Authentication authenticate = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
+        Authentication authenticate;
 
-        authenticatedFacade.checkIsAuthenticated(authenticate);
+        try {
+            authenticate = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getEmail(),
+                            request.getPassword()
+                    )
+            );
+        }
+        catch (AuthenticationException e) {
+            throw new RememberException(ErrorCode.PASSWORD_CONFORM_FAILED);
+        }
+
         RememberUser identity = ((RememberUser) authenticate.getPrincipal());
 
-        String accessToken = authTokenProvider.generateToken(identity);
-        String refreshToken = authTokenProvider.generateRefreshToken(String.valueOf(identity.getId()));
+        String accessToken = JWTAuthTokenProvider.generateToken(identity);
+        String refreshToken = JWTAuthTokenProvider.generateRefreshToken(String.valueOf(identity.getId()));
 
         User user = userRepository.getById(identity.getId());
         Optional<RefreshToken> refreshTokenEntity = refreshTokenRepository.findByUser(user);
@@ -81,12 +88,12 @@ public class AuthService {
     }
 
     public AuthTokenResponseDto refreshAccessToken(String accessTokenString, String refreshTokenString) {
-        RememberUser access = authTokenProvider.accessTokenToUserIdentity(accessTokenString, true);
-        RememberUser refresh = authTokenProvider.refreshTokenToUserIdentity(refreshTokenString);
+        RememberUser access = JWTAuthTokenProvider.accessTokenToUserIdentity(accessTokenString, true);
+        RememberUser refresh = JWTAuthTokenProvider.refreshTokenToUserIdentity(refreshTokenString);
 
         if (Objects.isNull(access) || Objects.isNull(refresh) || !access.isSameUser(refresh))
             throw new RememberException(ErrorCode.BAD_REQUEST);
 
-        return AuthTokenResponseDto.ofAccess(authTokenProvider.generateToken(access));
+        return AuthTokenResponseDto.ofAccess(JWTAuthTokenProvider.generateToken(access));
     }
 }

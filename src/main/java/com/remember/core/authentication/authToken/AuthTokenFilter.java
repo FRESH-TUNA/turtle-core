@@ -1,5 +1,6 @@
 package com.remember.core.authentication.authToken;
 
+import com.remember.core.authentication.properties.RememberJwtAuthProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -24,7 +25,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    private final AuthTokenProvider tokenProvider;
+    private final JWTAuthTokenProvider tokenProvider;
+    private final RememberJwtAuthProperties jwtAuthProperties;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -67,7 +69,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
         if (cookies != null && cookies.length > 0) {
             for (Cookie cookie : cookies) {
-                if (cookie.getName().equals(AuthTokenProvider.REFRESH_TOKEN_COOKIE_KEY)) {
+                if (cookie.getName().equals(jwtAuthProperties.getRefreshTokenCookieKey())) {
                     return cookie.getValue();
                 }
             }

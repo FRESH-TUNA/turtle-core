@@ -1,5 +1,7 @@
 package com.remember.core.dtos.responses.datas;
 
+import com.remember.core.exceptions.ErrorCode;
+
 public class ResponseStatusData {
     private String code;
     private String msg;
@@ -18,4 +20,8 @@ public class ResponseStatusData {
     }
 
     public static ResponseStatusData OK = new ResponseStatusData("200", "success");
+
+    public static ResponseStatusData ofErrorCode(ErrorCode errorCode) {
+        return new ResponseStatusData(errorCode.getCode(), errorCode.getMessage());
+    }
 }

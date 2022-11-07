@@ -1,6 +1,6 @@
 package com.remember.core.authentication.dtos;
 
-import com.remember.core.authentication.authToken.AuthTokenProvider;
+import com.remember.core.authentication.authToken.JWTAuthTokenProvider;
 import com.remember.core.authentication.domains.User;
 import com.remember.core.domains.UserIdentityField;
 import io.jsonwebtoken.Claims;
@@ -113,8 +113,17 @@ public class CentralAuthenticatedUser implements UserDetails, OAuth2User, Rememb
         );
     }
 
+    public static CentralAuthenticatedUser of(OAuth2User oAuth2User, User user) {
+        return new CentralAuthenticatedUser(
+                user.getId(),
+                user.getPassword(),
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())),
+                oAuth2User.getAttributes()
+        );
+    }
+
     public static CentralAuthenticatedUser of(Claims claims) {
-        if(!claims.containsKey(AuthTokenProvider.AUTHORITIES_KEY))
+        if(!claims.containsKey(JWTAuthTokenProvider.AUTHORITIES_KEY))
             return new CentralAuthenticatedUser(
                     Long.valueOf(claims.getSubject()),
                     null,
@@ -122,7 +131,7 @@ public class CentralAuthenticatedUser implements UserDetails, OAuth2User, Rememb
                     null
             );
 
-        String authoritiesString = claims.get(AuthTokenProvider.AUTHORITIES_KEY).toString();
+        String authoritiesString = claims.get(JWTAuthTokenProvider.AUTHORITIES_KEY).toString();
 
         List<GrantedAuthority> authorities = Arrays.stream(authoritiesString
                         .split(","))

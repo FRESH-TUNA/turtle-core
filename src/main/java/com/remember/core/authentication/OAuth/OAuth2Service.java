@@ -1,15 +1,16 @@
 package com.remember.core.authentication.OAuth;
 
+import com.remember.core.authentication.OAuth.UserInfo.OAuth2UserInfo;
+import com.remember.core.authentication.OAuth.UserInfo.OAuth2UserInfoFactory;
 import com.remember.core.authentication.domains.ProviderType;
 import com.remember.core.authentication.domains.User;
-import com.remember.core.authentication.OAuth.OAuth2UserInfo;
 import com.remember.core.authentication.exceptions.RememberAuthenticationException;
-import com.remember.core.authentication.OAuth.OAuth2UserInfoFactory;
 import com.remember.core.authentication.repositories.UserRepository;
 import com.remember.core.exceptions.ErrorCode;
 import com.remember.core.authentication.dtos.CentralAuthenticatedUser;
 import lombok.RequiredArgsConstructor;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -22,6 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2Service extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
@@ -41,7 +43,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
     private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        Optional<User> userWrapper = userRepository.findByEmail(userInfo.getEmail());
+        Optional<User> userWrapper = userRepository.findByUsernameAndProviderType(userInfo.getId(), providerType);
         User savedUser;
 
         /*
@@ -57,8 +59,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
         } else
             savedUser = userRepository.save(userInfo.toEntity());
 
-        return CentralAuthenticatedUser.builder()
-                .attributes(userInfo.getAttributes())
-                .build();
+        log.info("oauth success");
+        return CentralAuthenticatedUser.of(savedUser);
     }
 }

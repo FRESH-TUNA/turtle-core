@@ -1,31 +1,30 @@
 package com.remember.core.exceptionHandler;
 
-import com.remember.core.exceptionHandler.RedirectSupports.*;
+import com.remember.core.dtos.responses.BaseResponse;
 import com.remember.core.exceptions.RememberException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
-
-import javax.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler(BindException.class)
-    protected RedirectView handleBindException(
-            HttpServletRequest request,
-            BindException e,
-            RedirectAttributes attributes) {
-        return BindExceptionRedirectSupport.process(request, e, attributes);
+    @ExceptionHandler(RememberException.class)
+    protected ResponseEntity<?> handleRememberException(
+            RememberException e) {
+
+        return new ResponseEntity<>(
+                BaseResponse.ofErrorCode(e.getErrorCode()),
+                HttpStatus.resolve(e.getErrorCode().getStatus()));
     }
 
-    @ExceptionHandler(RememberException.class)
-    protected RedirectView handleRememberException(
-            HttpServletRequest request,
-            RememberException e,
-            RedirectAttributes attributes) {
-        return RememberExceptionRedirectSupport.process(request, e, attributes);
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<?> handleRuntimeException(
+            RuntimeException e) {
+        log.error(e.getMessage());
+        return new ResponseEntity<>(BaseResponse.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
