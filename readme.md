@@ -10,6 +10,8 @@
 <br>
 [링크](https://turtle.freshtuna.site) 를 클릭하여 서비스를 이용해보실수 있습니다.
 
+(데모계정, email: demo@remember.site, password: #remember123)
+
 ## 기술 노트 보러가기
 [링크](./docs/tech) 를 클릭하여 프로젝트에 사용된 기술 및 개발스토리를 보실수 있습니다.
 
