@@ -15,9 +15,10 @@ public enum ErrorCode {
     NOT_LOGINED(400, "A_005", "로그인후 이용해주세요"),
 
     /*
-     * authorization
+     * auth
      */
-    NOT_AUTHORIZED(401, "P_001", "권한이 없습니다"),
+    NOT_AUTHENTICATION(401, "P_001", "로그인이 필요합니다"),
+    NOT_AUTHORIZED(401, "P_002", "권한이 없습니다"),
 
     /*
      * business

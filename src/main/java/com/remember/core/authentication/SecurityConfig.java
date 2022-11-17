@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -34,6 +35,7 @@ public class SecurityConfig {
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
     private final DefaultOAuth2UserService oAuth2UserService;
     private final SimpleUrlAuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final AuthenticationEntryPoint authenticationEntryPoint;
 
     //private final AuthenticationEntryPoint authenticationEntryPoint;
     //private final AuthenticationFailureHandler authenticationFailureHandler;
@@ -96,6 +98,9 @@ public class SecurityConfig {
          * authorization filter
          */
         http
+                .exceptionHandling()
+                    .authenticationEntryPoint(authenticationEntryPoint)
+                    .and()
                 .authorizeRequests()
                 // users/me/questions
                 .antMatchers("/users/me/questions/**").authenticated()
@@ -105,6 +110,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.POST, "/platforms").hasRole("ADMIN")
                 // auth
                 .antMatchers("/auth/**").permitAll();
+
 
         return http.build();
     }

@@ -65,7 +65,7 @@ public class AuthController extends AbstractController {
     }
 
     /** 로그인 */
-    @PostMapping(path = "/refresh")
+    @GetMapping(path = "/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request) {
 
         String accessToken = request.getHeader(HttpHeaders.AUTHORIZATION);
