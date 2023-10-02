@@ -1,4 +1,4 @@
-# 코딩테스트 복습을 위한 ['터틀'](https://turtle.freshtuna.site)
+# 코딩테스트 복습을 위한 ['터틀'](https://turtle.freshtuna.store)
 
 ## 어떤 서비스 인가요?
 ![](./docs/howtouse/users.me.questions.png)
@@ -8,7 +8,7 @@
 <br>
 또한 문제에 대한 학습 상태(FAIL, GOOD, GREAT, PERFECT)를 같이 저장하여, 향후 어려웠던 문제부터 우선순위를 정해 복습을 할수 있도록 돕습니다.
 <br>
-[링크](https://turtle.freshtuna.site) 를 클릭하여 서비스를 이용해보실수 있습니다.
+[링크](https://turtle.freshtuna.store) 를 클릭하여 서비스를 이용해보실수 있습니다.
 
 (데모계정, email: demo@remember.site, password: #remember123)
 
